@@ -1,11 +1,14 @@
 import { Router } from 'express'
+import MusicBot from '../services/MusicBot.js'
 
 const playbackRouter = Router()
 
 playbackRouter.get('/', (_, res) => {
-    res.status(200).json({
-        message: 'Playback router is working!'
-    })
+    const musicBot = MusicBot.getSharedInstance()
+
+    musicBot.playAudioInVC('718078692110237746', '585869475622944815')
+
+    res.status(200).send('Joined voice channel!')
 })
 
 playbackRouter.post('/', (req, res) => {

@@ -1,6 +1,8 @@
 # Folders
 dist/
 node_modules/
+/resources
+
 
 # Files
 .env
