@@ -1,5 +1,5 @@
 import { config } from 'dotenv'
-import MusicBot from './discord/MusicBot.js'
+import MusicBot from './models/discord/MusicBot.js'
 
 // Load environment variables
 config()
