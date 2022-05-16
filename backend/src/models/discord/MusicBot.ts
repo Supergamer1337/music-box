@@ -20,11 +20,8 @@ export default class MusicBot {
 
     public startBot() {
         this.musicBot.on('ready', () => {
-            if (!this.musicBot.user)
-                return console.error('Client user is undefined')
-            console.log(
-                'Bot is authenticated as' + this.musicBot.user.tag + '!'
-            )
+            if (!this.musicBot.user) throw new Error('No user tag defined!')
+            console.log(`Bot authenticated as ${this.musicBot.user.tag}`)
         })
 
         this.musicBot.login(process.env.BOT_TOKEN)
