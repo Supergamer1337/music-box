@@ -8,7 +8,7 @@ type Props = {
 const AuthenticateWithDiscord = ({ className = '' }: Props) => {
 	return (
 		<div
-			className={`flex items-center w-fit bg-accent py-2 px-4 rounded ${className}`}>
+			className={`flex items-center w-fit bg-accent py-2 px-4 rounded shadow-md ${className}`}>
 			<DiscordSVG />
 			<p className='font-semibold text-lg h-fit w-fit ml-4'>
 				Authenticate
