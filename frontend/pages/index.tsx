@@ -1,7 +1,10 @@
 import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import AuthenticateWithDiscord from '../components/AuthenticateWithDiscord';
 
 const Home: NextPage = () => {
+	const router = useRouter();
+
 	return (
 		<div className='h-[100vh] w-[100vw] sm:flex sm:items-center sm:justify-center'>
 			<div className='min-h-full sm:min-h-fit sm:max-h-min min-w-full sm:min-w-fit sm:max-w-min bg-primaryBg pt-12 sm:pt-8 sm:pb-24 sm:px-52 sm:rounded-3xl'>
@@ -12,9 +15,8 @@ const Home: NextPage = () => {
 				<AuthenticateWithDiscord
 					className='m-auto mt-24'
 					onClick={() => {
-						fetch(`${process.env.BACKEND_ADDRESS}/api/`).then(
-							response => console.log(response)
-						);
+						// @ts-ignore
+						router.push(process.env.REDIRECT_ADDRESS);
 					}}
 				/>
 			</div>

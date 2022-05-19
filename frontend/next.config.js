@@ -2,7 +2,8 @@
 const nextConfig = {
 	reactStrictMode: true,
 	env: {
-		BACKEND_ADDRESS: process.env.BACKEND_ADDRESS
+		BACKEND_ADDRESS: process.env.BACKEND_ADDRESS,
+		REDIRECT_ADDRESS: process.env.REDIRECT_ADDRESS
 	}
 };
 
