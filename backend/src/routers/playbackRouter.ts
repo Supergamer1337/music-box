@@ -8,7 +8,7 @@ playbackRouter.get('/', (_, res) => {
 
     musicBot.playAudioInVC('718078692110237746', '585869475622944815')
 
-    res.status(200).send('Joined voice channel!')
+    res.status(200).json({ message: 'Joined voice channel!' })
 })
 
 playbackRouter.post('/', (req, res) => {

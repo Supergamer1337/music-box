@@ -9,7 +9,14 @@ const Home: NextPage = () => {
 					<h2 className='text-lg'>Welcome to</h2>
 					<h1 className='text-3xl'>GM's Music Box</h1>
 				</div>
-				<AuthenticateWithDiscord className='m-auto mt-24' />
+				<AuthenticateWithDiscord
+					className='m-auto mt-24'
+					onClick={() => {
+						fetch(`${process.env.BACKEND_ADDRESS}/api/`).then(
+							response => console.log(response)
+						);
+					}}
+				/>
 			</div>
 		</div>
 	);
