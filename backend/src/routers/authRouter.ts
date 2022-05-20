@@ -1,23 +1,27 @@
 import { Router } from 'express'
-import { getAccessTokenFromDiscord } from '../services/authService.js'
+import { requestAccessToken } from '../services/authService.js'
 
 const authRouter = Router()
 
 authRouter.get('/', async (req, res) => {
     const { code } = req.query
 
-    if (!code) {
-        res.status(400).send(
-            'Missing Discord authorization code in query string'
-        )
+    if (!code || typeof code !== 'string') {
+        return res
+            .status(400)
+            .send('Missing Discord authorization code in query string')
     }
 
-    const accessTokenData = await getAccessTokenFromDiscord(code as string)
+    try {
+        const accessTokenData = await requestAccessToken(code)
 
-    console.log(accessTokenData)
+        console.log('Access Token Data:', accessTokenData)
 
-    // @ts-ignore
-    res.redirect(process.env.FRONTEND_ADDRESS)
+        // @ts-expect-error setup error if fronted address is missing.
+        res.redirect(process.env.FRONTEND_ADDRESS)
+    } catch (error) {
+        res.status(500).send(error)
+    }
 })
 
 export default authRouter
