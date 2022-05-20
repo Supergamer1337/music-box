@@ -2,6 +2,7 @@ import { config } from 'dotenv'
 import express from 'express'
 import MusicBot from './services/MusicBot.js'
 import playbackRouter from './routers/playbackRouter.js'
+import authRouter from './routers/authRouter.js'
 import cors from 'cors'
 
 // Load environment variables
@@ -17,7 +18,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.json())
-app.use('/api', playbackRouter)
+app.use('/api/v1/', playbackRouter)
+app.use('/api/v1/auth', authRouter)
 
 if (!process.env.BACKEND_PORT) throw new Error('No backend port defined!')
 app.listen(process.env.BACKEND_PORT, () => {
