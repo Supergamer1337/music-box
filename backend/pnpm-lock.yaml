@@ -3,33 +3,43 @@ lockfileVersion: 5.3
 specifiers:
   '@discordjs/opus': ^0.7.0
   '@discordjs/voice': ^0.9.0
+  '@types/connect-redis': ^0.0.18
   '@types/cors': ^2.8.12
   '@types/express': ^4.17.13
+  '@types/express-session': ^1.17.4
   '@types/node': ^17.0.33
+  connect-redis: ^6.1.3
   cors: ^2.8.5
   discord.js: ^13.7.0
   dotenv: ^16.0.1
   express: ^4.18.1
+  express-session: ^1.17.3
   ffmpeg-static: ^5.0.0
   libsodium-wrappers: ^0.7.10
   node-fetch: ^3.2.4
   nodemon: ^2.0.16
+  redis: ^4.1.0
   typescript: ^4.6.4
 
 dependencies:
   '@discordjs/opus': 0.7.0
   '@discordjs/voice': 0.9.0_3b46ab0cca32de0f7f6a75c74e75f16f
+  connect-redis: 6.1.3
   cors: 2.8.5
   discord.js: 13.7.0
   dotenv: 16.0.1
   express: 4.18.1
+  express-session: 1.17.3
   ffmpeg-static: 5.0.0
   libsodium-wrappers: 0.7.10
   node-fetch: 3.2.4
+  redis: 4.1.0
 
 devDependencies:
+  '@types/connect-redis': 0.0.18
   '@types/cors': 2.8.12
   '@types/express': 4.17.13
+  '@types/express-session': 1.17.4
   '@types/node': 17.0.33
   nodemon: 2.0.16
   typescript: 4.6.4
@@ -112,6 +122,55 @@ packages:
       - utf-8-validate
     dev: false
 
+  /@redis/bloom/1.0.2_@redis+client@1.1.0:
+    resolution: {integrity: sha512-EBw7Ag1hPgFzdznK2PBblc1kdlj5B5Cw3XwI9/oG7tSn85/HKy3X9xHy/8tm/eNXJYHLXHJL/pkwBpFMVVefkw==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.1.0
+    dev: false
+
+  /@redis/client/1.1.0:
+    resolution: {integrity: sha512-xO9JDIgzsZYDl3EvFhl6LC52DP3q3GCMUer8zHgKV6qSYsq1zB+pZs9+T80VgcRogrlRYhi4ZlfX6A+bHiBAgA==}
+    engines: {node: '>=14'}
+    dependencies:
+      cluster-key-slot: 1.1.0
+      generic-pool: 3.8.2
+      yallist: 4.0.0
+    dev: false
+
+  /@redis/graph/1.0.1_@redis+client@1.1.0:
+    resolution: {integrity: sha512-oDE4myMCJOCVKYMygEMWuriBgqlS5FqdWerikMoJxzmmTUErnTRRgmIDa2VcgytACZMFqpAOWDzops4DOlnkfQ==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.1.0
+    dev: false
+
+  /@redis/json/1.0.3_@redis+client@1.1.0:
+    resolution: {integrity: sha512-4X0Qv0BzD9Zlb0edkUoau5c1bInWSICqXAGrpwEltkncUwcxJIGEcVryZhLgb0p/3PkKaLIWkjhHRtLe9yiA7Q==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.1.0
+    dev: false
+
+  /@redis/search/1.0.6_@redis+client@1.1.0:
+    resolution: {integrity: sha512-pP+ZQRis5P21SD6fjyCeLcQdps+LuTzp2wdUbzxEmNhleighDDTD5ck8+cYof+WLec4csZX7ks+BuoMw0RaZrA==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.1.0
+    dev: false
+
+  /@redis/time-series/1.0.3_@redis+client@1.1.0:
+    resolution: {integrity: sha512-OFp0q4SGrTH0Mruf6oFsHGea58u8vS/iI5+NpYdicaM+7BgqBZH8FFvNZ8rYYLrUO/QRqMq72NpXmxLVNcdmjA==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.1.0
+    dev: false
+
   /@sapphire/async-queue/1.3.1:
     resolution: {integrity: sha512-FFTlPOWZX1kDj9xCAsRzH5xEJfawg1lNoYAA+ecOWJMHOfiZYb1uXOI3ne9U4UILSEPwfE68p3T9wUHwIQfR0g==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
@@ -146,6 +205,15 @@ packages:
       '@types/node': 17.0.33
     dev: true
 
+  /@types/connect-redis/0.0.18:
+    resolution: {integrity: sha512-iGygGbXgPIr94DEAuoluWhzre3c2/ew5NPlbW9IWvwCTXMM1YCmc7M9wpXMkYqt6kB9aO1sjZnmDzyugUu+2vQ==}
+    dependencies:
+      '@types/express': 4.17.13
+      '@types/express-session': 1.17.4
+      '@types/ioredis': 4.28.10
+      '@types/redis': 2.8.32
+    dev: true
+
   /@types/connect/3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
@@ -164,6 +232,12 @@ packages:
       '@types/range-parser': 1.2.4
     dev: true
 
+  /@types/express-session/1.17.4:
+    resolution: {integrity: sha512-7cNlSI8+oOBUHTfPXMwDxF/Lchx5aJ3ho7+p9jJZYVg9dVDJFh3qdMXmJtRsysnvS+C6x46k9DRYmrmCkE+MVg==}
+    dependencies:
+      '@types/express': 4.17.13
+    dev: true
+
   /@types/express/4.17.13:
     resolution: {integrity: sha512-6bSZTPaTIACxn48l50SR+axgrqm6qXFIxrdAKaG6PaJk3+zuUr35hBlgT7vOmJcum+OEaIBLtHV/qloEAFITeA==}
     dependencies:
@@ -171,6 +245,12 @@ packages:
       '@types/express-serve-static-core': 4.17.28
       '@types/qs': 6.9.7
       '@types/serve-static': 1.13.10
+    dev: true
+
+  /@types/ioredis/4.28.10:
+    resolution: {integrity: sha512-69LyhUgrXdgcNDv7ogs1qXZomnfOEnSmrmMFqKgt1XMJxmoOSG/u3wYy13yACIfKuMJ8IhKgHafDO3sx19zVQQ==}
+    dependencies:
+      '@types/node': 17.0.33
     dev: true
 
   /@types/mime/1.3.2:
@@ -197,6 +277,12 @@ packages:
 
   /@types/range-parser/1.2.4:
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==}
+    dev: true
+
+  /@types/redis/2.8.32:
+    resolution: {integrity: sha512-7jkMKxcGq9p242exlbsVzuJb57KqHRhNl4dHoQu2Y5v9bCAbtIXXH0R3HleSQW4CTOqpHIYUW3t6tpUj4BVQ+w==}
+    dependencies:
+      '@types/node': 17.0.33
     dev: true
 
   /@types/serve-static/1.13.10:
@@ -411,6 +497,11 @@ packages:
       mimic-response: 1.0.1
     dev: true
 
+  /cluster-key-slot/1.1.0:
+    resolution: {integrity: sha512-2Nii8p3RwAPiFwsnZvukotvow2rIHM+yQ6ZcBXGHdniadkYGZYiGmkHJIbZPIV9nfv7m/U1IPMVVcAhoWFeklw==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
   /color-convert/2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
     engines: {node: '>=7.0.0'}
@@ -459,6 +550,11 @@ packages:
       xdg-basedir: 4.0.0
     dev: true
 
+  /connect-redis/6.1.3:
+    resolution: {integrity: sha512-aaNluLlAn/3JPxRwdzw7lhvEoU6Enb+d83xnokUNhC9dktqBoawKWL+WuxinxvBLTz6q9vReTnUDnUslaz74aw==}
+    engines: {node: '>=12'}
+    dev: false
+
   /console-control-strings/1.1.0:
     resolution: {integrity: sha1-PXz0Rk22RG6mRL9LOVB/mFEAjo4=}
     dev: false
@@ -477,6 +573,11 @@ packages:
 
   /cookie-signature/1.0.6:
     resolution: {integrity: sha1-4wOogrNCzD7oylE6eZmXNNqzriw=}
+    dev: false
+
+  /cookie/0.4.2:
+    resolution: {integrity: sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==}
+    engines: {node: '>= 0.6'}
     dev: false
 
   /cookie/0.5.0:
@@ -655,6 +756,20 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
+  /express-session/1.17.3:
+    resolution: {integrity: sha512-4+otWXlShYlG1Ma+2Jnn+xgKUZTMJ5QD3YvfilX3AcocOAbIkVylSWEklzALe/+Pu4qV6TYBj5GwOBFfdKqLBw==}
+    engines: {node: '>= 0.8.0'}
+    dependencies:
+      cookie: 0.4.2
+      cookie-signature: 1.0.6
+      debug: 2.6.9
+      depd: 2.0.0
+      on-headers: 1.0.2
+      parseurl: 1.3.3
+      safe-buffer: 5.2.1
+      uid-safe: 2.1.5
+    dev: false
+
   /express/4.18.1:
     resolution: {integrity: sha512-zZBcOX9TfehHQhtupq57OF8lFZ3UZi08Y97dwFCkD8p9d/d2Y3M+ykKcwaMDEL+4qyUolgBDX6AblpR3fL212Q==}
     engines: {node: '>= 0.10.0'}
@@ -808,6 +923,11 @@ packages:
       string-width: 4.2.3
       strip-ansi: 6.0.1
       wide-align: 1.1.5
+    dev: false
+
+  /generic-pool/3.8.2:
+    resolution: {integrity: sha512-nGToKy6p3PAbYQ7p1UlWl6vSPwfwU6TMSWK7TTu+WUY4ZjyZQGniGGt2oNVvyNSpyZYSB43zMXVLcBm08MTMkg==}
+    engines: {node: '>= 4'}
     dev: false
 
   /get-intrinsic/1.1.1:
@@ -1286,6 +1406,11 @@ packages:
       ee-first: 1.1.1
     dev: false
 
+  /on-headers/1.0.2:
+    resolution: {integrity: sha512-pZAE+FJLoyITytdqK0U5s+FIpjN0JP3OzFi/u8Rx+EV5/W+JTWGXG8xFzevE7AjBfDqHv/8vL8qQsIhHnqRkrA==}
+    engines: {node: '>= 0.8'}
+    dev: false
+
   /once/1.4.0:
     resolution: {integrity: sha1-WDsap3WWHUsROsF9nFC6753Xa9E=}
     dependencies:
@@ -1397,6 +1522,11 @@ packages:
       side-channel: 1.0.4
     dev: false
 
+  /random-bytes/1.0.0:
+    resolution: {integrity: sha1-T2ih3Arli9P7lYSMMDJNt11kNgs=}
+    engines: {node: '>= 0.8'}
+    dev: false
+
   /range-parser/1.2.1:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
     engines: {node: '>= 0.6'}
@@ -1449,6 +1579,17 @@ packages:
     dependencies:
       picomatch: 2.3.1
     dev: true
+
+  /redis/4.1.0:
+    resolution: {integrity: sha512-5hvJ8wbzpCCiuN1ges6tx2SAh2XXCY0ayresBmu40/SGusWHFW86TAlIPpbimMX2DFHOX7RN34G2XlPA1Z43zg==}
+    dependencies:
+      '@redis/bloom': 1.0.2_@redis+client@1.1.0
+      '@redis/client': 1.1.0
+      '@redis/graph': 1.0.1_@redis+client@1.1.0
+      '@redis/json': 1.0.3_@redis+client@1.1.0
+      '@redis/search': 1.0.6_@redis+client@1.1.0
+      '@redis/time-series': 1.0.3_@redis+client@1.1.0
+    dev: false
 
   /registry-auth-token/4.2.1:
     resolution: {integrity: sha512-6gkSb4U6aWJB4SF2ZvLb76yCBjcvufXBqvvEx1HbmKPkutswjW1xNVRY0+daljIYRbogN7O0etYSlbiaEQyMyw==}
@@ -1690,6 +1831,13 @@ packages:
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true
+
+  /uid-safe/2.1.5:
+    resolution: {integrity: sha512-KPHm4VL5dDXKz01UuEd88Df+KzynaohSL9fBh096KWAxSKZQDI2uBrVqtvRM4rwrIrRRKsdLNML/lnaaVSRioA==}
+    engines: {node: '>= 0.8'}
+    dependencies:
+      random-bytes: 1.0.0
+    dev: false
 
   /undefsafe/2.0.5:
     resolution: {integrity: sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA==}

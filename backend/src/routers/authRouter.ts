@@ -17,7 +17,6 @@ authRouter.get('/', async (req, res) => {
 
         console.log('Access Token Data:', accessTokenData)
 
-        // @ts-expect-error setup error if fronted address is missing.
         res.redirect(process.env.FRONTEND_ADDRESS)
     } catch (error) {
         res.status(500).send(error)

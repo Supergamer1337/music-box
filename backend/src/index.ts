@@ -4,14 +4,35 @@ import MusicBot from './services/MusicBot.js'
 import playbackRouter from './routers/playbackRouter.js'
 import authRouter from './routers/authRouter.js'
 import cors from 'cors'
+import session from 'express-session'
+import { createClient } from 'redis'
+import connectRedis from 'connect-redis'
 
 // Load environment variables
 config()
+
+// Setup redis variables
+let RedisStore = connectRedis(session)
+const redisClient = createClient({
+    url: process.env.REDIS_URL
+})
 
 // Start the application
 MusicBot.getSharedInstance().startBot()
 
 const app = express()
+
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        store: new RedisStore({
+            // @ts-expect-error It is simply wrong
+            client: redisClient
+        }),
+        resave: false,
+        saveUninitialized: false
+    })
+)
 
 if (process.env.NODE_ENV === 'development') {
     app.use(cors())
