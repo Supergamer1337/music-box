@@ -1,5 +1,14 @@
 import fetch from 'node-fetch'
 
+/**
+ * General request function.
+ * @param url The URL to request.
+ * @param method The HTTP method to use.
+ * @param data The data to send.
+ * @param headers The headers to send.
+ * @returns The response data.
+ * @throws The response if the request failed.
+ */
 export const request = async (
     url: string,
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
@@ -25,6 +34,14 @@ export const request = async (
     }
 }
 
+/**
+ * Form data POST request.
+ * @param url The URL to request.
+ * @param data The data to send.
+ * @param headers The headers to send. If specified, the Content-Type header will be overwritten.
+ * @returns The response data.
+ * @throws The response if the request failed.
+ */
 export const formDataPostRequest = async (
     url: string,
     data: Record<string, any>,
