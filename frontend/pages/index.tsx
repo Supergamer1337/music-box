@@ -17,7 +17,26 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 }
 
 const Home: NextPage = () => {
-    return <div>You are home.</div>
+    return (
+        <>
+            <div>You are home.</div>
+            <button
+                onClick={async () => {
+                    const guilds = await fetch(
+                        `${process.env.BACKEND_ADDRESS}/api/v1/guilds`,
+                        {
+                            method: 'GET',
+                            credentials: 'include'
+                        }
+                    )
+                    console.log(guilds)
+                    console.log(await guilds.json())
+                }}
+            >
+                Get Guild info
+            </button>
+        </>
+    )
 }
 
 export default Home
