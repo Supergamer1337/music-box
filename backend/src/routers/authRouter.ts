@@ -33,16 +33,24 @@ authRouter.get('/me', async (req, res) => {
         return res.status(401).send('Not authenticated')
     }
 
-    const discordUser = await getDiscordUser(
-        req.session.discordTokenData.access_token
-    )
+    try {
+        const discordUser = await getDiscordUser(
+            req.session.discordTokenData.access_token
+        )
 
-    res.status(200).json({
-        id: discordUser.id,
-        username: discordUser.username,
-        discriminator: discordUser.discriminator,
-        avatar: discordUser.avatar
-    })
+        res.status(200).json({
+            id: discordUser.id,
+            username: discordUser.username,
+            discriminator: discordUser.discriminator,
+            avatar: discordUser.avatar
+        })
+    } catch (error) {
+        console.log(error)
+
+        res.status(500).json({
+            error: 'Failed to get Discord user'
+        })
+    }
 })
 
 export default authRouter
