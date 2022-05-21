@@ -6,8 +6,6 @@ import { NextIncomingMessage } from 'next/dist/server/request-meta'
  * @returns True if the user is authenticated, false otherwise.
  */
 export const isAuthenticated = async (req: NextIncomingMessage) => {
-    console.log(req.headers.cookie)
-
     if (!req.headers.cookie) {
         return false
     }
