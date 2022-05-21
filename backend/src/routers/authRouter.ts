@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { requestAccessToken } from '../services/authService.js'
-import DiscordTokenData from './../types/DiscordTokenData.d'
+import { getDiscordUser, requestAccessToken } from '../services/authService.js'
+import DiscordTokenData from '../types/discord/DiscordTokenData'
 
 const authRouter = Router()
 
@@ -26,6 +26,23 @@ authRouter.get('/', async (req, res) => {
     } catch (error) {
         res.status(500).send(error)
     }
+})
+
+authRouter.get('/me', async (req, res) => {
+    if (!req.session.discordTokenData) {
+        return res.status(401).send('Not authenticated')
+    }
+
+    const discordUser = await getDiscordUser(
+        req.session.discordTokenData.access_token
+    )
+
+    res.status(200).json({
+        id: discordUser.id,
+        username: discordUser.username,
+        discriminator: discordUser.discriminator,
+        avatar: discordUser.avatar
+    })
 })
 
 export default authRouter

@@ -9,10 +9,10 @@ import fetch from 'node-fetch'
  * @returns The response data.
  * @throws The response if the request failed.
  */
-export const request = async (
+const request = async (
     url: string,
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-    data: string,
+    data: string | undefined,
     headers: Record<string, string> = {
         'Content-Type': 'application/json'
     }
@@ -52,4 +52,11 @@ export const formDataPostRequest = async (
     const requestData = new URLSearchParams(data)
 
     return await request(url, 'POST', requestData.toString(), headers)
+}
+
+export const getRequest = async (
+    url: string,
+    headers: Record<string, string>
+) => {
+    return await request(url, 'GET', undefined, headers)
 }

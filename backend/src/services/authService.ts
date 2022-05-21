@@ -1,4 +1,5 @@
-import { formDataPostRequest } from './requestService.js'
+import { formDataPostRequest, getRequest } from './requestService.js'
+import DiscordUserData from './../types/discord/DiscordUserData.d'
 
 /**
  * Gets the user Discord access token data.
@@ -22,5 +23,22 @@ export const requestAccessToken = async (code: string) => {
         console.error(await errorResponse.json())
 
         throw 'Failed to get access token'
+    }
+}
+
+export const getDiscordUser = async (accessToken: string) => {
+    try {
+        const discordUserData = await getRequest(
+            'https://discordapp.com/api/users/@me',
+            {
+                Authorization: `Bearer ${accessToken}`
+            }
+        )
+
+        return discordUserData as DiscordUserData
+    } catch (err) {
+        console.error(err)
+
+        throw 'Failed to get Discord user'
     }
 }

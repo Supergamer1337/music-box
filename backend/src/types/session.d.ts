@@ -1,4 +1,4 @@
-import DiscordTokenData from './DiscordTokenData.d'
+import DiscordTokenData from './discord/DiscordTokenData'
 
 declare module 'express-session' {
     interface SessionData {
