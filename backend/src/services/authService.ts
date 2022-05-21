@@ -1,6 +1,7 @@
 import { formDataPostRequest, getRequest } from './requestService.js'
 import DiscordUserData from './../types/discord/DiscordUserData.d'
 import DiscordTokenData from './../types/discord/DiscordTokenData.d'
+import DiscordCurrentAuthorization from './../types/discord/DiscordCurrentAuthorization.d'
 
 /**
  * Gets the user Discord access token data.
@@ -39,6 +40,31 @@ export const getDiscordUserData = async (accessToken: string) => {
         return (await getRequest('https://discordapp.com/api/users/@me', {
             Authorization: `Bearer ${accessToken}`
         })) as DiscordUserData
+    } catch (errorResponse: any) {
+        throw new Error(
+            `${errorResponse.status} ${
+                errorResponse.statusText
+            }. ${await errorResponse.json()}`
+        )
+    }
+}
+
+/**
+ * Checks if the user's Discord access token is valid.
+ * @param discordTokenData The user's Discord access token data.
+ * @returns Whether the user's Discord access token is valid.
+ * @throws An error if the request failed.
+ */
+export const discordTokenValid = async (discordTokenData: DiscordTokenData) => {
+    try {
+        const authorizationData = (await getRequest(
+            'https://discordapp.com/api/oauth2/@me',
+            {
+                Authorization: `Bearer ${discordTokenData.access_token}`
+            }
+        )) as DiscordCurrentAuthorization
+
+        return authorizationData.expires > new Date().toISOString()
     } catch (errorResponse: any) {
         throw new Error(
             `${errorResponse.status} ${

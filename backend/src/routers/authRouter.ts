@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import isAuthenticated from './../middleware/isAuthenticated.js'
 import {
     getDiscordUserData,
     requestAccessToken
@@ -30,13 +31,10 @@ authRouter.get('/', async (req, res) => {
     }
 })
 
-authRouter.get('/me', async (req, res) => {
-    if (!req.session.discordTokenData) {
-        return res.status(401).send('Not authenticated')
-    }
-
+authRouter.get('/me', isAuthenticated, async (req, res) => {
     try {
         const discordUser = await getDiscordUserData(
+            // @ts-expect-error Taken care of by the authentication middleware
             req.session.discordTokenData.access_token
         )
 
