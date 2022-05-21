@@ -1,6 +1,8 @@
 import { Router } from 'express'
-import { getDiscordUser, requestAccessToken } from '../services/authService.js'
-import DiscordTokenData from '../types/discord/DiscordTokenData'
+import {
+    getDiscordUserData,
+    requestAccessToken
+} from '../services/authService.js'
 
 const authRouter = Router()
 
@@ -34,7 +36,7 @@ authRouter.get('/me', async (req, res) => {
     }
 
     try {
-        const discordUser = await getDiscordUser(
+        const discordUser = await getDiscordUserData(
             req.session.discordTokenData.access_token
         )
 

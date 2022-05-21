@@ -4,8 +4,9 @@ import session from 'express-session'
 import { Express } from 'express'
 
 /**
- *
- * @returns
+ * Setup redis for sessions
+ * @returns A RedisStore instance.
+ * @throws An error if the redis client could not connect.
  */
 const setupRedis = async () => {
     // Setup redis variables
@@ -32,6 +33,10 @@ const setupRedis = async () => {
     })
 }
 
+/**
+ * Setup the session middleware
+ * @param app The express app.
+ */
 export const setupSessions = async (app: Express) => {
     const redisStore = await setupRedis()
 

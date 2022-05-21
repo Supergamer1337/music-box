@@ -29,7 +29,12 @@ export const requestAccessToken = async (code: string) => {
     }
 }
 
-export const getDiscordUser = async (accessToken: string) => {
+/**
+ * Gets the user's Discord user data.
+ * @param accessToken The user's Discord access token.
+ * @returns The user's Discord user data.
+ */
+export const getDiscordUserData = async (accessToken: string) => {
     try {
         return (await getRequest('https://discordapp.com/api/users/@me', {
             Authorization: `Bearer ${accessToken}`
