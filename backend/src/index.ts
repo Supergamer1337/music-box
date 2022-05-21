@@ -17,18 +17,30 @@ const redisClient = createClient({
     url: process.env.REDIS_URL
 })
 
+redisClient.on('connected', () => {
+    console.log('Redis client connected')
+})
+
+try {
+    console.log('Connecting to Redis...')
+    // Connect to Redis
+    await redisClient.connect()
+} catch (err) {
+    console.error(err)
+}
+
 // Start the application
-MusicBot.getSharedInstance().startBot()
+await MusicBot.getSharedInstance().startBot()
 
 const app = express()
 
 app.use(
     session({
         secret: process.env.SESSION_SECRET,
-        store: new RedisStore({
-            // @ts-expect-error It is simply wrong
-            client: redisClient
-        }),
+        // store: new RedisStore({
+        //     // @ts-expect-error It is simply wrong
+        //     client: redisClient
+        // }),
         resave: false,
         saveUninitialized: false
     })

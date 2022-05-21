@@ -26,13 +26,13 @@ export default class MusicBot {
         }
     }
 
-    public startBot() {
+    public async startBot() {
         this.musicBot.on('ready', () => {
             if (!this.musicBot.user) throw new Error('No user tag defined!')
             console.log(`Bot authenticated as ${this.musicBot.user.tag}`)
         })
 
-        this.musicBot.login(process.env.BOT_TOKEN)
+        await this.musicBot.login(process.env.BOT_TOKEN)
     }
 
     public playAudioInVC(channelId: string, guildId: string) {

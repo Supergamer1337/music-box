@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { requestAccessToken } from '../services/authService.js'
+import DiscordTokenData from './../types/DiscordTokenData.d'
 
 const authRouter = Router()
 
@@ -13,9 +14,13 @@ authRouter.get('/', async (req, res) => {
     }
 
     try {
-        const accessTokenData = await requestAccessToken(code)
+        const accessTokenData = (await requestAccessToken(
+            code
+        )) as DiscordTokenData
 
-        console.log('Access Token Data:', accessTokenData)
+        req.session.discordTokenData = accessTokenData
+
+        console.log(accessTokenData)
 
         res.redirect(process.env.FRONTEND_ADDRESS)
     } catch (error) {
