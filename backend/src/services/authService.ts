@@ -1,5 +1,6 @@
 import { formDataPostRequest, getRequest } from './requestService.js'
 import DiscordUserData from './../types/discord/DiscordUserData.d'
+import DiscordTokenData from './../types/discord/DiscordTokenData.d'
 
 /**
  * Gets the user Discord access token data.
@@ -9,7 +10,7 @@ import DiscordUserData from './../types/discord/DiscordUserData.d'
  */
 export const requestAccessToken = async (code: string) => {
     try {
-        return await formDataPostRequest(
+        return (await formDataPostRequest(
             'https://discordapp.com/api/oauth2/token',
             {
                 client_id: process.env.OAUTH_CLIENT_ID,
@@ -18,27 +19,26 @@ export const requestAccessToken = async (code: string) => {
                 code,
                 redirect_uri: process.env.BACKEND_ADDRESS + '/api/v1/auth/'
             }
-        )
+        )) as DiscordTokenData
     } catch (errorResponse: any) {
-        console.error(await errorResponse.json())
-
-        throw 'Failed to get access token'
+        throw new Error(
+            `${errorResponse.status} ${
+                errorResponse.statusText
+            }. ${await errorResponse.json()}`
+        )
     }
 }
 
 export const getDiscordUser = async (accessToken: string) => {
     try {
-        const discordUserData = await getRequest(
-            'https://discordapp.com/api/users/@me',
-            {
-                Authorization: `Bearer ${accessToken}`
-            }
+        return (await getRequest('https://discordapp.com/api/users/@me', {
+            Authorization: `Bearer ${accessToken}`
+        })) as DiscordUserData
+    } catch (errorResponse: any) {
+        throw new Error(
+            `${errorResponse.status} ${
+                errorResponse.statusText
+            }. ${await errorResponse.json()}`
         )
-
-        return discordUserData as DiscordUserData
-    } catch (err) {
-        console.error(err)
-
-        throw 'Failed to get Discord user'
     }
 }

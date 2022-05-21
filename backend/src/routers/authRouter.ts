@@ -14,17 +14,17 @@ authRouter.get('/', async (req, res) => {
     }
 
     try {
-        const accessTokenData = (await requestAccessToken(
-            code
-        )) as DiscordTokenData
+        const accessTokenData = await requestAccessToken(code)
 
         req.session.discordTokenData = accessTokenData
 
-        console.log(accessTokenData)
-
         res.redirect(process.env.FRONTEND_ADDRESS)
     } catch (error) {
-        res.status(500).send(error)
+        console.log(error)
+
+        res.status(500).json({
+            error: 'Failed to get Discord authentication token'
+        })
     }
 })
 
