@@ -27,3 +27,16 @@ export const serverSideGetUserData = async (req: NextIncomingMessage) => {
 
     return (await userData.json()) as BackendUserData
 }
+
+export const clientGetUserData = async () => {
+    const user = await fetch(`${process.env.BACKEND_ADDRESS}/api/v1/auth/me`, {
+        method: 'GET',
+        credentials: 'include'
+    })
+
+    if (!user.ok) {
+        throw new Error('User not authenticated')
+    }
+
+    return (await user.json()) as BackendUserData
+}

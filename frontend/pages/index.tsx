@@ -1,10 +1,18 @@
 import type { GetServerSideProps, NextPage } from 'next'
-import { serverSideGetUserData } from './../services/authenticationService'
+import {
+    clientGetUserData,
+    serverSideGetUserData
+} from './../services/authenticationService'
 import BackendUserData from '../types/BackendUserData'
+import { dehydrate, QueryClient, useQuery } from 'react-query'
+import router from 'next/router'
+import { useEffect } from 'react'
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-    const userData = await serverSideGetUserData(req)
-    if (!userData) {
+    const queryClient = new QueryClient()
+
+    const user = await serverSideGetUserData(req)
+    if (!user) {
         return {
             redirect: {
                 destination: '/authenticate',
@@ -13,24 +21,34 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
         }
     }
 
+    await queryClient.prefetchQuery('user', () => user)
+
     return {
         props: {
-            user: userData
+            dehydratedState: dehydrate(queryClient)
         }
     }
 }
 
-interface Props {
-    user: BackendUserData
-}
+const Home: NextPage = () => {
+    const { data, error } = useQuery<BackendUserData, Error>(
+        'user',
+        clientGetUserData,
+        { cacheTime: 1000 }
+    )
 
-const Home: NextPage<Props> = ({ user }) => {
+    useEffect(() => {
+        if (error) {
+            router.push('/authenticate')
+        }
+    }, [error])
+
     return (
         <div className="min-h-[100vh] bg-primaryBg">
             <h1 className="text-xl font-semibold text-center pt-10">
                 Your Serverlist
             </h1>
-            <p>{user.username}</p>
+            <p>{`${data?.username}`}</p>
         </div>
     )
 }
