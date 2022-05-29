@@ -1,5 +1,5 @@
 import { NextIncomingMessage } from 'next/dist/server/request-meta'
-import DiscordUserData from './../types/DiscordUserData.d'
+import BackendUserData from '../types/BackendUserData'
 
 /**
  * Gets the user data from the backend, if the user is logged in.
@@ -25,5 +25,5 @@ export const serverSideGetUserData = async (req: NextIncomingMessage) => {
         return undefined
     }
 
-    return (await userData.json()) as DiscordUserData
+    return (await userData.json()) as BackendUserData
 }

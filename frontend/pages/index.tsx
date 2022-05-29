@@ -1,6 +1,6 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import { serverSideGetUserData } from './../services/authenticationService'
-import DiscordUserData from './../types/DiscordUserData.d'
+import BackendUserData from '../types/BackendUserData'
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     const userData = await serverSideGetUserData(req)
@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 }
 
 interface Props {
-    user: DiscordUserData
+    user: BackendUserData
 }
 
 const Home: NextPage<Props> = ({ user }) => {
