@@ -1,17 +1,18 @@
 import { NextIncomingMessage } from 'next/dist/server/request-meta'
+import DiscordUserData from './../types/DiscordUserData.d'
 
 /**
- * Checks if the user is authenticated.
+ * Gets the user data from the backend, if the user is logged in.
  * @param req The request object.
- * @returns True if the user is authenticated, false otherwise.
+ * @returns The user data, or undefined if the user is not logged in.
  */
-export const isAuthenticated = async (req: NextIncomingMessage) => {
+export const serverSideGetUserData = async (req: NextIncomingMessage) => {
     if (!req.headers.cookie) {
         return false
     }
 
-    const isAuthenticated = await fetch(
-        `${process.env.BACKEND_ADDRESS}/api/v1/auth/is-authenticated`,
+    const userData = await fetch(
+        `${process.env.BACKEND_ADDRESS}/api/v1/auth/me`,
         {
             method: 'GET',
             headers: {
@@ -20,9 +21,9 @@ export const isAuthenticated = async (req: NextIncomingMessage) => {
         }
     )
 
-    if (!isAuthenticated.ok) {
-        return false
+    if (!userData.ok) {
+        return undefined
     }
 
-    return true
+    return (await userData.json()) as DiscordUserData
 }

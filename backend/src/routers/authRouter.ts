@@ -53,10 +53,4 @@ authRouter.get('/me', isAuthenticated, async (req, res) => {
     }
 })
 
-authRouter.get('/is-authenticated', isAuthenticated, (_, res) => {
-    res.status(200).json({
-        success: 'You are authenticated!'
-    })
-})
-
 export default authRouter

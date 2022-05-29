@@ -1,8 +1,10 @@
 import type { GetServerSideProps, NextPage } from 'next'
-import { isAuthenticated } from './../services/authenticationService'
+import { serverSideGetUserData } from './../services/authenticationService'
+import DiscordUserData from './../types/DiscordUserData.d'
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-    if (!(await isAuthenticated(req))) {
+    const userData = await serverSideGetUserData(req)
+    if (!userData) {
         return {
             redirect: {
                 destination: '/authenticate',
@@ -12,30 +14,24 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     }
 
     return {
-        props: {}
+        props: {
+            user: userData
+        }
     }
 }
 
-const Home: NextPage = () => {
+interface Props {
+    user: DiscordUserData
+}
+
+const Home: NextPage<Props> = ({ user }) => {
     return (
-        <>
-            <div>You are home.</div>
-            <button
-                onClick={async () => {
-                    const guilds = await fetch(
-                        `${process.env.BACKEND_ADDRESS}/api/v1/guilds`,
-                        {
-                            method: 'GET',
-                            credentials: 'include'
-                        }
-                    )
-                    console.log(guilds)
-                    console.log(await guilds.json())
-                }}
-            >
-                Get Guild info
-            </button>
-        </>
+        <div className="min-h-[100vh] bg-primaryBg">
+            <h1 className="text-xl font-semibold text-center pt-10">
+                Your Serverlist
+            </h1>
+            <p>{user.username}</p>
+        </div>
     )
 }
 
