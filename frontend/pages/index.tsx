@@ -1,8 +1,8 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import { serverGetUserData } from './../services/authenticationService'
-import BackendUserData from '../types/BackendUserData'
-import { dehydrate, QueryClient } from 'react-query'
+import { dehydrate, QueryClient, useQuery } from 'react-query'
 import useUser from '../hooks/useUser'
+import { clientGetGuilds, serverGetGuilds } from './../services/guildsService'
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     const queryClient = new QueryClient()
@@ -19,6 +19,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     }
 
     await queryClient.prefetchQuery('user', () => user)
+    await queryClient.prefetchQuery('guilds', () => serverGetGuilds(req))
 
     return {
         props: {
@@ -29,13 +30,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
 const Home: NextPage = () => {
     const user = useUser()
+    const { data, error } = useQuery('guilds', clientGetGuilds)
 
     return (
         <div className="min-h-[100vh] bg-primaryBg">
             <h1 className="text-xl font-semibold text-center pt-10">
                 Your Serverlist
             </h1>
-            <p>{`${user.username}`}</p>
         </div>
     )
 }
