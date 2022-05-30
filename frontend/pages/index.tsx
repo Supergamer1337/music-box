@@ -1,12 +1,8 @@
 import type { GetServerSideProps, NextPage } from 'next'
-import {
-    clientGetUserData,
-    serverGetUserData
-} from './../services/authenticationService'
+import { serverGetUserData } from './../services/authenticationService'
 import BackendUserData from '../types/BackendUserData'
-import { dehydrate, QueryClient, useQuery } from 'react-query'
-import router from 'next/router'
-import { useEffect } from 'react'
+import { dehydrate, QueryClient } from 'react-query'
+import useUser from '../hooks/useUser'
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     const queryClient = new QueryClient()
@@ -32,24 +28,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 }
 
 const Home: NextPage = () => {
-    const { data, error } = useQuery<BackendUserData, Error>(
-        'user',
-        clientGetUserData,
-        { cacheTime: 1000 }
-    )
-
-    useEffect(() => {
-        if (error) {
-            router.push('/authenticate')
-        }
-    }, [error])
+    const user = useUser()
 
     return (
         <div className="min-h-[100vh] bg-primaryBg">
             <h1 className="text-xl font-semibold text-center pt-10">
                 Your Serverlist
             </h1>
-            <p>{`${data?.username}`}</p>
+            <p>{`${user.username}`}</p>
         </div>
     )
 }
