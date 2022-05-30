@@ -33,7 +33,7 @@ const Home: NextPage = () => {
     const { data, error } = useQuery('guilds', clientGetGuilds)
 
     return (
-        <div className="min-h-[100vh] bg-primaryBg">
+        <div>
             <h1 className="text-xl font-semibold text-center pt-10">
                 Your Serverlist
             </h1>

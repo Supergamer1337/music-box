@@ -3,10 +3,11 @@
 @tailwind utilities;
 
 * {
-	@apply text-white;
+    @apply text-white;
 }
 
 html,
 body {
-	@apply bg-emptyBg;
+    @apply bg-primaryBg;
+    @apply sm:bg-emptyBg;
 }
