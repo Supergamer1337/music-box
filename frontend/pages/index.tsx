@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import {
     clientGetUserData,
-    serverSideGetUserData
+    serverGetUserData
 } from './../services/authenticationService'
 import BackendUserData from '../types/BackendUserData'
 import { dehydrate, QueryClient, useQuery } from 'react-query'
@@ -11,7 +11,8 @@ import { useEffect } from 'react'
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     const queryClient = new QueryClient()
 
-    const user = await serverSideGetUserData(req)
+    const user = await serverGetUserData(req)
+
     if (!user) {
         return {
             redirect: {
