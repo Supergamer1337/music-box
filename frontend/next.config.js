@@ -1,10 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	reactStrictMode: true,
-	env: {
-		BACKEND_ADDRESS: process.env.BACKEND_ADDRESS,
-		REDIRECT_ADDRESS: process.env.REDIRECT_ADDRESS
-	}
-};
+    reactStrictMode: true,
+    env: {
+        BACKEND_ADDRESS: process.env.BACKEND_ADDRESS,
+        REDIRECT_ADDRESS: process.env.REDIRECT_ADDRESS
+    },
+    images: {
+        domains: ['cdn.discordapp.com']
+    }
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig
