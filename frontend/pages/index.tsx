@@ -66,7 +66,7 @@ const Home: NextPage = () => {
                 <input
                     type="text"
                     placeholder="Search for server..."
-                    className="block mx-auto bg-emptyBg my-4 p-2 rounded-md text-lg w-10/12 max-w-[40rem] outline-none sm:bg-primaryBg"
+                    className="block mx-auto bg-emptyBg my-4 p-2 rounded-md text-lg w-10/12 max-w-[40rem] outline-none outline-0 sm:bg-primaryBg focus:outline-2 outline-accent"
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
