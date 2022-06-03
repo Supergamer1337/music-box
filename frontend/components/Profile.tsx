@@ -25,13 +25,13 @@ const Profile = ({ user }: Props) => {
     return (
         <div className="relative inline-block sm:w-fit">
             <div
-                className="flex items-center cursor-pointer"
+                className="flex items-center gap-2 cursor-pointer rounded-md sm:hover:bg-emptyBg sm:p-1"
                 onClick={handleClick}
             >
                 <h4 className="hidden select-none font-medium sm:block">
                     {user.username}
                 </h4>
-                <div className="relative w-16 h-16 rounded-md">
+                <div className="relative w-16 h-16 sm:w-12 sm:h-12 rounded-md">
                     <Image
                         src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
                         alt={`${user.username}'s avatar`}
