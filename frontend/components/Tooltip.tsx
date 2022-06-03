@@ -38,7 +38,7 @@ const Tooltip = ({ children, message }: Props) => {
             {display && (
                 <div
                     ref={tooltipRef}
-                    className={`flex items-center transition-opacity duration-200 ${
+                    className={`flex items-center transition-opacity duration-200 shadow-lg ${
                         isVisible ? 'opacity-100' : 'opacity-0'
                     }`}
                 >
