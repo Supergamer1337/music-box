@@ -6,6 +6,7 @@ import { clientGetGuilds, serverGetGuilds } from './../services/guildsService'
 import Profile from '../components/Profile'
 import GuildListItem from '../components/GuildListItem'
 import BackendGuildData from './../types/BackendGuildData.d'
+import { useState } from 'react'
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     const queryClient = new QueryClient()
@@ -36,6 +37,8 @@ const sortGuilds = (a: BackendGuildData, b: BackendGuildData) => {
         return -1
     } else if (!a.botInServer && b.botInServer) {
         return 1
+    } else {
+        return 0
     }
 }
 
@@ -44,6 +47,8 @@ const Home: NextPage = () => {
     const { data, error } = useQuery('guilds', clientGetGuilds, {
         staleTime: 1000 * 60 * 30
     })
+
+    const [searchTerm, setSearchTerm] = useState('')
 
     return (
         <>
@@ -55,10 +60,28 @@ const Home: NextPage = () => {
                 </h1>
             </div>
 
+            <input
+                type="text"
+                placeholder="Search for server..."
+                className="block mx-auto bg-emptyBg my-4 p-2 rounded-md text-lg w-10/12 outline-none"
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
+
             <ul className="flex flex-col mx-4 gap-2">
-                {data?.sort(sortGuilds).map((guild) => (
-                    <GuildListItem key={guild.id} guild={guild} />
-                ))}
+                {data
+                    ?.sort(sortGuilds)
+                    .filter((guild) => {
+                        if (searchTerm === '') {
+                            return true
+                        }
+
+                        return guild.name
+                            .toLowerCase()
+                            .includes(searchTerm.toLowerCase())
+                    })
+                    .map((guild) => (
+                        <GuildListItem key={guild.id} guild={guild} />
+                    ))}
             </ul>
         </>
     )
