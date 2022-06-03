@@ -5,6 +5,7 @@ import useUser from '../hooks/useUser'
 import { clientGetGuilds, serverGetGuilds } from './../services/guildsService'
 import Profile from '../components/Profile'
 import GuildListItem from '../components/GuildListItem'
+import BackendGuildData from './../types/BackendGuildData.d'
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     const queryClient = new QueryClient()
@@ -30,6 +31,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     }
 }
 
+const sortGuilds = (a: BackendGuildData, b: BackendGuildData) => {
+    if (a.botInServer && !b.botInServer) {
+        return -1
+    } else if (!a.botInServer && b.botInServer) {
+        return 1
+    }
+}
+
 const Home: NextPage = () => {
     const user = useUser()
     const { data, error } = useQuery('guilds', clientGetGuilds, {
@@ -47,7 +56,7 @@ const Home: NextPage = () => {
             </div>
 
             <ul className="flex flex-col mx-4 gap-2">
-                {data?.map((guild) => (
+                {data?.sort(sortGuilds).map((guild) => (
                     <GuildListItem key={guild.id} guild={guild} />
                 ))}
             </ul>
