@@ -3,6 +3,7 @@ import BackendUserData from './../types/BackendUserData.d'
 import Image from 'next/image'
 import LogoutSVG from '../svg/LogoutSVG'
 import { AnimatePresence, motion } from 'framer-motion'
+import { logout } from '../services/authenticationService'
 
 type Props = {
     user: BackendUserData
@@ -50,7 +51,10 @@ const Profile = ({ user }: Props) => {
                             {user.username}
                         </h4>
                         <hr className="opacity-25 mx-2" />
-                        <div className="flex items-center gap-1 p-2 mt-1 rounded cursor-pointer hover:bg-accent">
+                        <div
+                            onClick={logout}
+                            className="flex items-center gap-1 p-2 mt-1 rounded cursor-pointer hover:bg-accent"
+                        >
                             <LogoutSVG opacity="0.75" />
                             <p className="text-base font-medium">Logout</p>
                         </div>

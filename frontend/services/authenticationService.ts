@@ -2,8 +2,10 @@ import { NextIncomingMessage } from 'next/dist/server/request-meta'
 import BackendUserData from '../types/BackendUserData'
 import {
     clientBackendGetRequest,
+    clientBackendPostRequest,
     serverBackendGetRequest
 } from './requestService'
+import router from 'next/router'
 
 /**
  * Gets the user data from the backend, if the user is logged in. As the Next.js server.
@@ -27,6 +29,7 @@ export const serverGetUserData = async (req: NextIncomingMessage) => {
 /**
  * Gets the user data from the backend, if the user is logged in. As the client.
  * @returns The user data, or undefined if the user is not logged in.
+ * @throws If the user is not logged in.
  */
 export const clientGetUserData = async () => {
     const user = await clientBackendGetRequest('/api/v1/auth/me')
@@ -36,4 +39,18 @@ export const clientGetUserData = async () => {
     }
 
     return (await user.json()) as BackendUserData
+}
+
+/**
+ * Logs the user out, and redirects them to the authentication page.
+ * @throws Throws an error if the backend response was an error.
+ */
+export const logout = async () => {
+    const response = await clientBackendPostRequest('/api/v1/auth/logout')
+
+    if (!response.ok) {
+        throw new Error('Failed to logout!')
+    }
+
+    router.push('/authenticate')
 }

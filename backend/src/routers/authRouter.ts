@@ -53,4 +53,17 @@ authRouter.get('/me', isAuthenticated, async (req, res) => {
     }
 })
 
+authRouter.post('/logout', isAuthenticated, async (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Failed to destroy session:', err)
+            req.session.discordTokenData = undefined
+        }
+
+        res.status(200).json({
+            message: 'Successfully logged out!'
+        })
+    })
+})
+
 export default authRouter

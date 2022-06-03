@@ -38,3 +38,20 @@ export const clientBackendGetRequest = async (
         headers
     })
 }
+
+/**
+ * Makes a post request to the specified backend endpoint, as the client server.
+ * @param endpoint The endpoint to request.
+ * @param headers The headers to send with the request.
+ * @returns The response object.
+ */
+export const clientBackendPostRequest = async (
+    endpoint: string,
+    headers = {}
+) => {
+    return await fetch(`${process.env.BACKEND_ADDRESS}${endpoint}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers
+    })
+}
