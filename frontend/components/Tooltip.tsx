@@ -42,10 +42,10 @@ const Tooltip = ({ children, message }: Props) => {
                         isVisible ? 'opacity-100' : 'opacity-0'
                     }`}
                 >
-                    <div className="absolute bg-accent right-[calc(100%+0.2rem)] p-2 w-max rounded-md z-10">
+                    <div className="absolute bg-accent right-[calc(100%+0.2rem)] p-2 w-max rounded-md z-10 shadow-lg">
                         <p className="text-white">{message}</p>
                     </div>
-                    <div className="absolute right-[calc(100%-0.05rem)] rotate-45 bg-accent w-2 h-2" />
+                    <div className="absolute right-[calc(100%-0.05rem)] rotate-45 bg-accent w-2 h-2 shadow-lg" />
                 </div>
             )}
 
