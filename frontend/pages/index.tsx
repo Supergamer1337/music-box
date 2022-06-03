@@ -51,39 +51,43 @@ const Home: NextPage = () => {
     const [searchTerm, setSearchTerm] = useState('')
 
     return (
-        <>
-            <div className="flex flex-col items-end">
-                <Profile user={user} />
+        <div className="grid grid-cols-1 grid-rows-[auto,1fr] max-h-[100vh]">
+            <div>
+                <div className="flex flex-col items-end">
+                    <Profile user={user} />
 
-                <h1 className="text-xl font-semibold text-center w-full">
-                    Your Serverlist
-                </h1>
+                    <h1 className="text-xl font-semibold text-center w-full">
+                        Your Serverlist
+                    </h1>
+                </div>
+
+                <input
+                    type="text"
+                    placeholder="Search for server..."
+                    className="block mx-auto bg-emptyBg my-4 p-2 rounded-md text-lg w-10/12 outline-none"
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
             </div>
 
-            <input
-                type="text"
-                placeholder="Search for server..."
-                className="block mx-auto bg-emptyBg my-4 p-2 rounded-md text-lg w-10/12 outline-none"
-                onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <div className="overflow-y-scroll pb-12">
+                <ul className="flex flex-col mx-4 gap-2">
+                    {data
+                        ?.sort(sortGuilds)
+                        .filter((guild) => {
+                            if (searchTerm === '') {
+                                return true
+                            }
 
-            <ul className="flex flex-col mx-4 gap-2">
-                {data
-                    ?.sort(sortGuilds)
-                    .filter((guild) => {
-                        if (searchTerm === '') {
-                            return true
-                        }
-
-                        return guild.name
-                            .toLowerCase()
-                            .includes(searchTerm.toLowerCase())
-                    })
-                    .map((guild) => (
-                        <GuildListItem key={guild.id} guild={guild} />
-                    ))}
-            </ul>
-        </>
+                            return guild.name
+                                .toLowerCase()
+                                .includes(searchTerm.toLowerCase())
+                        })
+                        .map((guild) => (
+                            <GuildListItem key={guild.id} guild={guild} />
+                        ))}
+                </ul>
+            </div>
+        </div>
     )
 }
 
