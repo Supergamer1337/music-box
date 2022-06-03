@@ -26,9 +26,17 @@ const GuildListItem = ({ guild }: Props) => {
                 </h4>
                 {guild.owner && <p className="text-sm font-light">Owner</p>}
             </div>
-            <Tooltip message="Bot not in server!">
+            <Tooltip
+                message={
+                    guild.botInServer
+                        ? 'Bot in server!'
+                        : 'Bot not in server...'
+                }
+            >
                 <div className="w-10 h-10">
-                    <CheckMarkIconSVG />
+                    <CheckMarkIconSVG
+                        fill={guild.botInServer ? '#10B981' : undefined}
+                    />
                 </div>
             </Tooltip>
         </li>

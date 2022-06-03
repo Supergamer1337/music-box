@@ -5,4 +5,5 @@ export default interface BackendGuildData {
     owner: boolean
     permissions: string
     features: string[]
+    botInServer: boolean
 }

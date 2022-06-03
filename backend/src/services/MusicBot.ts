@@ -11,7 +11,7 @@ export default class MusicBot {
 
     private musicBot: Client
 
-    constructor() {
+    private constructor() {
         this.musicBot = new Client({
             intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES]
         })
@@ -57,5 +57,14 @@ export default class MusicBot {
 
             player.unpause()
         }
+    }
+
+    /**
+     * Checks if the bot is in the specified guild
+     * @param id Guild ID
+     * @returns true if the bot is in the guild, false otherwise
+     */
+    public isInServer(id: string) {
+        return this.musicBot.guilds.cache.has(id)
     }
 }
