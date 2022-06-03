@@ -54,10 +54,10 @@ const Home: NextPage = () => {
         <div className="grid grid-cols-1 grid-rows-[auto,1fr] max-h-[100vh]">
             <div>
                 <div className=" bg-primaryBg">
-                    <div className="container flex flex-col items-end sm:flex-row-reverse sm:items-start">
+                    <div className="container relative flex flex-col items-end mx-auto sm:flex-row-reverse sm:justify-start sm:items-center">
                         <Profile user={user} />
 
-                        <h1 className="text-xl font-semibold text-center w-full pt-4">
+                        <h1 className="text-xl font-semibold text-center w-full pt-4 sm:pt-0 sm:flex-[0,1,auto] sm:absolute sm:left-[50%] sm:translate-x-[-50%] sm:inline-block sm:w-fit">
                             Your Serverlist
                         </h1>
                     </div>
