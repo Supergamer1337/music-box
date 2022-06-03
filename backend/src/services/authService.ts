@@ -11,6 +11,7 @@ import DiscordCurrentAuthorization from './../types/discord/DiscordCurrentAuthor
  */
 export const requestAccessToken = async (code: string) => {
     try {
+        console.log(process.env.BACKEND_ADDRESS + '/api/v1/auth/')
         return (await formDataPostRequest(
             'https://discordapp.com/api/oauth2/token',
             {
@@ -25,7 +26,7 @@ export const requestAccessToken = async (code: string) => {
         throw new Error(
             `${errorResponse.status} ${
                 errorResponse.statusText
-            }. ${await errorResponse.json()}`
+            }. ${await errorResponse.text()}`
         )
     }
 }
