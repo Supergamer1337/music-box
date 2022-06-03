@@ -53,23 +53,25 @@ const Home: NextPage = () => {
     return (
         <div className="grid grid-cols-1 grid-rows-[auto,1fr] max-h-[100vh]">
             <div>
-                <div className="flex flex-col items-end">
-                    <Profile user={user} />
+                <div className=" bg-primaryBg">
+                    <div className="container flex flex-col items-end sm:flex-row-reverse sm:items-start">
+                        <Profile user={user} />
 
-                    <h1 className="text-xl font-semibold text-center w-full">
-                        Your Serverlist
-                    </h1>
+                        <h1 className="text-xl font-semibold text-center w-full pt-4">
+                            Your Serverlist
+                        </h1>
+                    </div>
                 </div>
 
                 <input
                     type="text"
                     placeholder="Search for server..."
-                    className="block mx-auto bg-emptyBg my-4 p-2 rounded-md text-lg w-10/12 outline-none"
+                    className="block mx-auto bg-emptyBg my-4 p-2 rounded-md text-lg w-10/12 max-w-[40rem] outline-none sm:bg-primaryBg"
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
 
-            <div className="overflow-y-scroll pb-12">
+            <div className="overflow-y-auto pb-12 w-[36rem] md:w-[40rem] max-w-full mx-auto mb-2">
                 <ul className="flex flex-col mx-4 gap-2">
                     {data
                         ?.sort(sortGuilds)
