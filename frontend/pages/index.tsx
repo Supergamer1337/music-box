@@ -71,7 +71,7 @@ const Home: NextPage = () => {
                 />
             </div>
 
-            <div className="overflow-y-auto w-[36rem] md:w-[40rem] max-w-full mx-auto mb-">
+            <div className="overflow-y-auto w-[36rem] md:w-[40rem] max-w-full mx-auto mb-4">
                 <ul className="flex flex-col mx-4 sm:mx-0 sm:mr-1 gap-2">
                     {data
                         ?.sort(sortGuilds)
