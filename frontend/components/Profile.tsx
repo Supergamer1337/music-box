@@ -1,37 +1,35 @@
-import React, { useState } from 'react'
+import React, { createRef, useState } from 'react'
 import BackendUserData from './../types/BackendUserData.d'
 import Image from 'next/image'
 import LogoutSVG from '../svg/LogoutSVG'
 import { AnimatePresence, motion } from 'framer-motion'
 import { logout } from '../services/authenticationService'
+import useOutsideDetection from './useOutsideDetection'
 
 type Props = {
     user: BackendUserData
 }
 
-const textVariants = {
-    hover: {
-        x: '0.1rem'
-    }
-}
-
 const Profile = ({ user }: Props) => {
     const [showMenu, setShowMenu] = useState(false)
-
-    const handleClick = () => {
-        setShowMenu(!showMenu)
-    }
+    let menuRef = createRef<HTMLDivElement>()
+    useOutsideDetection(menuRef, () => {
+        setShowMenu(false)
+    })
 
     return (
-        <div className="relative inline-block sm:w-fit">
+        <div className="relative inline-block sm:w-fit" ref={menuRef}>
             <div
                 className="flex items-center gap-2 cursor-pointer rounded-md sm:hover:bg-emptyBg sm:p-1"
-                onClick={handleClick}
+                onClick={(e) => {
+                    e.stopPropagation()
+                    setShowMenu(!showMenu)
+                }}
             >
                 <h4 className="hidden select-none font-medium sm:block">
                     {user.username}
                 </h4>
-                <div className="relative w-16 h-16 sm:w-12 sm:h-12 rounded-md">
+                <div className="relative w-16 h-16 sm:w-12 sm:h-12 rounded-full m-1 overflow-hidden">
                     <Image
                         src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
                         alt={`${user.username}'s avatar`}
