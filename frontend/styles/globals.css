@@ -11,3 +11,18 @@ body {
     @apply bg-primaryBg;
     @apply sm:bg-emptyBg;
 }
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 0.4rem;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-scrollbarBg;
+    @apply rounded-md;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-emptyBg;
+    @apply rounded-md;
+}

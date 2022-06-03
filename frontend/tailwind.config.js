@@ -12,7 +12,8 @@ module.exports = {
                 emptyBg: '#202225',
                 primaryBg: '#37393F',
                 secondaryBg: '#2F3136',
-                discordBorder: 'rgba(255, 255, 255, 0.1)'
+                discordBorder: 'rgba(255, 255, 255, 0.1)',
+                scrollbarBg: '#2E3338'
             },
             fontFamily: {
                 sans: ['Roboto', ...defaultTheme.fontFamily.sans]
