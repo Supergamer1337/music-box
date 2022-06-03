@@ -45,7 +45,7 @@ const sortGuilds = (a: BackendGuildData, b: BackendGuildData) => {
 const Home: NextPage = () => {
     const user = useUser()
     const { data, error } = useQuery('guilds', clientGetGuilds, {
-        staleTime: 1000 * 60 * 30
+        staleTime: 1000 * 60 * 5
     })
 
     const [searchTerm, setSearchTerm] = useState('')
