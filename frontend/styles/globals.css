@@ -23,6 +23,6 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    @apply bg-emptyBg;
+    @apply bg-accent;
     @apply rounded-md;
 }
