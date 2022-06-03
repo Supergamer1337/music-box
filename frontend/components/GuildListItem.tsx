@@ -13,7 +13,11 @@ const GuildListItem = ({ guild }: Props) => {
         <li className="bg-secondaryBg p-2 rounded-md border-discordBorder border-[1px] grid grid-cols-[min-content,auto,min-content] w-full gap-2 items-center">
             <div className="w-12 h-12 relative">
                 <Image
-                    src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
+                    src={
+                        guild.icon
+                            ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`
+                            : '/images/missing-server.jpg'
+                    }
                     alt={`${guild.name}'s Icon`}
                     layout="fill"
                     objectFit="fill"
