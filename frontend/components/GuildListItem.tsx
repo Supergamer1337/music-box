@@ -11,8 +11,8 @@ type Props = {
 const GuildListItem = ({ guild }: Props) => {
     return (
         <li
-            className="bg-secondaryBg p-2 rounded-md border-discordBorder border-[1px] grid grid-cols-[min-content,auto,min-content] w-full gap-2 items-center 
-                        transition-colors hover:bg-primaryBg cursor-pointer"
+            className="bg-secondaryBg sm:bg-primaryBg p-2 rounded-md border-discordBorder border-[1px] grid grid-cols-[min-content,auto,min-content] w-full gap-2 items-center 
+                        transition-colors hover:bg-primaryBg sm:hover:bg-secondaryBg cursor-pointer"
         >
             <div className="w-12 h-12 relative">
                 <Image
