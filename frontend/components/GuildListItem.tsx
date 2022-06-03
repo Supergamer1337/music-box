@@ -2,6 +2,7 @@ import React from 'react'
 import BackendGuildData from './../types/BackendGuildData.d'
 import Image from 'next/image'
 import CheckMarkIconSVG from '../svg/CheckMarkIconSVG'
+import Tooltip from './Tooltip'
 
 type Props = {
     guild: BackendGuildData
@@ -25,9 +26,11 @@ const GuildListItem = ({ guild }: Props) => {
                 </h4>
                 {guild.owner && <p className="text-sm font-light">Owner</p>}
             </div>
-            <div className="w-10 h-10">
-                <CheckMarkIconSVG />
-            </div>
+            <Tooltip message="Bot not in server!">
+                <div className="w-10 h-10">
+                    <CheckMarkIconSVG />
+                </div>
+            </Tooltip>
         </li>
     )
 }
