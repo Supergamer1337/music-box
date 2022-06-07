@@ -28,7 +28,7 @@ export const requestAccessToken = async (code: string) => {
             }
         )) as RESTPostOAuth2AccessTokenResult
     } catch (errorResponse: any) {
-        handleRequestError(errorResponse, 'requestAccessToken')
+        return handleRequestError(errorResponse, 'requestAccessToken')
     }
 }
 
@@ -41,7 +41,7 @@ export const getDiscordUserData = async (accessToken: string) => {
     try {
         return (await discordGetRequest('/users/@me', accessToken)) as APIUser
     } catch (errorResponse: any) {
-        handleRequestError(errorResponse, 'getDiscordUserData')
+        return handleRequestError(errorResponse, 'getDiscordUserData')
     }
 }
 
@@ -60,6 +60,6 @@ export const discordTokenValid = async (accessToken: string) => {
 
         return authorizationData.expires > new Date().toISOString()
     } catch (errorResponse: any) {
-        handleRequestError(errorResponse, 'discordTokenValid')
+        return handleRequestError(errorResponse, 'discordTokenValid')
     }
 }
