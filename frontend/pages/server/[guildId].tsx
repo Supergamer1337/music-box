@@ -21,6 +21,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     }
 
     await queryClient.prefetchQuery('user', () => user)
+    await queryClient.prefetchQuery('guildData', () => serverGetGuildData(req))
 
     return {
         props: {

@@ -13,7 +13,9 @@ const isAuthenticated: RequestHandler = async (req, res, next) => {
     }
 
     try {
-        if (await discordTokenValid(req.session.discordTokenData)) {
+        if (
+            await discordTokenValid(req.session.discordTokenData.access_token)
+        ) {
             next()
         } else {
             return res.status(401).json({ error: 'You are not authenticated' })

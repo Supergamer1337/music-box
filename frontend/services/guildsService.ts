@@ -17,6 +17,16 @@ export const clientGetGuilds = async () => {
     return handleGuildRequest(guilds)
 }
 
+export const serverGetGuildData = async (req: NextIncomingMessage) => {
+    const guild = await serverBackendGetRequest(req, '/api/v1/guilds/:id')
+
+    if (!guild.ok) {
+        throw new Error('Failed to get server')
+    }
+
+    return (await guild.json()) as BackendGuildExtendedData
+}
+
 const handleGuildRequest = async (servers: Response) => {
     if (!servers.ok) {
         throw new Error('Failed to get servers')

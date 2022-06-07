@@ -1,8 +1,8 @@
-import DiscordTokenData from './discord/DiscordTokenData'
+import { RESTPostOAuth2AccessTokenResult } from 'discord-api-types/v10'
 
 declare module 'express-session' {
     interface SessionData {
-        discordTokenData?: DiscordTokenData
+        discordTokenData?: RESTPostOAuth2AccessTokenResult
     }
 }
 

@@ -1,7 +1,9 @@
+import {
+    APIUser,
+    RESTGetAPIOAuth2CurrentAuthorizationResult,
+    RESTPostOAuth2AccessTokenResult
+} from 'discord-api-types/v10'
 import { formDataPostRequest, getRequest } from './requestService.js'
-import DiscordUserData from './../types/discord/DiscordUserData.d'
-import DiscordTokenData from './../types/discord/DiscordTokenData.d'
-import DiscordCurrentAuthorization from './../types/discord/DiscordCurrentAuthorization.d'
 
 /**
  * Gets the user Discord access token data.
@@ -11,9 +13,8 @@ import DiscordCurrentAuthorization from './../types/discord/DiscordCurrentAuthor
  */
 export const requestAccessToken = async (code: string) => {
     try {
-        console.log(process.env.BACKEND_ADDRESS + '/api/v1/auth/')
         return (await formDataPostRequest(
-            'https://discordapp.com/api/oauth2/token',
+            'https://discord.com/api/v10/oauth2/token',
             {
                 client_id: process.env.OAUTH_CLIENT_ID,
                 client_secret: process.env.OAUTH_CLIENT_SECRET,
@@ -21,7 +22,7 @@ export const requestAccessToken = async (code: string) => {
                 code,
                 redirect_uri: process.env.BACKEND_ADDRESS + '/api/v1/auth/'
             }
-        )) as DiscordTokenData
+        )) as RESTPostOAuth2AccessTokenResult
     } catch (errorResponse: any) {
         throw new Error(
             `${errorResponse.status} ${
@@ -38,9 +39,9 @@ export const requestAccessToken = async (code: string) => {
  */
 export const getDiscordUserData = async (accessToken: string) => {
     try {
-        return (await getRequest('https://discordapp.com/api/users/@me', {
+        return (await getRequest('https://discord.com/api/v10/users/@me', {
             Authorization: `Bearer ${accessToken}`
-        })) as DiscordUserData
+        })) as APIUser
     } catch (errorResponse: any) {
         throw new Error(
             `${errorResponse.status} ${
@@ -56,21 +57,21 @@ export const getDiscordUserData = async (accessToken: string) => {
  * @returns Whether the user's Discord access token is valid.
  * @throws An error if the request failed.
  */
-export const discordTokenValid = async (discordTokenData: DiscordTokenData) => {
+export const discordTokenValid = async (accessToken: string) => {
     try {
         const authorizationData = (await getRequest(
-            'https://discordapp.com/api/oauth2/@me',
+            'https://discord.com/api/v10/oauth2/@me',
             {
-                Authorization: `Bearer ${discordTokenData.access_token}`
+                Authorization: `Bearer ${accessToken}`
             }
-        )) as DiscordCurrentAuthorization
+        )) as RESTGetAPIOAuth2CurrentAuthorizationResult
 
         return authorizationData.expires > new Date().toISOString()
     } catch (errorResponse: any) {
         throw new Error(
             `${errorResponse.status} ${
                 errorResponse.statusText
-            }. ${await errorResponse.json()}`
+            }. ${await errorResponse.text()}`
         )
     }
 }

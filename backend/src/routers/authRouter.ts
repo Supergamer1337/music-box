@@ -38,12 +38,7 @@ authRouter.get('/me', isAuthenticated, async (req, res) => {
             req.session.discordTokenData.access_token
         )
 
-        res.status(200).json({
-            id: discordUser.id,
-            username: discordUser.username,
-            discriminator: discordUser.discriminator,
-            avatar: discordUser.avatar
-        })
+        res.status(200).json(discordUser)
     } catch (error) {
         console.log(error)
 
