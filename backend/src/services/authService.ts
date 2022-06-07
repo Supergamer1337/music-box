@@ -3,7 +3,11 @@ import {
     RESTGetAPIOAuth2CurrentAuthorizationResult,
     RESTPostOAuth2AccessTokenResult
 } from 'discord-api-types/v10'
-import { formDataPostRequest, getRequest } from './requestService.js'
+import {
+    formDataPostRequest,
+    getRequest,
+    handleRequestError
+} from './requestService.js'
 
 /**
  * Gets the user Discord access token data.
@@ -24,11 +28,7 @@ export const requestAccessToken = async (code: string) => {
             }
         )) as RESTPostOAuth2AccessTokenResult
     } catch (errorResponse: any) {
-        throw new Error(
-            `${errorResponse.status} ${
-                errorResponse.statusText
-            }. ${await errorResponse.text()}`
-        )
+        handleRequestError(errorResponse)
     }
 }
 
@@ -43,11 +43,7 @@ export const getDiscordUserData = async (accessToken: string) => {
             Authorization: `Bearer ${accessToken}`
         })) as APIUser
     } catch (errorResponse: any) {
-        throw new Error(
-            `${errorResponse.status} ${
-                errorResponse.statusText
-            }. ${await errorResponse.json()}`
-        )
+        handleRequestError(errorResponse)
     }
 }
 
@@ -68,10 +64,6 @@ export const discordTokenValid = async (accessToken: string) => {
 
         return authorizationData.expires > new Date().toISOString()
     } catch (errorResponse: any) {
-        throw new Error(
-            `${errorResponse.status} ${
-                errorResponse.statusText
-            }. ${await errorResponse.text()}`
-        )
+        handleRequestError(errorResponse)
     }
 }

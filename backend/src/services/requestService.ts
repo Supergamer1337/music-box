@@ -54,9 +54,28 @@ export const formDataPostRequest = async (
     return await request(url, 'POST', requestData.toString(), headers)
 }
 
+/**
+ * A GET request.
+ * @param url The URL to request.
+ * @param headers The headers to send.
+ * @returns The response data.
+ */
 export const getRequest = async (
     url: string,
     headers: Record<string, string>
 ) => {
     return await request(url, 'GET', undefined, headers)
+}
+
+/**
+ * Handles a request error.
+ * @param errorResponse The error response.
+ * @throws Formatted error message.
+ */
+export const handleRequestError = async (errorResponse: any) => {
+    throw new Error(
+        `${errorResponse.status} ${
+            errorResponse.statusText
+        }. ${await errorResponse.text()}`
+    )
 }

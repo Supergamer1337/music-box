@@ -1,5 +1,5 @@
 import { RESTGetAPICurrentUserGuildsResult } from '.pnpm/discord-api-types@0.30.0/node_modules/discord-api-types/v10'
-import { getRequest } from './requestService.js'
+import { getRequest, handleRequestError } from './requestService.js'
 
 export const getDiscordUserGuilds = async (access_token: string) => {
     try {
@@ -9,12 +9,8 @@ export const getDiscordUserGuilds = async (access_token: string) => {
                 Authorization: `Bearer ${access_token}`
             }
         )) as RESTGetAPICurrentUserGuildsResult
-    } catch (errorRequest: any) {
-        throw new Error(
-            `${errorRequest.status} ${
-                errorRequest.statusText
-            }. ${errorRequest.json()}`
-        )
+    } catch (errorResponse: any) {
+        handleRequestError(errorResponse)
     }
 }
 
@@ -29,11 +25,7 @@ export const getDiscordGuild = async (
                 Authorization: `Bearer ${access_token}`
             }
         )
-    } catch (errorRequest: any) {
-        throw new Error(
-            `${errorRequest.status} ${
-                errorRequest.statusText
-            }. ${errorRequest.json()}`
-        )
+    } catch (errorResponse: any) {
+        handleRequestError(errorResponse)
     }
 }
