@@ -46,7 +46,7 @@ const sortGuilds = (a: GuildListObject, b: GuildListObject) => {
 const Home: NextPage = () => {
     const user = useUser()
     const { data, error } = useQuery('guilds', clientGetGuilds, {
-        staleTime: 1000 * 60 * 5
+        staleTime: 1000 * 60 * 1
     })
 
     const [searchTerm, setSearchTerm] = useState('')
