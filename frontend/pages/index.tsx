@@ -63,22 +63,28 @@ const Home: NextPage = () => {
             />
 
             <div className="overflow-y-auto w-[36rem] md:w-[40rem] max-w-full mx-auto mb-4">
-                <ul className="flex flex-col mx-4 sm:mx-0 sm:mr-1 gap-2">
-                    {data
-                        ?.sort(sortGuilds)
-                        .filter((guild) => {
-                            if (searchTerm === '') {
-                                return true
-                            }
+                {error || !data ? (
+                    <div className="text-center text-2xl mt-10 bg-red-600 mx-2 p-2 rounded-md">
+                        Failed to retrieve servers. Please try again later.
+                    </div>
+                ) : (
+                    <ul className="flex flex-col mx-4 sm:mx-0 sm:mr-1 gap-2">
+                        {data
+                            .sort(sortGuilds)
+                            .filter((guild) => {
+                                if (searchTerm === '') {
+                                    return true
+                                }
 
-                            return guild.name
-                                .toLowerCase()
-                                .includes(searchTerm.toLowerCase())
-                        })
-                        .map((guild) => (
-                            <GuildListItem key={guild.id} guild={guild} />
-                        ))}
-                </ul>
+                                return guild.name
+                                    .toLowerCase()
+                                    .includes(searchTerm.toLowerCase())
+                            })
+                            .map((guild) => (
+                                <GuildListItem key={guild.id} guild={guild} />
+                            ))}
+                    </ul>
+                )}
             </div>
         </div>
     )
