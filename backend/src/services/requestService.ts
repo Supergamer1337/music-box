@@ -68,11 +68,39 @@ export const getRequest = async (
 }
 
 /**
+ * Makes a request to the specified Discord API endpoint.
+ * @param endpoint The Discord API endpoint to request.
+ * @param headers The headers to send.
+ * @param accessToken The Discord access token to use.
+ * @returns The response data.
+ */
+export const discordGetRequest = async (
+    endpoint: string,
+    accessToken: string,
+    headers?: Record<string, string>
+) => {
+    return await request(
+        `https://discord.com/api/v10${endpoint}`,
+        'GET',
+        undefined,
+        {
+            Authorization: `Bearer ${accessToken}`,
+            ...headers
+        }
+    )
+}
+
+/**
  * Handles a request error.
  * @param errorResponse The error response.
+ * @param functionName The name of the function that caused the error.
  * @throws Formatted error message.
  */
-export const handleRequestError = async (errorResponse: any) => {
+export const handleRequestError = async (
+    errorResponse: any,
+    functionName: string
+) => {
+    console.error('Request error occurred in function:', functionName)
     throw new Error(
         `${errorResponse.status} ${
             errorResponse.statusText

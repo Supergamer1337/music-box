@@ -10,7 +10,7 @@ export const getDiscordUserGuilds = async (access_token: string) => {
             }
         )) as RESTGetAPICurrentUserGuildsResult
     } catch (errorResponse: any) {
-        handleRequestError(errorResponse)
+        handleRequestError(errorResponse, 'getDiscordUserGuilds')
     }
 }
 
@@ -26,6 +26,6 @@ export const getDiscordGuild = async (
             }
         )
     } catch (errorResponse: any) {
-        handleRequestError(errorResponse)
+        handleRequestError(errorResponse, 'getDiscordGuild')
     }
 }

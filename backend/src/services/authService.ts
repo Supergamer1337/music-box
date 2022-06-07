@@ -4,8 +4,8 @@ import {
     RESTPostOAuth2AccessTokenResult
 } from 'discord-api-types/v10'
 import {
+    discordGetRequest,
     formDataPostRequest,
-    getRequest,
     handleRequestError
 } from './requestService.js'
 
@@ -28,7 +28,7 @@ export const requestAccessToken = async (code: string) => {
             }
         )) as RESTPostOAuth2AccessTokenResult
     } catch (errorResponse: any) {
-        handleRequestError(errorResponse)
+        handleRequestError(errorResponse, 'requestAccessToken')
     }
 }
 
@@ -39,11 +39,9 @@ export const requestAccessToken = async (code: string) => {
  */
 export const getDiscordUserData = async (accessToken: string) => {
     try {
-        return (await getRequest('https://discord.com/api/v10/users/@me', {
-            Authorization: `Bearer ${accessToken}`
-        })) as APIUser
+        return (await discordGetRequest('/users/@me', accessToken)) as APIUser
     } catch (errorResponse: any) {
-        handleRequestError(errorResponse)
+        handleRequestError(errorResponse, 'getDiscordUserData')
     }
 }
 
@@ -55,15 +53,13 @@ export const getDiscordUserData = async (accessToken: string) => {
  */
 export const discordTokenValid = async (accessToken: string) => {
     try {
-        const authorizationData = (await getRequest(
-            'https://discord.com/api/v10/oauth2/@me',
-            {
-                Authorization: `Bearer ${accessToken}`
-            }
+        const authorizationData = (await discordGetRequest(
+            '/oauth2/@me',
+            accessToken
         )) as RESTGetAPIOAuth2CurrentAuthorizationResult
 
         return authorizationData.expires > new Date().toISOString()
     } catch (errorResponse: any) {
-        handleRequestError(errorResponse)
+        handleRequestError(errorResponse, 'discordTokenValid')
     }
 }
