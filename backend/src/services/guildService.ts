@@ -23,16 +23,15 @@ export const getDiscordUserGuilds = async (accessToken: string) => {
 /**
  * Gets guild data from Discord for the given guild ID.
  * @param guildId The guild ID.
- * @param accessToken The user's Discord access token.
  * @returns The guild data.
  * @throws An error if the request failed.
  */
-export const getDiscordGuild = async (guildId: string, accessToken: string) => {
+export const getDiscordGuild = async (guildId: string) => {
     try {
         return await getRequest(
             'https://discord.com/api/v10/guilds/' + guildId,
             {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bot ${process.env.BOT_TOKEN}`
             }
         )
     } catch (errorResponse: any) {

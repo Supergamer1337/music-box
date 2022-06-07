@@ -37,11 +37,7 @@ guildRouter.get('/:guildId', async (req, res) => {
     try {
         const guildId = req.params.guildId
 
-        const guild = await getDiscordGuild(
-            guildId,
-            // @ts-expect-error Taken care of by middleware
-            req.session.discordTokenData.access_token
-        )
+        const guild = await getDiscordGuild(guildId)
 
         res.status(200).json(guild)
     } catch (error) {

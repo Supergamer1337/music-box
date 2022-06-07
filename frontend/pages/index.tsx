@@ -8,6 +8,7 @@ import GuildListItem from '../components/GuildListItem'
 import GuildListObject from '../types/GuildListObject'
 import { useState } from 'react'
 import Header from '../components/Header'
+import { MINUTE } from '../constants/time'
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     const queryClient = new QueryClient()
@@ -46,7 +47,7 @@ const sortGuilds = (a: GuildListObject, b: GuildListObject) => {
 const Home: NextPage = () => {
     const user = useUser()
     const { data, error } = useQuery('guilds', clientGetGuilds, {
-        staleTime: 1000 * 60 * 1
+        staleTime: 1 * MINUTE
     })
 
     const [searchTerm, setSearchTerm] = useState('')

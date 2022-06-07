@@ -35,8 +35,24 @@ export const clientGetGuilds = async () => {
  * @returns The guild data.
  * @throws An error if the request failed.
  */
-export const serverGetGuildData = async (req: NextIncomingMessage) => {
-    const guild = await serverBackendGetRequest(req, '/api/v1/guilds/:id')
+export const serverGetGuildData = async (
+    req: NextIncomingMessage,
+    guildId: string
+) => {
+    const guild = await serverBackendGetRequest(
+        req,
+        `/api/v1/guilds/${guildId}`
+    )
+
+    if (!guild.ok) {
+        throw new Error('Failed to get server')
+    }
+
+    return (await guild.json()) as APIGuild
+}
+
+export const clientGetGuildData = async (guildId: string) => {
+    const guild = await clientBackendGetRequest(`/api/v1/guilds/${guildId}`)
 
     if (!guild.ok) {
         throw new Error('Failed to get server')
