@@ -3,7 +3,8 @@ import {
     clientBackendGetRequest,
     serverBackendGetRequest
 } from './requestService'
-import BackendGuildData from './../types/BackendGuildData.d'
+import GuildListObject from '../types/GuildListObject'
+import { APIGuild } from 'discord-api-types/v10'
 
 export const serverGetGuilds = async (req: NextIncomingMessage) => {
     const guilds = await serverBackendGetRequest(req, '/api/v1/guilds')
@@ -24,7 +25,7 @@ export const serverGetGuildData = async (req: NextIncomingMessage) => {
         throw new Error('Failed to get server')
     }
 
-    return (await guild.json()) as BackendGuildExtendedData
+    return (await guild.json()) as APIGuild
 }
 
 const handleGuildRequest = async (servers: Response) => {
@@ -32,5 +33,5 @@ const handleGuildRequest = async (servers: Response) => {
         throw new Error('Failed to get servers')
     }
 
-    return (await servers.json()) as BackendGuildData[]
+    return (await servers.json()) as GuildListObject[]
 }

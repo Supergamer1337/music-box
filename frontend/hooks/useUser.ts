@@ -2,13 +2,10 @@ import router from 'next/router'
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { clientGetUserData } from '../services/authenticationService'
-import BackendUserData from '../types/BackendUserData'
+import { APIUser } from 'discord-api-types/v10'
 
 export default function useUser() {
-    const { data, error } = useQuery<BackendUserData, Error>(
-        'user',
-        clientGetUserData
-    )
+    const { data, error } = useQuery<APIUser, Error>('user', clientGetUserData)
 
     useEffect(() => {
         if (error) {
@@ -16,5 +13,5 @@ export default function useUser() {
         }
     }, [error])
 
-    return data as BackendUserData
+    return data as APIUser
 }

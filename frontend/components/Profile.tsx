@@ -1,13 +1,13 @@
 import React, { createRef, useState } from 'react'
-import BackendUserData from './../types/BackendUserData.d'
 import Image from 'next/image'
 import LogoutSVG from '../svg/LogoutSVG'
 import { AnimatePresence, motion } from 'framer-motion'
 import { logout } from '../services/authenticationService'
 import useOutsideDetection from './useOutsideDetection'
+import { APIUser } from 'discord-api-types/v10'
 
 type Props = {
-    user: BackendUserData
+    user: APIUser
 }
 
 const Profile = ({ user }: Props) => {

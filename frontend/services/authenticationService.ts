@@ -1,11 +1,11 @@
 import { NextIncomingMessage } from 'next/dist/server/request-meta'
-import BackendUserData from '../types/BackendUserData'
 import {
     clientBackendGetRequest,
     clientBackendPostRequest,
     serverBackendGetRequest
 } from './requestService'
 import router from 'next/router'
+import { APIUser } from 'discord-api-types/v10'
 
 /**
  * Gets the user data from the backend, if the user is logged in. As the Next.js server.
@@ -23,7 +23,7 @@ export const serverGetUserData = async (req: NextIncomingMessage) => {
         return undefined
     }
 
-    return (await userData.json()) as BackendUserData
+    return (await userData.json()) as APIUser
 }
 
 /**
@@ -38,7 +38,7 @@ export const clientGetUserData = async () => {
         throw new Error('User not authenticated')
     }
 
-    return (await user.json()) as BackendUserData
+    return (await user.json()) as APIUser
 }
 
 /**

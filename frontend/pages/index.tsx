@@ -5,7 +5,7 @@ import useUser from '../hooks/useUser'
 import { clientGetGuilds, serverGetGuilds } from './../services/guildsService'
 import Profile from '../components/Profile'
 import GuildListItem from '../components/GuildListItem'
-import BackendGuildData from './../types/BackendGuildData.d'
+import GuildListObject from '../types/GuildListObject'
 import { useState } from 'react'
 import Header from '../components/Header'
 
@@ -33,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     }
 }
 
-const sortGuilds = (a: BackendGuildData, b: BackendGuildData) => {
+const sortGuilds = (a: GuildListObject, b: GuildListObject) => {
     if (a.botInServer && !b.botInServer) {
         return -1
     } else if (!a.botInServer && b.botInServer) {

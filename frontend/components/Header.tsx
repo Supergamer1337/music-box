@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import React from 'react'
-import BackendUserData from '../types/BackendUserData'
 import Profile from './Profile'
+import { APIUser } from 'discord-api-types/v10'
 
 type Props = {
-    user: BackendUserData
+    user: APIUser
     pageName: string
     guildName?: string
 }

@@ -1,12 +1,12 @@
 import React from 'react'
-import BackendGuildData from './../types/BackendGuildData.d'
+import GuildListObject from '../types/GuildListObject'
 import Image from 'next/image'
 import CheckMarkIconSVG from '../svg/CheckMarkIconSVG'
 import Tooltip from './Tooltip'
 import Link from 'next/link'
 
 type Props = {
-    guild: BackendGuildData
+    guild: GuildListObject
 }
 
 const GuildListItem = ({ guild }: Props) => {
