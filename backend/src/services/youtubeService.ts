@@ -14,10 +14,10 @@ export const searchForYoutubeVideos = async (
     searchTerm: string,
     nrResults: number
 ) => {
-    const ytSerachResult = await (
+    const ytSearchResult = await (
         await yt.search(searchTerm)
     ).slice(0, nrResults)
-    const videos = ytSearchToYtVideos(ytSerachResult)
+    const videos = ytSearchToYtVideos(ytSearchResult)
     return videos
 }
 
