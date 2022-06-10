@@ -24,10 +24,7 @@ const MobileSearchComponent = ({}: Props) => {
         ['ytSearch', searchTerm],
         () => ytSearch(searchTerm),
         {
-            enabled: false,
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            refetchOnReconnect: false
+            enabled: false
         }
     )
 

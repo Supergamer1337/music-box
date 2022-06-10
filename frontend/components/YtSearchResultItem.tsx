@@ -19,7 +19,7 @@ const YtSearchResultItem = ({ video }: Props) => {
                     objectFit="cover"
                     className="rounded-md"
                 />
-                <p className="absolute bg-emptyBg bottom-1 right-1 p-1 text-sm rounded-md">
+                <p className="absolute bg-emptyBg bottom-1 right-1 px-[4px] pt-[2px] text-sm rounded-md border-[1px] border-discordBorder">
                     {video.duration}
                 </p>
             </div>
