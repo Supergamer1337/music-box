@@ -3,6 +3,7 @@ import Overlay from './Overlay'
 import YtVideo from './../../backend/src/types/YtVideo.d'
 import { ytSearch } from './../services/searchService'
 import YtSearchResultItem from './YtSearchResultItem'
+import { AnimatePresence, motion } from 'framer-motion'
 
 interface Props {}
 
@@ -43,12 +44,24 @@ const MobileSearchComponent = ({}: Props) => {
                     placeholder="Search Youtube... (or paste url)"
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <div className="bg-primaryBg p-2 rounded-b-md flex flex-col gap-2">
-                    {results &&
-                        results.map((video) => (
-                            <YtSearchResultItem key={video.id} video={video} />
-                        ))}
-                </div>
+                <AnimatePresence>
+                    {searchTerm && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="bg-primaryBg p-2 rounded-b-md flex flex-col gap-2"
+                        >
+                            {results &&
+                                results.map((video) => (
+                                    <YtSearchResultItem
+                                        key={video.id}
+                                        video={video}
+                                    />
+                                ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
 
             <Overlay active={searchTerm ? true : false} />
