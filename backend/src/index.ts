@@ -7,6 +7,7 @@ import guildRouter from './routers/guildRouter.js'
 import cors from 'cors'
 import { setupSessions } from './setup.js'
 import isAuthenticated from './middleware/isAuthenticated.js'
+import searchRouter from './routers/searchRouter.js'
 
 // Load environment variables
 config()
@@ -29,6 +30,7 @@ app.use(express.json())
 app.use('/api/v1/', playbackRouter)
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/guilds', isAuthenticated, guildRouter)
+app.use('/api/v1/search', searchRouter)
 
 if (!process.env.BACKEND_PORT) throw new Error('No backend port defined!')
 app.listen(process.env.BACKEND_PORT, () => {
