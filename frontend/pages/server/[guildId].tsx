@@ -10,6 +10,7 @@ import {
     serverGetGuildData
 } from '../../services/guildsService'
 import { MINUTE } from '../../constants/time'
+import BottomNavBar from '../../components/BottomNavBar'
 
 export const getServerSideProps: GetServerSideProps = async ({
     req,
@@ -60,6 +61,8 @@ const GuildPage: NextPage = () => {
                 pageName="Saved Playlists"
                 guildName={error ? 'Unknown server' : guildData?.name}
             />
+
+            <BottomNavBar />
         </>
     )
 }
