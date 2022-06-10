@@ -10,11 +10,14 @@ import { NextIncomingMessage } from 'next/dist/server/request-meta'
 export const serverBackendGetRequest = async (
     req: NextIncomingMessage,
     endpoint: string,
+    param: string = '',
     query: string = '',
     headers?: HeadersInit
 ) => {
     return await fetch(
-        `${process.env.BACKEND_ADDRESS}${endpoint}${query ? `?${query}}` : ''}`,
+        `${process.env.BACKEND_ADDRESS}${endpoint}${
+            param ? encodeURIComponent(param) : ''
+        }${query ? `?${query}}` : ''}`,
         {
             method: 'GET',
             headers: {
@@ -39,9 +42,9 @@ export const clientBackendGetRequest = async (
     headers = {}
 ) => {
     return await fetch(
-        `${process.env.BACKEND_ADDRESS}${endpoint}${param ? param : ''}${
-            query ? `?${query}}` : ''
-        }`,
+        `${process.env.BACKEND_ADDRESS}${endpoint}${
+            param ? encodeURIComponent(param) : ''
+        }${query ? `?${query}}` : ''}`,
         {
             method: 'GET',
             credentials: 'include',
