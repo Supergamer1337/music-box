@@ -4,31 +4,39 @@ import YtVideo from './../../backend/src/types/YtVideo.d'
 import { ytSearch } from './../services/searchService'
 import YtSearchResultItem from './YtSearchResultItem'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useQuery } from 'react-query'
+import LoadingSpinnerSVG from '../svg/LoadingSpinnerSVG'
 
 interface Props {}
 
 const MobileSearchComponent = ({}: Props) => {
     const [searchTerm, setSearchTerm] = useState('')
-    const [results, setResults] = useState<YtVideo[]>([])
+    const [searchTimer, setSearchTimer] = useState<
+        ReturnType<typeof setTimeout> | undefined
+    >(undefined)
 
-    const handleSearch = async (
-        searchTerm: string,
-        setSearchResults: typeof setResults
-    ) => {
-        console.log('Handling search')
-        if (!searchTerm) return
-
-        try {
-            const results = await ytSearch(searchTerm)
-            console.log(results)
-            setSearchResults(results)
-        } catch (error) {
-            console.error(error)
+    const {
+        data: searchResults,
+        isLoading,
+        error,
+        refetch
+    } = useQuery<YtVideo[]>(
+        ['ytSearch', searchTerm],
+        () => ytSearch(searchTerm),
+        {
+            enabled: false,
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: false
         }
-    }
+    )
 
     useEffect(() => {
-        handleSearch(searchTerm, setResults)
+        if (searchTerm === '') return // Prevents initial fetch
+        if (searchTimer) {
+            clearTimeout(searchTimer)
+        }
+        setSearchTimer(setTimeout(() => refetch(), 250))
     }, [searchTerm])
 
     return (
@@ -52,8 +60,11 @@ const MobileSearchComponent = ({}: Props) => {
                             exit={{ opacity: 0 }}
                             className="bg-primaryBg p-2 rounded-b-md flex flex-col gap-2"
                         >
-                            {results &&
-                                results.map((video) => (
+                            {!searchResults && (
+                                <LoadingSpinnerSVG className="animate-spin w-12 h-12 mx-auto my-2" />
+                            )}
+                            {searchResults &&
+                                searchResults.map((video) => (
                                     <YtSearchResultItem
                                         key={video.id}
                                         video={video}
