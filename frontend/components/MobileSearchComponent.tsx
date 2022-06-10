@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Overlay from './Overlay'
 import YtVideo from './../../backend/src/types/YtVideo.d'
 import { ytSearch } from './../services/searchService'
+import YtSearchResultItem from './YtSearchResultItem'
 
 interface Props {}
 
@@ -42,10 +43,10 @@ const MobileSearchComponent = ({}: Props) => {
                     placeholder="Search Youtube... (or paste url)"
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <div className="bg-primaryBg p-2 rounded-b-md">
+                <div className="bg-primaryBg p-2 rounded-b-md flex flex-col gap-2">
                     {results &&
                         results.map((video) => (
-                            <div key={video.id}>{video.title}</div>
+                            <YtSearchResultItem key={video.id} video={video} />
                         ))}
                 </div>
             </div>

@@ -6,7 +6,7 @@ const nextConfig = {
         REDIRECT_ADDRESS: process.env.REDIRECT_ADDRESS
     },
     images: {
-        domains: ['cdn.discordapp.com']
+        domains: ['cdn.discordapp.com', 'i.ytimg.com']
     }
 }
 
