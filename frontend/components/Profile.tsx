@@ -47,7 +47,7 @@ const Profile = ({ user }: Props) => {
                         initial={{ opacity: 0, top: '120%' }}
                         animate={{ opacity: 1, top: '100%' }}
                         exit={{ opacity: 0 }}
-                        className="absolute bg-emptyBg p-2 z-20 right-0 mr-4 min-w-[15rem] w-fit rounded-md shadow-lg border-discordBorder border-[1px] sm:bg-primaryBg sm:mt-2 sm:p-1"
+                        className="absolute bg-emptyBg p-2 z-[200] right-0 mr-4 min-w-[15rem] w-fit rounded-md shadow-lg border-discordBorder border-[1px] sm:bg-primaryBg sm:mt-2 sm:p-1"
                     >
                         <h4 className="text-center text-lg font-semibold sm:hidden">
                             <div></div>
