@@ -10,16 +10,20 @@ import { NextIncomingMessage } from 'next/dist/server/request-meta'
 export const serverBackendGetRequest = async (
     req: NextIncomingMessage,
     endpoint: string,
+    query: string = '',
     headers?: HeadersInit
 ) => {
-    return await fetch(`${process.env.BACKEND_ADDRESS}${endpoint}`, {
-        method: 'GET',
-        headers: {
-            ...headers,
-            // @ts-ignore
-            Cookie: req.headers.cookie
+    return await fetch(
+        `${process.env.BACKEND_ADDRESS}${endpoint}${query ? `?${query}}` : ''}`,
+        {
+            method: 'GET',
+            headers: {
+                ...headers,
+                // @ts-ignore
+                Cookie: req.headers.cookie
+            }
         }
-    })
+    )
 }
 
 /**
@@ -30,13 +34,20 @@ export const serverBackendGetRequest = async (
  */
 export const clientBackendGetRequest = async (
     endpoint: string,
+    param: string = '',
+    query: string = '',
     headers = {}
 ) => {
-    return await fetch(`${process.env.BACKEND_ADDRESS}${endpoint}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers
-    })
+    return await fetch(
+        `${process.env.BACKEND_ADDRESS}${endpoint}${param ? param : ''}${
+            query ? `?${query}}` : ''
+        }`,
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers
+        }
+    )
 }
 
 /**
