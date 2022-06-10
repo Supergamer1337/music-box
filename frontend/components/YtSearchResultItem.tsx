@@ -1,6 +1,8 @@
 import React from 'react'
 import YtVideo from '../types/YtVideo'
 import Image from 'next/image'
+import PlayIconSVG from '../svg/PlayIconSVG'
+import AddToPlaylistIconSVG from './../svg/AddToPlaylistIconSVG'
 
 interface Props {
     video: YtVideo
@@ -21,8 +23,14 @@ const YtSearchResultItem = ({ video }: Props) => {
                     {video.duration}
                 </p>
             </div>
-            <div>
-                <p className="line-clamp-2 max-h-[3rem]">{video.title}</p>
+            <div className="grid grid-flow-row grid-rows-[max-content,min-content]">
+                <p className="line-clamp-2 h-[3rem] font-semibold">
+                    {video.title}
+                </p>
+                <div className="flex flex-row gap-4 items-center mt-3">
+                    <PlayIconSVG className="w-5 h-5 cursor-pointer hover:opacity-75 transition-opacity" />
+                    <AddToPlaylistIconSVG className="w-8 h-4 cursor-pointer hover:opacity-75 transition-opacity" />
+                </div>
             </div>
         </div>
     )
