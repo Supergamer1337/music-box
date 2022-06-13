@@ -1,5 +1,8 @@
 import { RequestHandler } from 'express'
-import { discordTokenValid } from './../services/authService.js'
+import {
+    discordTokenValid,
+    getDiscordUserData
+} from './../services/authService.js'
 
 /**
  * Checks if the current request is authenticated.
@@ -16,7 +19,19 @@ const isAuthenticated: RequestHandler = async (req, res, next) => {
         if (
             await discordTokenValid(req.session.discordTokenData.access_token)
         ) {
-            next()
+            try {
+                const user = await getDiscordUserData(
+                    req.session.discordTokenData.access_token
+                )
+                req.user = user
+                next()
+            } catch (error) {
+                console.error(error)
+
+                return res
+                    .status(500)
+                    .json({ error: 'Failed to get user data from Discord' })
+            }
         } else {
             return res.status(401).json({ error: 'You are not authenticated' })
         }
