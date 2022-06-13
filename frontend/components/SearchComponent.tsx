@@ -65,16 +65,24 @@ const SearchComponent = ({}: Props) => {
                             exit={{ opacity: 0 }}
                             className="bg-primaryBg p-2 rounded-b-md flex flex-col gap-2"
                         >
-                            {!searchResults && (
+                            {!searchResults && !error ? (
                                 <LoadingSpinnerSVG className="animate-spin w-12 h-12 mx-auto my-2" />
-                            )}
-                            {searchResults &&
+                            ) : error ? (
+                                !searchResults && (
+                                    <div className="text-center bg-red-600 mx-4 rounded-md">
+                                        A problem occurred while getting youtube
+                                        videos. Try again later.
+                                    </div>
+                                )
+                            ) : (
+                                searchResults &&
                                 searchResults.map((video) => (
                                     <YtSearchResultItem
                                         key={video.id}
                                         video={video}
                                     />
-                                ))}
+                                ))
+                            )}
                         </motion.div>
                     )}
                 </AnimatePresence>
