@@ -1,10 +1,11 @@
 import { Router } from 'express'
 import { validGuildPermissions } from './../services/validationService.js'
+import { createPlaylist } from './../services/playlistService.js'
 
 const playlistRouter = Router()
 
+// Handle POST requests to /api/v1/playlists/create
 playlistRouter.post('/create', async (req, res) => {
-    const { id: userId } = req.user
     const { name, guildId } = req.body
 
     // Check if name and guildId were provided
@@ -32,8 +33,17 @@ playlistRouter.post('/create', async (req, res) => {
                 error: 'You do not have the correct rights for this guild.'
             })
 
-        res.status(200).json({ message: 'Created playlist' })
-    } catch (error) {}
+        // Create the playlist
+        const playlist = await createPlaylist(name, guildId)
+
+        res.status(200).json({ playlist })
+    } catch (error) {
+        console.error(error)
+
+        res.status(500).json({
+            error: 'Failed to create playlist'
+        })
+    }
 })
 
 export default playlistRouter
