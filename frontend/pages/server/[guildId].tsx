@@ -11,7 +11,7 @@ import {
 } from '../../services/guildsService'
 import { MINUTE } from '../../constants/time'
 import BottomNavBar from '../../components/BottomNavBar'
-import MobileSearchComponent from '../../components/MobileSearchComponent'
+import SearchComponent from '../../components/SearchComponent'
 
 export const getServerSideProps: GetServerSideProps = async ({
     req,
@@ -64,7 +64,7 @@ const GuildPage: NextPage = () => {
             />
 
             <div>
-                <MobileSearchComponent />
+                <SearchComponent />
             </div>
 
             <BottomNavBar />

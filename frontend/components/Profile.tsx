@@ -3,7 +3,7 @@ import Image from 'next/image'
 import LogoutSVG from '../svg/LogoutSVG'
 import { AnimatePresence, motion } from 'framer-motion'
 import { logout } from '../services/authenticationService'
-import useOutsideDetection from './useOutsideDetection'
+import useOutsideDetection from '../hooks/useOutsideDetection'
 import { APIUser } from 'discord-api-types/v10'
 
 type Props = {
