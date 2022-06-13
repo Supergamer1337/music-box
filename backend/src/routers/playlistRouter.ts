@@ -1,8 +1,46 @@
 import { Router } from 'express'
 import { validGuildPermissions } from './../services/validationService.js'
-import { createPlaylist } from './../services/playlistService.js'
+import {
+    createPlaylist,
+    getGuildPlaylists
+} from './../services/playlistService.js'
 
 const playlistRouter = Router()
+
+// Handles GET requests to /api/v1/playlists/guild/:guildId
+playlistRouter.get('/guild/:guildId', async (req, res) => {
+    const guildId = req.params.guildId
+    if (
+        !validGuildPermissions(
+            // @ts-expect-error Fixed by middleware
+            req.session.discordTokenData?.access_token,
+            guildId
+        )
+    )
+        return res
+            .status(403)
+            .send('You do not have permission to access this guild.')
+
+    try {
+        let playlists = await getGuildPlaylists(guildId)
+
+        // @ts-expect-error Mapped for response
+        playlists = playlists.map((playlist) => {
+            return {
+                ...playlist,
+                guildId: undefined
+            }
+        })
+
+        res.status(200).json({ playlists })
+    } catch (error) {
+        console.error(error)
+
+        res.status(500).json({
+            error: 'Error occurred while fetching playlists.'
+        })
+    }
+})
 
 // Handle POST requests to /api/v1/playlists/create
 playlistRouter.post('/create', async (req, res) => {
@@ -24,7 +62,7 @@ playlistRouter.post('/create', async (req, res) => {
         // Check that the user has the correct rights for the guild
         if (
             !(await validGuildPermissions(
-                // @ts-ignore
+                // @ts-expect-error Fixed by middleware
                 req.session.discordTokenData.access_token,
                 guildId
             ))

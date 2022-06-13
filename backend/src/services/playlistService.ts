@@ -16,3 +16,18 @@ export const createPlaylist = async (name: string, guildId: string) => {
         }
     })
 }
+
+/**
+ * Gets all playlists for a guild.
+ *
+ * @param guildId The ID of the guild.
+ * @returns The playlists for the guild.
+ * @throws An error if the playlists could not be fetched.
+ */
+export const getGuildPlaylists = async (guildId: string) => {
+    return await prisma.playlist.findMany({
+        where: {
+            guildId
+        }
+    })
+}
