@@ -7,6 +7,7 @@ import authRouter from './routers/authRouter.js'
 import isAuthenticated from './middleware/isAuthenticated.js'
 import guildRouter from './routers/guildRouter.js'
 import searchRouter from './routers/searchRouter.js'
+import playlistRouter from './routers/playlistRouter.js'
 
 /**
  * Setup redis for sessions
@@ -60,4 +61,5 @@ export const setupRoutes = (app: Express) => {
     app.use('/api/v1/auth', authRouter)
     app.use('/api/v1/guilds', isAuthenticated, guildRouter)
     app.use('/api/v1/search', isAuthenticated, searchRouter)
+    app.use('/api/v1/playlists', isAuthenticated, playlistRouter)
 }
