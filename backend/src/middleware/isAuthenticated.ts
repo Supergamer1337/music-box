@@ -20,10 +20,10 @@ const isAuthenticated: RequestHandler = async (req, res, next) => {
             await discordTokenValid(req.session.discordTokenData.access_token)
         ) {
             try {
-                const user = await getDiscordUserData(
-                    req.session.discordTokenData.access_token
-                )
-                req.user = user
+                // const user = await getDiscordUserData(
+                //     req.session.discordTokenData.access_token
+                // )
+                // req.user = user
                 next()
             } catch (error) {
                 console.error(error)
