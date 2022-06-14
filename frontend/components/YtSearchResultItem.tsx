@@ -3,8 +3,7 @@ import YtVideo from '../types/YtVideo'
 import Image from 'next/image'
 import PlayIconSVG from '../svg/PlayIconSVG'
 import AddToPlaylistIconSVG from './../svg/AddToPlaylistIconSVG'
-import SearchComponent from './SearchComponent'
-import AddPlaylist from './AddPlaylist'
+import AddToPlaylist from './AddToPlaylist'
 
 interface Props {
     video: YtVideo
@@ -43,7 +42,7 @@ const YtSearchResultItem = ({ video }: Props) => {
             </div>
 
             {showAddPlaylist && (
-                <AddPlaylist hideFunction={() => setShowAddPlaylist(false)} />
+                <AddToPlaylist hideFunction={() => setShowAddPlaylist(false)} />
             )}
         </>
     )
