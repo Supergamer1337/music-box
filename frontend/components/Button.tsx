@@ -9,7 +9,7 @@ interface Props {
 const commonStyling =
     'px-4 py-2 text-lg hover:opacity-75 transition-opacity cursor-pointer disabled:cursor-default disabled:opacity-25 rounded-md'
 
-const Button = ({ type = 'secondary', disabled = false, label }: Props) => {
+const Button = ({ type = 'primary', disabled = false, label }: Props) => {
     switch (type) {
         case 'primary':
             return (
