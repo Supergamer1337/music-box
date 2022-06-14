@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from 'framer-motion'
 import React, { useState } from 'react'
 import BackArrowIconSVG from '../svg/BackArrowIconSVG'
 import Button from './Button'
@@ -12,7 +13,13 @@ const AddToPlaylist = ({ hideFunction }: Props) => {
     const [playlistName, setPlaylistName] = useState('')
 
     return (
-        <div className="fixed top-0 left-0 w-full h-full bg-primaryBg z-[101]">
+        <motion.div
+            initial={{ x: '-100vw' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100vw' }}
+            transition={{ bounce: 0 }}
+            className="fixed top-0 left-0 w-full h-full bg-primaryBg z-[101]"
+        >
             <div className="p-4 flex">
                 <BackArrowIconSVG
                     onClick={hideFunction}
@@ -61,7 +68,7 @@ const AddToPlaylist = ({ hideFunction }: Props) => {
                     </div>
                 </div>
             </Dialog>
-        </div>
+        </motion.div>
     )
 }
 

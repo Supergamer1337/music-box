@@ -4,6 +4,7 @@ import Image from 'next/image'
 import PlayIconSVG from '../svg/PlayIconSVG'
 import AddToPlaylistIconSVG from './../svg/AddToPlaylistIconSVG'
 import AddToPlaylist from './AddToPlaylist'
+import { AnimatePresence } from 'framer-motion'
 
 interface Props {
     video: YtVideo
@@ -41,9 +42,13 @@ const YtSearchResultItem = ({ video }: Props) => {
                 </div>
             </div>
 
-            {showAddPlaylist && (
-                <AddToPlaylist hideFunction={() => setShowAddPlaylist(false)} />
-            )}
+            <AnimatePresence>
+                {showAddPlaylist && (
+                    <AddToPlaylist
+                        hideFunction={() => setShowAddPlaylist(false)}
+                    />
+                )}
+            </AnimatePresence>
         </>
     )
 }
