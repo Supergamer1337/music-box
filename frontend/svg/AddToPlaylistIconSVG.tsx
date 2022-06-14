@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { MouseEventHandler } from 'react'
 
 interface Props {
     className?: string
+    onClick?: MouseEventHandler<HTMLDivElement>
 }
 
-const AddToPlaylistIconSVG = ({ className }: Props) => {
+const AddToPlaylistIconSVG = ({ className, onClick }: Props) => {
     return (
-        <div className={className}>
+        <div onClick={onClick} className={className}>
             <svg
                 viewBox="0 0 34 25"
                 fill="currentColor"
