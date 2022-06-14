@@ -1,12 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import BackArrowIconSVG from '../svg/BackArrowIconSVG'
 import Button from './Button'
+import Dialog from './Dialog'
 
 interface Props {
     hideFunction: () => void
 }
 
 const AddToPlaylist = ({ hideFunction }: Props) => {
+    const [showDialog, setShowDialog] = useState(false)
+    const [playlistName, setPlaylistName] = useState('')
+
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-primaryBg z-[101]">
             <div className="p-4 flex">
@@ -19,7 +23,10 @@ const AddToPlaylist = ({ hideFunction }: Props) => {
                 </h2>
             </div>
             <div className="text-center mt-4">
-                <Button label="New Playlist" />
+                <Button
+                    label="New Playlist"
+                    onClick={() => setShowDialog(true)}
+                />
             </div>
 
             <input
@@ -27,6 +34,33 @@ const AddToPlaylist = ({ hideFunction }: Props) => {
                 className="w-4/5 block mx-auto mt-10 bg-emptyBg rounded-md py-1 px-2 outline-none outline-0 focus:outline-2 outline-accent"
                 placeholder="Filter Playlists..."
             />
+
+            <Dialog
+                active={showDialog}
+                hideFunction={() => setShowDialog(false)}
+            >
+                <div className="w-[80vw]">
+                    <p className="text-center">Give your playlist a name.</p>
+                    <input
+                        type="text"
+                        className="w-11/12 mx-auto block bg-emptyBg mt-2 rounded-md py-1 px-2 outline-none outline-0 focus:outline-2 outline-accent"
+                        placeholder="Playlist Name..."
+                        onChange={(e) => setPlaylistName(e.target.value)}
+                    />
+                    <div className="flex gap-4 justify-center flex-wrap mt-4">
+                        <Button
+                            type="secondary"
+                            label="Cancel"
+                            onClick={() => setShowDialog(false)}
+                        />
+                        <Button
+                            type="primary"
+                            label="Create"
+                            disabled={!playlistName ? true : false}
+                        />
+                    </div>
+                </div>
+            </Dialog>
         </div>
     )
 }

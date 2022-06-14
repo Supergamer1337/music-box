@@ -4,16 +4,23 @@ interface Props {
     type?: 'primary' | 'secondary'
     disabled?: boolean
     label: string
+    onClick?: () => void
 }
 
 const commonStyling =
     'px-4 py-2 text-lg hover:opacity-75 transition-opacity cursor-pointer disabled:cursor-default disabled:opacity-25 rounded-md'
 
-const Button = ({ type = 'primary', disabled = false, label }: Props) => {
+const Button = ({
+    type = 'primary',
+    disabled = false,
+    label,
+    onClick = () => {}
+}: Props) => {
     switch (type) {
         case 'primary':
             return (
                 <button
+                    onClick={onClick}
                     className={`${commonStyling} bg-accent font-semibold`}
                     disabled={disabled}
                 >
@@ -23,6 +30,7 @@ const Button = ({ type = 'primary', disabled = false, label }: Props) => {
         case 'secondary':
             return (
                 <button
+                    onClick={onClick}
                     className={`${commonStyling} bg-secondaryAccent`}
                     disabled={disabled}
                 >
