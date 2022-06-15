@@ -61,11 +61,32 @@ export const clientBackendGetRequest = async (
  */
 export const clientBackendPostRequest = async (
     endpoint: string,
+    body?: Record<string, any>,
     headers = {}
 ) => {
     return await fetch(`${process.env.BACKEND_ADDRESS}${endpoint}`, {
         method: 'POST',
         credentials: 'include',
-        headers
+        headers,
+        body: JSON.stringify(body)
     })
+}
+
+/**
+ * Logs the error of the given response, and throws an error with the specified message.
+ *
+ * @param response The response object.
+ * @param errorMessage The message to throw.
+ * @throws The specified error message.
+ */
+export const handleInvalidRequest = async (
+    response: Response,
+    errorMessage: string
+) => {
+    console.error(
+        `Status: ${response.status}, ${
+            response.statusText
+        } with body:\n ${await response.text()}`
+    )
+    throw errorMessage
 }

@@ -3,6 +3,9 @@ import React, { useState } from 'react'
 import BackArrowIconSVG from '../svg/BackArrowIconSVG'
 import Button from './Button'
 import Dialog from './Dialog'
+import { useMutation } from 'react-query'
+import { addNewPlaylist } from './../services/playlistService'
+import { PlaylistInfo } from './../types/Playlist.d'
 
 interface Props {
     hideFunction: () => void
@@ -11,6 +14,10 @@ interface Props {
 const AddToPlaylist = ({ hideFunction }: Props) => {
     const [showDialog, setShowDialog] = useState(false)
     const [playlistName, setPlaylistName] = useState('')
+    const { mutate, isLoading, isError, error } = useMutation<
+        PlaylistInfo,
+        string
+    >(() => addNewPlaylist(playlistName))
 
     return (
         <motion.div
@@ -46,14 +53,22 @@ const AddToPlaylist = ({ hideFunction }: Props) => {
                 active={showDialog}
                 hideFunction={() => setShowDialog(false)}
             >
-                <div className="w-[80vw]">
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        mutate()
+                    }}
+                    className="w-[80vw]"
+                >
                     <p className="text-center">Give your playlist a name.</p>
                     <input
                         type="text"
                         className="w-11/12 mx-auto block bg-emptyBg mt-2 rounded-md py-1 px-2 outline-none outline-0 focus:outline-2 outline-accent"
                         placeholder="Playlist Name..."
+                        value={playlistName}
                         onChange={(e) => setPlaylistName(e.target.value)}
                     />
+
                     <div className="flex gap-4 justify-center flex-wrap mt-4">
                         <Button
                             type="secondary"
@@ -63,10 +78,23 @@ const AddToPlaylist = ({ hideFunction }: Props) => {
                         <Button
                             type="primary"
                             label="Create"
-                            disabled={!playlistName ? true : false}
+                            inputType="submit"
+                            disabled={!playlistName || isLoading ? true : false}
                         />
                     </div>
-                </div>
+                    {isError ? (
+                        <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="p-2 text-center bg-red-700 rounded-md mt-5 overflow-hidden"
+                        >
+                            {error}
+                        </motion.p>
+                    ) : (
+                        ''
+                    )}
+                </form>
             </Dialog>
         </motion.div>
     )

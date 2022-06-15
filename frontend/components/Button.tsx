@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { ButtonHTMLAttributes } from 'react'
 
 interface Props {
     type?: 'primary' | 'secondary'
+    inputType?: ButtonHTMLAttributes<HTMLButtonElement>['type']
     disabled?: boolean
     label: string
     onClick?: () => void
@@ -12,6 +13,7 @@ const commonStyling =
 
 const Button = ({
     type = 'primary',
+    inputType = 'button',
     disabled = false,
     label,
     onClick = () => {}
@@ -20,6 +22,7 @@ const Button = ({
         case 'primary':
             return (
                 <button
+                    type={inputType}
                     onClick={onClick}
                     className={`${commonStyling} bg-accent font-semibold`}
                     disabled={disabled}
@@ -30,6 +33,7 @@ const Button = ({
         case 'secondary':
             return (
                 <button
+                    type={inputType}
                     onClick={onClick}
                     className={`${commonStyling} bg-secondaryAccent`}
                     disabled={disabled}
