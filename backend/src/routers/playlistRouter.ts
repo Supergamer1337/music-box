@@ -10,18 +10,18 @@ const playlistRouter = Router()
 // Handles GET requests to /api/v1/playlists/guild/:guildId
 playlistRouter.get('/guild/:guildId', async (req, res) => {
     const guildId = req.params.guildId
-    if (
-        !validGuildPermissions(
-            // @ts-expect-error Fixed by middleware
-            req.session.discordTokenData?.access_token,
-            guildId
-        )
-    )
-        return res
-            .status(403)
-            .send('You do not have permission to access this guild.')
-
     try {
+        if (
+            !(await validGuildPermissions(
+                // @ts-expect-error Fixed by middleware
+                req.session.discordTokenData?.access_token,
+                guildId
+            ))
+        )
+            return res
+                .status(403)
+                .send('You do not have permission to access this guild.')
+
         let playlists = await getGuildPlaylists(guildId)
 
         // @ts-expect-error Mapped for response
