@@ -8,7 +8,9 @@ import { clientBackendGetRequest } from './requestService'
  * @throws An error if the request fails.
  */
 export const ytSearch = async (query: string) => {
-    const response = await clientBackendGetRequest('/api/v1/search/yt/', query)
+    const response = await clientBackendGetRequest(
+        `/api/v1/search/yt?query=${query}`
+    )
 
     if (!response.ok) {
         throw new Error('Failed to retrieve search results :(')

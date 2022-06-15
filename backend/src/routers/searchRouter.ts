@@ -7,7 +7,12 @@ const searchRouter = Router()
  * Search for videos on youtube. Optional query parameters:
  * - nrResults: The number of results to return.
  */
-searchRouter.get('/yt/:searchTerm', async (req, res) => {
+searchRouter.get('/yt', async (req, res) => {
+    const query = req.query.query as string | undefined
+
+    if (!query)
+        return res.status(400).json({ error: 'Missing query parameter.' })
+
     try {
         let nrResults = 3
         if (req.query.nrResults) {
@@ -21,8 +26,7 @@ searchRouter.get('/yt/:searchTerm', async (req, res) => {
             }
         }
 
-        const searchTerm = req.params.searchTerm
-        const videos = await searchForYoutubeVideos(searchTerm, nrResults)
+        const videos = await searchForYoutubeVideos(query, nrResults)
 
         res.status(200).json({ videos })
     } catch (error) {
