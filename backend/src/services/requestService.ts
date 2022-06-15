@@ -100,10 +100,20 @@ export const handleRequestError = async (
     errorResponse: any,
     functionName: string
 ) => {
-    console.error('Request error occurred in function:', functionName)
-    throw new Error(
-        `${errorResponse.status} ${
-            errorResponse.statusText
-        }. ${await errorResponse.text()}`
-    )
+    if (errorResponse.status === 429) {
+        throw {
+            rateLimited: true,
+            message: `Rate limit exceeded in ${functionName}`,
+            retry_after: Number.parseFloat(
+                errorResponse.headers.get('retry-after')
+            )
+        }
+    } else {
+        throw {
+            rateLimited: false,
+            message: `${errorResponse.status} ${
+                errorResponse.statusText
+            }. ${await errorResponse.text()}`
+        }
+    }
 }

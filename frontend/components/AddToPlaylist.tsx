@@ -3,9 +3,11 @@ import React, { useState } from 'react'
 import BackArrowIconSVG from '../svg/BackArrowIconSVG'
 import Button from './Button'
 import Dialog from './Dialog'
-import { useMutation } from 'react-query'
-import { addNewPlaylist } from './../services/playlistService'
+import { useMutation, useQuery } from 'react-query'
+import { addNewPlaylist, getPlaylists } from './../services/playlistService'
 import { PlaylistInfo } from './../types/Playlist.d'
+import { useRouter } from 'next/router'
+import LoadingSpinnerSVG from './../svg/LoadingSpinnerSVG'
 
 interface Props {
     hideFunction: () => void
@@ -14,10 +16,32 @@ interface Props {
 const AddToPlaylist = ({ hideFunction }: Props) => {
     const [showDialog, setShowDialog] = useState(false)
     const [playlistName, setPlaylistName] = useState('')
-    const { mutate, isLoading, isError, error } = useMutation<
-        PlaylistInfo,
-        string
-    >(() => addNewPlaylist(playlistName))
+    const router = useRouter()
+    const {
+        mutate,
+        isLoading: isLoadingPlaylistCreation,
+        isError: isErrorPlaylistCreation,
+        error: errorPlaylistCreation
+    } = useMutation<PlaylistInfo, string>(
+        () => addNewPlaylist(playlistName, router.query.guildId as string),
+        {
+            onSuccess(_, __, ___) {
+                refetchPlaylists()
+                setShowDialog(false)
+                setPlaylistName('')
+            }
+        }
+    )
+    const {
+        data: playlists,
+        isLoading: isLoadingPlaylists,
+        isError: isErrorPlaylists,
+        error: errorPlaylists,
+        refetch: refetchPlaylists
+    } = useQuery<PlaylistInfo[], string>(
+        ['playlists', router.query.guildId],
+        () => getPlaylists(router.query.guildId as string)
+    )
 
     return (
         <motion.div
@@ -49,6 +73,30 @@ const AddToPlaylist = ({ hideFunction }: Props) => {
                 placeholder="Filter Playlists..."
             />
 
+            {isLoadingPlaylists && (
+                <div>
+                    <LoadingSpinnerSVG className=" w-12 h-12 mx-auto mt-4 animate-spin" />
+                    <p className="text-lg text-center">Loading playlists...</p>
+                </div>
+            )}
+
+            {isErrorPlaylists && (
+                <p className="p-2 text-center bg-red-700 rounded-md mt-5 text-lg mx-4">
+                    Could not fetch playlists... Please try again later.
+                </p>
+            )}
+
+            {playlists && playlists.length > 0 ? (
+                <p>Found playlists!</p>
+            ) : (
+                <>
+                    <p className="text-lg px-2 mt-4 text-center">
+                        No playlists exists for this server...
+                    </p>
+                    <p className="text-lg px-2 text-center">Add one above.</p>
+                </>
+            )}
+
             <Dialog
                 active={showDialog}
                 hideFunction={() => setShowDialog(false)}
@@ -79,17 +127,21 @@ const AddToPlaylist = ({ hideFunction }: Props) => {
                             type="primary"
                             label="Create"
                             inputType="submit"
-                            disabled={!playlistName || isLoading ? true : false}
+                            disabled={
+                                !playlistName || isLoadingPlaylistCreation
+                                    ? true
+                                    : false
+                            }
                         />
                     </div>
-                    {isError ? (
+                    {isErrorPlaylistCreation ? (
                         <motion.p
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             className="p-2 text-center bg-red-700 rounded-md mt-5 overflow-hidden"
                         >
-                            {error}
+                            {errorPlaylistCreation}
                         </motion.p>
                     ) : (
                         ''

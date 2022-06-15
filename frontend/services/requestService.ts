@@ -37,20 +37,13 @@ export const serverBackendGetRequest = async (
  */
 export const clientBackendGetRequest = async (
     endpoint: string,
-    param: string = '',
-    query: string = '',
     headers = {}
 ) => {
-    return await fetch(
-        `${process.env.BACKEND_ADDRESS}${endpoint}${
-            param ? encodeURIComponent(param) : ''
-        }${query ? `?${query}}` : ''}`,
-        {
-            method: 'GET',
-            credentials: 'include',
-            headers
-        }
-    )
+    return await fetch(`${process.env.BACKEND_ADDRESS}${endpoint}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers
+    })
 }
 
 /**
@@ -62,12 +55,15 @@ export const clientBackendGetRequest = async (
 export const clientBackendPostRequest = async (
     endpoint: string,
     body?: Record<string, any>,
-    headers = {}
+    headers: Record<string, string> = {}
 ) => {
     return await fetch(`${process.env.BACKEND_ADDRESS}${endpoint}`, {
         method: 'POST',
         credentials: 'include',
-        headers,
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify(body)
     })
 }

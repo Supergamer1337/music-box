@@ -1,4 +1,5 @@
 import {
+    clientBackendGetRequest,
     clientBackendPostRequest,
     handleInvalidRequest
 } from './requestService'
@@ -11,10 +12,14 @@ import { PlaylistInfo } from './../types/Playlist.d'
  * @returns The created playlist.
  * @throws An error if the request failed.
  */
-export const addNewPlaylist = async (name: string) => {
-    const response = await clientBackendPostRequest('/api/v1/playlist/create', {
-        name
-    })
+export const addNewPlaylist = async (name: string, guildId: string) => {
+    const response = await clientBackendPostRequest(
+        '/api/v1/playlists/create',
+        {
+            name,
+            guildId
+        }
+    )
 
     if (!response.ok) {
         return handleInvalidRequest(
@@ -24,4 +29,26 @@ export const addNewPlaylist = async (name: string) => {
     }
 
     return (await response.json()) as PlaylistInfo
+}
+
+/**
+ * Gets the playlists for the given guild.
+ *
+ * @param guildId The id of the guild.
+ * @returns The playlists for the guild.
+ * @throws An error if the request failed.
+ */
+export const getPlaylists = async (guildId: string) => {
+    const response = await clientBackendGetRequest(
+        `/api/v1/playlists/guild/${guildId}`
+    )
+
+    if (!response.ok) {
+        return handleInvalidRequest(
+            response,
+            'Failed to get playlists. Please try again later.'
+        )
+    }
+
+    return (await response.json()) as PlaylistInfo[]
 }

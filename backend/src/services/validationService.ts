@@ -11,18 +11,36 @@ import { getDiscordUserGuilds } from './guildService.js'
 export const validGuildPermissions = async (
     access_token: string,
     guildId: string
-) => {
+): Promise<boolean> => {
     try {
-        const guild = (await getDiscordUserGuilds(access_token)).find(
-            (guild) => guild.id === guildId
-        )
-
-        if (guild?.owner) {
-            return true
-        } else {
-            return false
+        return await checkGuildPermissions(access_token, guildId)
+    } catch (error: any) {
+        if (error?.rateLimited) {
+            return new Promise(async (resolve, reject) => {
+                setTimeout(async () => {
+                    try {
+                        return resolve(
+                            await checkGuildPermissions(access_token, guildId)
+                        )
+                    } catch (error) {
+                        reject(error)
+                    }
+                }, error.retryAfter * 1000)
+            })
         }
-    } catch (error) {
+
         throw error
+    }
+}
+
+const checkGuildPermissions = async (access_token: string, guildId: string) => {
+    const guild = (await getDiscordUserGuilds(access_token)).find(
+        (guild) => guild.id === guildId
+    )
+
+    if (guild?.owner) {
+        return true
+    } else {
+        return false
     }
 }
