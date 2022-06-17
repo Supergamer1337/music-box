@@ -10,32 +10,20 @@ import prisma from './prismaService.js'
  * @throws An error if the song could not be added to database.
  */
 export const addNewSong = async (playlistId: string, video: YtVideo) => {
-    const [song] = await prisma.$transaction([
-        prisma.song.create({
-            data: {
-                title: video.title,
-                youtubeId: video.id,
-                youtubeUrl: video.url,
-                thumbnail: video.thumbnail,
-                duration: video.duration,
-                playlist: {
-                    connect: {
-                        id: playlistId
-                    }
+    const song = prisma.song.create({
+        data: {
+            title: video.title,
+            youtubeId: video.id,
+            youtubeUrl: video.url,
+            thumbnail: video.thumbnail,
+            duration: video.duration,
+            playlist: {
+                connect: {
+                    id: playlistId
                 }
             }
-        }),
-        prisma.playlist.update({
-            where: {
-                id: playlistId
-            },
-            data: {
-                nrOfSongs: {
-                    increment: 1
-                }
-            }
-        })
-    ])
+        }
+    })
 
     return song
 }
@@ -79,27 +67,11 @@ export const getSongByPlaylistAndYoutubeId = async (
  * Removes a song from a playlist.
  *
  * @param id The ID of the song.
- * @param playlistId The ID of the playlist to remove the song from.
  */
-export const removeSongFromPlaylist = async (
-    id: string,
-    playlistId: string
-) => {
-    await prisma.$transaction([
-        prisma.song.delete({
-            where: {
-                id
-            }
-        }),
-        prisma.playlist.update({
-            where: {
-                id: playlistId
-            },
-            data: {
-                nrOfSongs: {
-                    decrement: 1
-                }
-            }
-        })
-    ])
+export const removeSongFromPlaylist = async (id: string) => {
+    await prisma.song.delete({
+        where: {
+            id
+        }
+    })
 }

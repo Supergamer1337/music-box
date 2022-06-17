@@ -11,11 +11,10 @@ datasource db {
 }
 
 model Playlist {
-  id        String @id @default(uuid())
-  name      String
-  nrOfSongs Int    @default(0)
-  songs     Song[]
-  guildId   String
+  id      String @id @default(uuid())
+  name    String
+  songs   Song[]
+  guildId String
 }
 
 model Song {

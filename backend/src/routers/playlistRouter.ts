@@ -39,6 +39,8 @@ playlistRouter.get('/guild/:guildId', async (req, res) => {
         playlists = playlists.map((playlist) => {
             return {
                 ...playlist,
+                nrOfSongs: playlist._count.songs,
+                _count: undefined,
                 guildId: undefined
             }
         })
@@ -172,7 +174,7 @@ playlistRouter.delete('/:playlistId/ytId/:youtubeId', async (req, res) => {
 
         for (const song of playlist.songs) {
             if (song.youtubeId === youtubeId) {
-                removeSongFromPlaylist(song.id, playlistId)
+                removeSongFromPlaylist(song.id)
                 return res.status(200).json({ message: 'Song removed.' })
             }
         }

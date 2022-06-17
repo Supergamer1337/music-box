@@ -5,6 +5,7 @@ export interface PlaylistInfo {
     id: string
     name: string
     thumbnail?: string
+    nrOfSongs?: number
 }
 
 /**

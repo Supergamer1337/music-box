@@ -31,6 +31,13 @@ export const getGuildPlaylists = async (guildId: string) => {
         },
         orderBy: {
             name: 'asc'
+        },
+        include: {
+            _count: {
+                select: {
+                    songs: true
+                }
+            }
         }
     })
 }
