@@ -15,21 +15,27 @@ export const validGuildPermissions = async (
     try {
         return await checkGuildPermissions(access_token, guildId)
     } catch (error: any) {
+        // Hack: This should be fixed using caching or a better error handling mechanism in the future.
+        // If checking the guild permissions fails, check if it was because of a rate limit.
         if (error?.rateLimited) {
+            // If it was rate limited, wait for the rate limit to expire and try again.
             return new Promise(async (resolve, reject) => {
                 setTimeout(async () => {
                     try {
-                        return resolve(
-                            await checkGuildPermissions(access_token, guildId)
+                        const hasPermission = await validGuildPermissions(
+                            access_token,
+                            guildId
                         )
+                        resolve(hasPermission)
                     } catch (error) {
                         reject(error)
                     }
                 }, error.retryAfter * 1000)
             })
+        } else {
+            // If it wasn't rate limited, throw the error.
+            throw error
         }
-
-        throw error
     }
 }
 
