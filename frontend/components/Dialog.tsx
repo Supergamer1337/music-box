@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import ReactPortal from './ReactPortal'
 
 interface Props {
     children: ReactNode
@@ -25,7 +26,7 @@ const Dialog = ({ children, active, hideFunction }: Props) => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.4 }}
                         exit={{ opacity: 0 }}
-                        className={`absolute top-0 z-[100] w-[100vw] h-[100vh] bg-black`}
+                        className={`fixed top-0 left-0 z-[100] w-full h-[100vh] bg-black`}
                     />
                 </>
             )}
