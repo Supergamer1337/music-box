@@ -42,9 +42,7 @@ const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
         mutate: deleteMutate,
         reset: deleteReset
     } = useMutation(() => removeSongByYoutubeId(videoToAdd.id, playlist.id), {
-        onSuccess: () => {
-            addReset()
-        }
+        onSuccess: () => addReset()
     })
 
     return (
@@ -62,9 +60,13 @@ const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
                 {playlist.name}
             </p>
             <Tooltip
-                message="Failed to add song. Try again later."
+                message={
+                    deleteIsError
+                        ? 'Failed to delete song. Try again later.'
+                        : 'Failed to add song. Try again later.'
+                }
                 onActive
-                active={addIsError}
+                active={addIsError || deleteIsError}
                 error
             >
                 {/* Using display hidden instead of ternary operator, 
@@ -81,18 +83,21 @@ const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
                 />
                 <AddIconSVG
                     onClick={() => {
-                        if (deleteIsError) return
+                        if (deleteIsError) return deleteMutate()
                         addMutate()
                     }}
                     className={`${
-                        addIsLoading ||
-                        addIsSuccess ||
-                        (!deleteIsSuccess &&
-                            (youtubeVideoExistsLoading || youtubeVideoExists))
+                        (addIsLoading ||
+                            addIsSuccess ||
+                            youtubeVideoExistsLoading ||
+                            (youtubeVideoExists && !deleteIsSuccess)) &&
+                        !deleteIsError
                             ? 'hidden'
                             : ''
                     } w-8 h-8 hover:opacity-75 cursor-pointer transition-all ${
-                        addIsError || youtubeVideoExistsError ? 'rotate-45' : ''
+                        addIsError || youtubeVideoExistsError || deleteIsError
+                            ? 'rotate-45'
+                            : ''
                     }`}
                 />
                 <CheckMarkIconSVG
@@ -101,6 +106,7 @@ const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
                         addIsLoading ||
                         deleteIsLoading ||
                         deleteIsSuccess ||
+                        deleteIsError ||
                         (!youtubeVideoExists && !addIsSuccess)
                             ? 'hidden'
                             : ''
