@@ -1,7 +1,15 @@
-import Song from '../types/Song'
 import YtVideo from '../types/YtVideo'
-import { clientBackendPostRequest } from './requestService'
+import {
+    clientBackendGetRequest,
+    clientBackendPostRequest
+} from './requestService'
 
+/**
+ * Add a video to a playlist.
+ *
+ * @param video The video to add.
+ * @param playlistId The ID of the playlist to add the video to.
+ */
 export const addNewSong = async (
     video: YtVideo,
     playlistId: string
@@ -14,6 +22,29 @@ export const addNewSong = async (
     if (!response.ok) {
         throw new Error('Failed to add song')
     }
+}
+
+/**
+ * Checks if the video exists in a playlist.
+ *
+ * @param playlistId The ID of the playlist.
+ * @param videoId The ID of the video.
+ * @returns Whether or not the video exists in the playlist.
+ * @throws Error if the request fails.
+ */
+export const checkYtVideoExistsInPlaylist = async (
+    playlistId: string,
+    videoId: string
+): Promise<boolean> => {
+    const response = await clientBackendGetRequest(
+        `/api/v1/playlists/${playlistId}/ytId/${videoId}`
+    )
+
+    if (!response.ok) {
+        throw new Error('Failed to check if video exists in playlist')
+    }
+
+    return (await response.json()).exists
 }
 
 /**

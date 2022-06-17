@@ -55,7 +55,7 @@ export const getPlaylist = async (id: string) => {
  * @param id The ID of the playlist.
  * @returns The playlist, or null if it could not be found.
  */
-export const getExtendedPlaylist = (id: string) => {
+export const getExtendedPlaylist = async (id: string) => {
     return await prisma.playlist.findUnique({
         where: {
             id

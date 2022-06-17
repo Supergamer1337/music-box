@@ -3,8 +3,11 @@ import { PlaylistInfo } from '../types/Playlist'
 import Image from 'next/image'
 import YtVideo from './../types/YtVideo.d'
 import AddIconSVG from '../svg/AddIconSVG'
-import { useMutation } from 'react-query'
-import { addNewSong } from './../services/songService'
+import { useMutation, useQuery } from 'react-query'
+import {
+    addNewSong,
+    checkYtVideoExistsInPlaylist
+} from './../services/songService'
 import LoadingSpinnerSVG from '../svg/LoadingSpinnerSVG'
 import Tooltip from './Tooltip'
 import CheckMarkIconSVG from '../svg/CheckMarkIconSVG'
@@ -14,9 +17,19 @@ interface Props {
 }
 
 const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
+    const {
+        data: youtubeVideoExists,
+        isLoading: youtubeVideoExistsLoading,
+        isError: youtubeVideoExistsError
+    } = useQuery(
+        ['youtubeVideoExistsIn', playlist.id, videoToAdd.id],
+        async () => checkYtVideoExistsInPlaylist(playlist.id, videoToAdd.id)
+    )
     const { isSuccess, isLoading, isError, mutate } = useMutation(() =>
         addNewSong(videoToAdd, playlist.id)
     )
+
+    console.log(youtubeVideoExists, 'for', playlist.name)
 
     return (
         <div className="grid grid-cols-[min-content,auto,min-content] items-center w-4/5 mx-auto bg-secondaryBg p-2 rounded-md gap-2">
@@ -43,20 +56,25 @@ const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
                 think it is clicked outside and close the menu. */}
                 <LoadingSpinnerSVG
                     className={`${
-                        !isLoading && 'hidden'
+                        !youtubeVideoExistsLoading && !isLoading ? 'hidden' : ''
                     } w-8 h-8 animate-spin cursor-pointer hover:opacity-75`}
                 />
                 <AddIconSVG
                     onClick={() => mutate()}
                     className={`${
-                        isLoading || isSuccess ? 'hidden' : ''
+                        isLoading ||
+                        isSuccess ||
+                        youtubeVideoExistsLoading ||
+                        youtubeVideoExists
+                            ? 'hidden'
+                            : ''
                     } w-8 h-8 hover:opacity-75 cursor-pointer transition-all ${
-                        isError && 'rotate-45'
+                        isError || youtubeVideoExistsError ? 'rotate-45' : ''
                     }`}
                 />
                 <CheckMarkIconSVG
                     className={`${
-                        !isSuccess && 'hidden'
+                        !youtubeVideoExists && !isSuccess ? 'hidden' : ''
                     } w-8 h-8 cursor-pointer hover:opacity-75`}
                 />
             </Tooltip>
