@@ -28,6 +28,9 @@ export const getGuildPlaylists = async (guildId: string) => {
     return await prisma.playlist.findMany({
         where: {
             guildId
+        },
+        orderBy: {
+            name: 'asc'
         }
     })
 }

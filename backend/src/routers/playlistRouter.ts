@@ -9,7 +9,10 @@ import {
     getPlaylist
 } from './../services/playlistService.js'
 import type YtVideo from '../types/YtVideo.d'
-import { addNewSong } from './../services/songService.js'
+import {
+    addNewSong,
+    getSongByPlaylistAndYoutubeId
+} from './../services/songService.js'
 
 const playlistRouter = Router()
 
@@ -90,9 +93,10 @@ playlistRouter.post('/create', async (req, res) => {
     }
 })
 
+// Handles POST requests to /api/v1/playlists/:playlistId/add-song, and adds a song to the specified playlist
 playlistRouter.post('/:playlistId/add-song', async (req, res) => {
     try {
-        const { playlistId } = req.query
+        const { playlistId } = req.params
 
         const playlist = await getPlaylist(playlistId as string)
 
@@ -132,9 +136,19 @@ playlistRouter.post('/:playlistId/add-song', async (req, res) => {
                 error: 'Video duration must exist and be of type int.'
             })
 
-        const song = await addNewSong(playlistId as string, video)
+        const existingSong = await getSongByPlaylistAndYoutubeId(
+            playlistId,
+            video.id
+        )
 
-        return res.status(200).json({ song })
+        if (existingSong)
+            return res.status(200).json({
+                song: existingSong
+            })
+
+        const newSong = await addNewSong(playlistId as string, video)
+
+        return res.status(200).json({ song: newSong })
     } catch (error) {
         console.error(error)
 

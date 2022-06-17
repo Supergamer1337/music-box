@@ -55,3 +55,22 @@ export const getSongsInPlaylist = async (playlistId: string) => {
         }
     })
 }
+
+/**
+ * Checks if a song is in a playlist.
+ *
+ * @param playlistId The ID of the playlist.
+ * @param youtubeId The youtube ID of the song.
+ * @returns True if the song is in the playlist, false otherwise.
+ * @throws An error if the song could not be checked.
+ */
+export const getSongByPlaylistAndYoutubeId = async (
+    playlistId: string,
+    youtubeId: string
+) => {
+    return await prisma.song.findFirst({
+        where: {
+            AND: [{ playlist: { id: playlistId } }, { youtubeId }]
+        }
+    })
+}
