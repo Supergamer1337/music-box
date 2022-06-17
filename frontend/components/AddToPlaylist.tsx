@@ -50,7 +50,7 @@ const AddToPlaylist = ({ hideFunction }: Props) => {
             animate={{ x: 0 }}
             exit={{ x: '-100vw' }}
             transition={{ bounce: 0 }}
-            className="fixed top-0 left-0 w-full max-h-[100vh] bg-primaryBg z-[101] overflow-y-auto pb-4"
+            className="fixed top-0 left-0 w-full h-[100vh] bg-primaryBg z-[101] overflow-y-auto pb-4"
         >
             <div className="p-4 flex">
                 <BackArrowIconSVG
