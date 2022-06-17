@@ -1,5 +1,5 @@
-import { AnimatePresence, motion } from 'framer-motion'
-import React, { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import React, { useState } from 'react'
 import BackArrowIconSVG from '../svg/BackArrowIconSVG'
 import Button from './Button'
 import Dialog from './Dialog'
@@ -8,13 +8,15 @@ import { addNewPlaylist, getPlaylists } from './../services/playlistService'
 import { PlaylistInfo } from './../types/Playlist.d'
 import { useRouter } from 'next/router'
 import LoadingSpinnerSVG from './../svg/LoadingSpinnerSVG'
-import Image from 'next/image'
+import AddToPlaylistItem from './AddToPlaylistItem'
+import YtVideo from '../types/YtVideo'
 
 interface Props {
     hideFunction: () => void
+    video: YtVideo
 }
 
-const AddToPlaylist = ({ hideFunction }: Props) => {
+const AddToPlaylist = ({ hideFunction, video }: Props) => {
     const [showDialog, setShowDialog] = useState(false)
     const [playlistName, setPlaylistName] = useState('')
     const router = useRouter()
@@ -92,24 +94,11 @@ const AddToPlaylist = ({ hideFunction }: Props) => {
                     !isErrorPlaylists &&
                     (playlists && playlists.length > 0 ? (
                         playlists?.map((playlist) => (
-                            <div
+                            <AddToPlaylistItem
                                 key={playlist.id}
-                                className="flex items-center w-4/5 mx-auto bg-secondaryBg p-2 rounded-md gap-2"
-                            >
-                                <div className=" bg-blue-600 w-16 h-16 relative rounded-md">
-                                    <Image
-                                        src={
-                                            playlist.thumbnail ||
-                                            '/images/missing-playlist.png'
-                                        }
-                                        alt={`${playlist.name}'s Thumbnail`}
-                                        layout="fill"
-                                        objectFit="fill"
-                                        className="rounded-md"
-                                    />
-                                </div>
-                                <p className="text-lg">{playlist.name}</p>
-                            </div>
+                                playlist={playlist}
+                                videoToAdd={video}
+                            />
                         ))
                     ) : (
                         <>

@@ -46,6 +46,7 @@ const YtSearchResultItem = ({ video }: Props) => {
                 {showAddPlaylist && (
                     <AddToPlaylist
                         hideFunction={() => setShowAddPlaylist(false)}
+                        video={video}
                     />
                 )}
             </AnimatePresence>
