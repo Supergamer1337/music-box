@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BackArrowIconSVG from '../svg/BackArrowIconSVG'
 import Button from './Button'
 import Dialog from './Dialog'
@@ -8,6 +8,7 @@ import { addNewPlaylist, getPlaylists } from './../services/playlistService'
 import { PlaylistInfo } from './../types/Playlist.d'
 import { useRouter } from 'next/router'
 import LoadingSpinnerSVG from './../svg/LoadingSpinnerSVG'
+import Image from 'next/image'
 
 interface Props {
     hideFunction: () => void
@@ -49,7 +50,7 @@ const AddToPlaylist = ({ hideFunction }: Props) => {
             animate={{ x: 0 }}
             exit={{ x: '-100vw' }}
             transition={{ bounce: 0 }}
-            className="fixed top-0 left-0 w-full h-full bg-primaryBg z-[101]"
+            className="fixed top-0 left-0 w-full h-[100vh] bg-primaryBg z-[101]"
         >
             <div className="p-4 flex">
                 <BackArrowIconSVG
@@ -86,16 +87,41 @@ const AddToPlaylist = ({ hideFunction }: Props) => {
                 </p>
             )}
 
-            {playlists && playlists.length > 0 ? (
-                <p>Found playlists!</p>
-            ) : (
-                <>
-                    <p className="text-lg px-2 mt-4 text-center">
-                        No playlists exists for this server...
-                    </p>
-                    <p className="text-lg px-2 text-center">Add one above.</p>
-                </>
-            )}
+            <div className="flex flex-col gap-2 mt-4 overflow-y-auto max-h-[42rem]">
+                {!isLoadingPlaylists &&
+                    !isErrorPlaylists &&
+                    (playlists && playlists.length > 0 ? (
+                        playlists?.map((playlist) => (
+                            <div
+                                key={playlist.id}
+                                className="flex items-center w-4/5 mx-auto bg-secondaryBg p-2 rounded-md gap-2"
+                            >
+                                <div className=" bg-blue-600 w-16 h-16 relative rounded-md">
+                                    <Image
+                                        src={
+                                            playlist.thumbnail ||
+                                            '/images/missing-playlist.png'
+                                        }
+                                        alt={`${playlist.name}'s Thumbnail`}
+                                        layout="fill"
+                                        objectFit="fill"
+                                        className="rounded-md"
+                                    />
+                                </div>
+                                <p className="text-lg">{playlist.name}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <>
+                            <p className="text-lg px-2 mt-4 text-center">
+                                No playlists exists for this server...
+                            </p>
+                            <p className="text-lg px-2 text-center">
+                                Add one above.
+                            </p>
+                        </>
+                    ))}
+            </div>
 
             <Dialog
                 active={showDialog}

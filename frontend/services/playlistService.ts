@@ -50,5 +50,5 @@ export const getPlaylists = async (guildId: string) => {
         )
     }
 
-    return (await response.json()) as PlaylistInfo[]
+    return (await response.json()).playlists as PlaylistInfo[]
 }
