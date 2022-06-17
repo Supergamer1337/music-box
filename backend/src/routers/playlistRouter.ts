@@ -1,9 +1,16 @@
 import { Router } from 'express'
-import { validGuildPermissions } from './../services/validationService.js'
+import {
+    isString,
+    validGuildPermissions
+} from './../services/validationService.js'
 import {
     createPlaylist,
-    getGuildPlaylists
+    getGuildPlaylists,
+    playlistExists
 } from './../services/playlistService.js'
+import type YtVideo from '../types/YtVideo.d'
+import { getPlaylist } from './../../dist/services/playlistService'
+import { addNewSong } from './../services/songService'
 
 const playlistRouter = Router()
 
@@ -81,6 +88,57 @@ playlistRouter.post('/create', async (req, res) => {
         res.status(500).json({
             error: 'Failed to create playlist'
         })
+    }
+})
+
+playlistRouter.post('/:playlistId/add-song', async (req, res) => {
+    try {
+        const { playlistId } = req.query
+
+        const playlist = await getPlaylist(playlistId)
+
+        if (!playlistId)
+            return res
+                .status(404)
+                .json({ error: 'That playlist does not exist.' })
+
+        if (
+            !validGuildPermissions(
+                // @ts-expect-error Taken care of by middleware.
+                req.session.discordTokenData.access_token,
+                playlist.guildId
+            )
+        )
+            return res.status(403).json({
+                error: 'You do not have permission to add songs to this playlist.'
+            })
+
+        const video = req.body.video as YtVideo
+        if (!video) return res.status(400).json({ error: 'No video provided.' })
+        if (!video.id || !isString(video.id))
+            return res
+                .status(400)
+                .json({ error: 'Video id must exist and be of type string.' })
+        if (!video.title || !isString(video.title))
+            return res.status(400).json({
+                error: 'Video title must exist and be of type string.'
+            })
+        if (!video.thumbnail || !isString(video.thumbnail))
+            return res.status(400).json({
+                error: 'Video thumbnail must exist and be of type string.'
+            })
+        if (!video.duration || !Number.isInteger(video.duration))
+            return res.status(400).json({
+                error: 'Video duration must exist and be of type int.'
+            })
+
+        const song = await addNewSong(playlistId as string, video)
+
+        return res.status(200).json({ song })
+    } catch (error) {
+        console.error(error)
+
+        res.status(500).json({ error: 'Failed to add song.' })
     }
 })
 
