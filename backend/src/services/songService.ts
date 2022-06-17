@@ -74,3 +74,16 @@ export const getSongByPlaylistAndYoutubeId = async (
         }
     })
 }
+
+/**
+ * Removes a song from a playlist.
+ *
+ * @param id The ID of the song.
+ */
+export const removeSongFromPlaylist = async (id: string) => {
+    await prisma.song.delete({
+        where: {
+            id
+        }
+    })
+}

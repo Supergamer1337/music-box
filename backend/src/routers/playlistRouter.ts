@@ -12,7 +12,8 @@ import {
 import type YtVideo from '../types/YtVideo.d'
 import {
     addNewSong,
-    getSongByPlaylistAndYoutubeId
+    getSongByPlaylistAndYoutubeId,
+    removeSongFromPlaylist
 } from './../services/songService.js'
 
 const playlistRouter = Router()
@@ -154,6 +155,35 @@ playlistRouter.post('/:playlistId/add-song', async (req, res) => {
         console.error(error)
 
         res.status(500).json({ error: 'Failed to add song.' })
+    }
+})
+
+// Handles DELETE requests to /api/v1/playlists/:playlistId/ytId/:youtubeId, and removes a song from the specified playlist
+playlistRouter.delete('/:playlistId/ytId/:youtubeId', async (req, res) => {
+    try {
+        const { playlistId, youtubeId } = req.params
+
+        const playlist = await getExtendedPlaylist(playlistId as string)
+
+        if (!playlist)
+            return res
+                .status(404)
+                .json({ error: 'That playlist does not exist.' })
+
+        for (const song of playlist.songs) {
+            if (song.youtubeId === youtubeId) {
+                removeSongFromPlaylist(song.id)
+                return res.status(200).json({ message: 'Song removed.' })
+            }
+        }
+
+        return res
+            .status(404)
+            .json({ error: 'That song does not exist in this playlist.' })
+    } catch (error) {
+        console.error(error)
+
+        res.status(500).json({ error: 'Failed to delete song.' })
     }
 })
 
