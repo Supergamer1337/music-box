@@ -1,3 +1,32 @@
+import Song from '../types/Song'
+import YtVideo from '../types/YtVideo'
+import { clientBackendPostRequest } from './requestService'
+
+export const addNewSong = async (
+    video: YtVideo,
+    playlistId: string
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const rand = Math.floor(Math.random() * 100)
+            if (rand > 50) {
+                reject('Error adding song')
+            } else {
+                resolve()
+            }
+        }, 1000)
+    })
+
+    // const response = await clientBackendPostRequest(
+    //     `/api/v1/playlists/${playlistId}/add-song`,
+    //     { video }
+    // )
+
+    // if (!response.ok) {
+    //     throw new Error('Failed to add song')
+    // }
+}
+
 /**
  * Converts a time in seconds to a string in the YouTube format.
  *
