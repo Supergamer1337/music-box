@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { PlaylistInfo } from '../types/Playlist'
 import Image from 'next/image'
 import YtVideo from './../types/YtVideo.d'
