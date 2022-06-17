@@ -7,6 +7,7 @@ import { useMutation } from 'react-query'
 import { addNewSong } from './../services/songService'
 import LoadingSpinnerSVG from '../svg/LoadingSpinnerSVG'
 import Tooltip from './Tooltip'
+import CheckMarkIconSVG from '../svg/CheckMarkIconSVG'
 interface Props {
     playlist: PlaylistInfo
     videoToAdd: YtVideo
@@ -45,16 +46,22 @@ const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
                 or the UseOutsideDetection function in search box will 
                 think it is clicked outside and close the menu. */}
                 <LoadingSpinnerSVG
-                    className={`${!isLoading && 'hidden'} w-8 h-8 animate-spin`}
+                    className={`${
+                        !isLoading && 'hidden'
+                    } w-8 h-8 animate-spin cursor-pointer hover:opacity-75`}
                 />
-
                 <AddIconSVG
                     onClick={() => mutate()}
                     className={`${
-                        isLoading && 'hidden'
+                        isLoading || isSuccess ? 'hidden' : ''
                     } w-8 h-8 hover:opacity-75 cursor-pointer transition-all ${
                         isError && 'rotate-45'
                     }`}
+                />
+                <CheckMarkIconSVG
+                    className={`${
+                        !isSuccess && 'hidden'
+                    } w-8 h-8 cursor-pointer hover:opacity-75`}
                 />
             </Tooltip>
         </div>

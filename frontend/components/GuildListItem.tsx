@@ -1,7 +1,7 @@
 import React from 'react'
 import GuildListObject from '../types/GuildListObject'
 import Image from 'next/image'
-import CheckMarkIconSVG from '../svg/CheckMarkIconSVG'
+import RoundCheckMarkIconSVG from '../svg/RoundCheckMarkIconSVG'
 import Tooltip from './Tooltip'
 import Link from 'next/link'
 
@@ -43,7 +43,7 @@ const GuildListItem = ({ guild }: Props) => {
                     }
                 >
                     <div className="w-10 h-10">
-                        <CheckMarkIconSVG
+                        <RoundCheckMarkIconSVG
                             fill={guild.botInServer ? '#10B981' : undefined}
                         />
                     </div>
