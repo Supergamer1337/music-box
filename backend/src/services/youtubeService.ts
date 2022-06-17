@@ -36,8 +36,22 @@ const ytSearchToYtVideos = (
             title: ytResult.title,
             url: ytResult.url,
             thumbnail: ytResult.snippet.thumbnails.url,
-            duration: ytResult.duration_raw
+            duration: parseYtDuration(ytResult.duration_raw)
         } as YtVideo
     })
     return videos
+}
+
+/**
+ * Convert a youtube string duration to number of seconds.
+ *
+ * @param duration The duration given by youtube.
+ * @returns The duration in seconds.
+ */
+const parseYtDuration = (duration: string): number => {
+    const durationParts = duration.split(':')
+    const durationSeconds = durationParts.reduce((acc, part) => {
+        return acc * 60 + parseInt(part)
+    }, 0)
+    return durationSeconds
 }

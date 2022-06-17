@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import YtVideo from '../types/YtVideo'
 import Image from 'next/image'
 import PlayIconSVG from '../svg/PlayIconSVG'
 import AddToPlaylistIconSVG from './../svg/AddToPlaylistIconSVG'
 import AddToPlaylist from './AddToPlaylist'
 import { AnimatePresence } from 'framer-motion'
+import { parseDuration } from './../services/songService'
 
 interface Props {
     video: YtVideo
@@ -12,6 +13,10 @@ interface Props {
 
 const YtSearchResultItem = ({ video }: Props) => {
     const [showAddPlaylist, setShowAddPlaylist] = useState(false)
+
+    const duration = useMemo(() => {
+        return parseDuration(video.duration)
+    }, [video.duration])
 
     return (
         <>
@@ -25,7 +30,7 @@ const YtSearchResultItem = ({ video }: Props) => {
                         className="rounded-md"
                     />
                     <p className="absolute bg-emptyBg bottom-1 right-1 px-[4px] pt-[2px] text-sm rounded-md border-[1px] border-discordBorder">
-                        {video.duration}
+                        {duration}
                     </p>
                 </div>
                 <div className="grid grid-flow-row grid-rows-[max-content,min-content]">
