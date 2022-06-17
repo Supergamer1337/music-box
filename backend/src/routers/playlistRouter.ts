@@ -6,11 +6,10 @@ import {
 import {
     createPlaylist,
     getGuildPlaylists,
-    playlistExists
+    getPlaylist
 } from './../services/playlistService.js'
 import type YtVideo from '../types/YtVideo.d'
-import { getPlaylist } from './../../dist/services/playlistService'
-import { addNewSong } from './../services/songService'
+import { addNewSong } from './../services/songService.js'
 
 const playlistRouter = Router()
 
@@ -95,7 +94,7 @@ playlistRouter.post('/:playlistId/add-song', async (req, res) => {
     try {
         const { playlistId } = req.query
 
-        const playlist = await getPlaylist(playlistId)
+        const playlist = await getPlaylist(playlistId as string)
 
         if (!playlistId)
             return res
@@ -106,6 +105,7 @@ playlistRouter.post('/:playlistId/add-song', async (req, res) => {
             !validGuildPermissions(
                 // @ts-expect-error Taken care of by middleware.
                 req.session.discordTokenData.access_token,
+                // @ts-expect-error Taken care of by above if statement.
                 playlist.guildId
             )
         )
