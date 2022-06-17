@@ -21,7 +21,8 @@ const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
     const {
         data: youtubeVideoExists,
         isLoading: youtubeVideoExistsLoading,
-        isError: youtubeVideoExistsError
+        isError: youtubeVideoExistsError,
+        refetch: youtubeVideoExistsRefetch
     } = useQuery(
         ['youtubeVideoExistsIn', playlist.id, videoToAdd.id],
         async () => checkYtVideoExistsInPlaylist(playlist.id, videoToAdd.id)
@@ -33,7 +34,10 @@ const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
         mutate: addMutate,
         reset: addReset
     } = useMutation(() => addNewSong(videoToAdd, playlist.id), {
-        onSuccess: () => deleteReset()
+        onSuccess: () => {
+            deleteReset()
+            youtubeVideoExistsRefetch()
+        }
     })
     const {
         isSuccess: deleteIsSuccess,
@@ -42,7 +46,10 @@ const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
         mutate: deleteMutate,
         reset: deleteReset
     } = useMutation(() => removeSongByYoutubeId(videoToAdd.id, playlist.id), {
-        onSuccess: () => addReset()
+        onSuccess: () => {
+            addReset()
+            youtubeVideoExistsRefetch()
+        }
     })
 
     return (
