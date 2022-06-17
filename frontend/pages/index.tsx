@@ -53,7 +53,7 @@ const Home: NextPage = () => {
     const [searchTerm, setSearchTerm] = useState('')
 
     return (
-        <div className="grid grid-cols-1 grid-rows-[auto,1fr] max-h-[100vh]">
+        <div className="grid grid-cols-1 grid-rows-[auto,1fr] mb-4">
             <Header pageName="Your serverlist" user={user} />
 
             <input
@@ -63,7 +63,7 @@ const Home: NextPage = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
             />
 
-            <div className="overflow-y-auto w-[36rem] md:w-[40rem] max-w-full mx-auto mb-4">
+            <div className="w-[36rem] md:w-[40rem] max-w-full mx-auto">
                 {error || !data ? (
                     <div className="text-center text-2xl mt-10 bg-red-600 mx-2 p-2 rounded-md">
                         Failed to retrieve servers. Please try again later.
