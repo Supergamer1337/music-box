@@ -6,7 +6,8 @@ import AddIconSVG from '../svg/AddIconSVG'
 import { useMutation, useQuery } from 'react-query'
 import {
     addNewSong,
-    checkYtVideoExistsInPlaylist
+    checkYtVideoExistsInPlaylist,
+    removeSongByYoutubeId
 } from './../services/songService'
 import LoadingSpinnerSVG from '../svg/LoadingSpinnerSVG'
 import Tooltip from './Tooltip'
@@ -25,11 +26,26 @@ const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
         ['youtubeVideoExistsIn', playlist.id, videoToAdd.id],
         async () => checkYtVideoExistsInPlaylist(playlist.id, videoToAdd.id)
     )
-    const { isSuccess, isLoading, isError, mutate } = useMutation(() =>
-        addNewSong(videoToAdd, playlist.id)
-    )
-
-    console.log(youtubeVideoExists, 'for', playlist.name)
+    const {
+        isSuccess: addIsSuccess,
+        isLoading: addIsLoading,
+        isError: addIsError,
+        mutate: addMutate,
+        reset: addReset
+    } = useMutation(() => addNewSong(videoToAdd, playlist.id), {
+        onSuccess: () => deleteReset()
+    })
+    const {
+        isSuccess: deleteIsSuccess,
+        isLoading: deleteIsLoading,
+        isError: deleteIsError,
+        mutate: deleteMutate,
+        reset: deleteReset
+    } = useMutation(() => removeSongByYoutubeId(videoToAdd.id, playlist.id), {
+        onSuccess: () => {
+            addReset()
+        }
+    })
 
     return (
         <div className="grid grid-cols-[min-content,auto,min-content] items-center w-4/5 mx-auto bg-secondaryBg p-2 rounded-md gap-2">
@@ -48,7 +64,7 @@ const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
             <Tooltip
                 message="Failed to add song. Try again later."
                 onActive
-                active={isError}
+                active={addIsError}
                 error
             >
                 {/* Using display hidden instead of ternary operator, 
@@ -56,25 +72,38 @@ const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
                 think it is clicked outside and close the menu. */}
                 <LoadingSpinnerSVG
                     className={`${
-                        !youtubeVideoExistsLoading && !isLoading ? 'hidden' : ''
+                        !youtubeVideoExistsLoading &&
+                        !addIsLoading &&
+                        !deleteIsLoading
+                            ? 'hidden'
+                            : ''
                     } w-8 h-8 animate-spin cursor-pointer hover:opacity-75`}
                 />
                 <AddIconSVG
-                    onClick={() => mutate()}
+                    onClick={() => {
+                        if (deleteIsError) return
+                        addMutate()
+                    }}
                     className={`${
-                        isLoading ||
-                        isSuccess ||
-                        youtubeVideoExistsLoading ||
-                        youtubeVideoExists
+                        addIsLoading ||
+                        addIsSuccess ||
+                        (!deleteIsSuccess &&
+                            (youtubeVideoExistsLoading || youtubeVideoExists))
                             ? 'hidden'
                             : ''
                     } w-8 h-8 hover:opacity-75 cursor-pointer transition-all ${
-                        isError || youtubeVideoExistsError ? 'rotate-45' : ''
+                        addIsError || youtubeVideoExistsError ? 'rotate-45' : ''
                     }`}
                 />
                 <CheckMarkIconSVG
+                    onClick={() => deleteMutate()}
                     className={`${
-                        !youtubeVideoExists && !isSuccess ? 'hidden' : ''
+                        addIsLoading ||
+                        deleteIsLoading ||
+                        deleteIsSuccess ||
+                        (!youtubeVideoExists && !addIsSuccess)
+                            ? 'hidden'
+                            : ''
                     } w-8 h-8 cursor-pointer hover:opacity-75`}
                 />
             </Tooltip>

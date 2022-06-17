@@ -47,7 +47,7 @@ export const clientBackendGetRequest = async (
 }
 
 /**
- * Makes a post request to the specified backend endpoint, as the client server.
+ * Makes a post request to the specified backend endpoint, as the client.
  * @param endpoint The endpoint to request.
  * @param headers The headers to send with the request.
  * @returns The response object.
@@ -65,6 +65,23 @@ export const clientBackendPostRequest = async (
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(body)
+    })
+}
+
+/**
+ * Makes a DELETE request to the specified backend endpoint, as the client.
+ * @param endpoint
+ * @param headers
+ * @returns The response object.
+ */
+export const clientBackendDeleteRequest = async (
+    endpoint: string,
+    headers: Record<string, string> = {}
+) => {
+    return await fetch(`${process.env.BACKEND_ADDRESS}${endpoint}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers
     })
 }
 

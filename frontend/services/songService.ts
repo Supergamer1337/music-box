@@ -1,5 +1,6 @@
 import YtVideo from '../types/YtVideo'
 import {
+    clientBackendDeleteRequest,
     clientBackendGetRequest,
     clientBackendPostRequest
 } from './requestService'
@@ -21,6 +22,26 @@ export const addNewSong = async (
 
     if (!response.ok) {
         throw new Error('Failed to add song')
+    }
+}
+
+/**
+ * Removes a song from a playlist, by Youtube ID.
+ *
+ * @param youtubeId The Youtube ID of the song to remove.
+ * @param playlistId The ID of the playlist to remove the song from.
+ * @throws An error if the request fails.
+ */
+export const removeSongByYoutubeId = async (
+    youtubeId: string,
+    playlistId: string
+): Promise<void> => {
+    const response = await clientBackendDeleteRequest(
+        `/api/v1/playlists/${playlistId}/ytId/${youtubeId}`
+    )
+
+    if (!response.ok) {
+        throw new Error('Failed to delete song')
     }
 }
 
