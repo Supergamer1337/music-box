@@ -48,3 +48,20 @@ export const getPlaylist = async (id: string) => {
         }
     })
 }
+
+/**
+ * Gets a playlist by ID, including all songs.
+ *
+ * @param id The ID of the playlist.
+ * @returns The playlist, or null if it could not be found.
+ */
+export const getExtendedPlaylist = (id: string) => {
+    return await prisma.playlist.findUnique({
+        where: {
+            id
+        },
+        include: {
+            songs: true
+        }
+    })
+}

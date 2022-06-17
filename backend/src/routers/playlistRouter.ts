@@ -5,6 +5,7 @@ import {
 } from './../services/validationService.js'
 import {
     createPlaylist,
+    getExtendedPlaylist,
     getGuildPlaylists,
     getPlaylist
 } from './../services/playlistService.js'
@@ -153,6 +154,32 @@ playlistRouter.post('/:playlistId/add-song', async (req, res) => {
         console.error(error)
 
         res.status(500).json({ error: 'Failed to add song.' })
+    }
+})
+
+// Handles GET requests to /api/v1/playlists/:playlistId/ytId/:ytId, and returns whether or not the specified song exists in the playlist
+playlistRouter.get('/:playlistId/ytId/:youtubeId', async (req, res) => {
+    try {
+        const { playlistId, youtubeId } = req.params
+
+        const playlist = await getExtendedPlaylist(playlistId as string)
+
+        if (!playlist)
+            return res
+                .status(404)
+                .json({ error: 'That playlist does not exist.' })
+
+        for (const song of playlist.songs) {
+            if (song.youtubeId === youtubeId) {
+                return res.status(200).json({ exists: true })
+            }
+        }
+
+        return res.status(200).json({ exists: false })
+    } catch (error) {
+        console.error(error)
+
+        res.status(500).json({ error: 'Failed to check if song exists.' })
     }
 })
 
