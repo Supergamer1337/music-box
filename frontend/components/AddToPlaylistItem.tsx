@@ -18,10 +18,6 @@ const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
         addNewSong(videoToAdd, playlist.id)
     )
 
-    useEffect(() => {
-        console.log(isError)
-    }, [isError])
-
     return (
         <div className="grid grid-cols-[min-content,auto,min-content] items-center w-4/5 mx-auto bg-secondaryBg p-2 rounded-md gap-2">
             <div className=" bg-blue-600 min-w-16 min-h-16 w-16 h-16 relative rounded-md select-none">
