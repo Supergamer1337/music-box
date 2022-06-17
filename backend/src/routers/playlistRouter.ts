@@ -172,7 +172,7 @@ playlistRouter.delete('/:playlistId/ytId/:youtubeId', async (req, res) => {
 
         for (const song of playlist.songs) {
             if (song.youtubeId === youtubeId) {
-                removeSongFromPlaylist(song.id)
+                removeSongFromPlaylist(song.id, playlistId)
                 return res.status(200).json({ message: 'Song removed.' })
             }
         }
