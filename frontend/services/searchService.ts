@@ -9,7 +9,7 @@ import { clientBackendGetRequest } from './requestService'
  */
 export const ytSearch = async (query: string) => {
     const response = await clientBackendGetRequest(
-        `/api/v1/search/yt?query=${query}`
+        `/api/v1/search/yt?query=${encodeURIComponent(query)}`
     )
 
     if (!response.ok) {
