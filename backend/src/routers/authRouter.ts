@@ -4,13 +4,15 @@ import {
     getDiscordUserData,
     requestAccessToken
 } from '../services/authService.js'
+import { isString } from '../services/validationService.js'
+import { handleEndpointError } from './../services/requestService'
 
 const authRouter = Router()
 
 authRouter.get('/', async (req, res) => {
-    const { code } = req.query
+    const { code } = req.query as { code?: string }
 
-    if (!code || typeof code !== 'string') {
+    if (!code || !isString(code)) {
         return res
             .status(400)
             .send('Missing Discord authorization code in query string')
@@ -23,11 +25,11 @@ authRouter.get('/', async (req, res) => {
 
         res.redirect(process.env.FRONTEND_ADDRESS)
     } catch (error) {
-        console.log(error)
-
-        res.status(500).json({
-            error: 'Failed to get Discord authentication token'
-        })
+        handleEndpointError(
+            error,
+            res,
+            'Failed to get Discord authentication token.'
+        )
     }
 })
 
@@ -40,11 +42,7 @@ authRouter.get('/me', isAuthenticated, async (req, res) => {
 
         res.status(200).json(discordUser)
     } catch (error) {
-        console.log(error)
-
-        res.status(500).json({
-            error: 'Failed to get Discord user'
-        })
+        handleEndpointError(eror, res, 'Failed to get Discord user data.')
     }
 })
 
