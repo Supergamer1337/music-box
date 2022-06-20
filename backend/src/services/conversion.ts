@@ -4,12 +4,12 @@ import GuildWithBotInfo from '../types/GuildWithBotInfo.d'
 import MusicBot from './MusicBot.js'
 
 /**
- * Converts a playlist (with songs as count) to an easier to use format for responding to a client.
+ * Converts playlists (with songs as count) to an easier to use format.
  *
  * @param playlists The playlists to convert.
  * @returns The converted playlists.
  */
-export const playlistsToResponsePlaylists = (
+export const playlistsSongCountConversion = (
     playlists: Array<Playlist & { _count: { songs: number } }>
 ): Array<Playlist & { nrOfSongs: number }> => {
     return playlists.map((playlist) => {

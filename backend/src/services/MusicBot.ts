@@ -1,11 +1,4 @@
 import { Client, Intents } from 'discord.js'
-import {
-    DiscordGatewayAdapterCreator,
-    joinVoiceChannel
-} from '@discordjs/voice'
-import path from 'path'
-import { RESTGetAPICurrentUserGuildsResult } from '.pnpm/discord-api-types@0.30.0/node_modules/discord-api-types/v10'
-import GuildWithBotInfo from './../types/GuildWithBotInfo.d'
 
 export default class MusicBot {
     private static botInstance: MusicBot | undefined

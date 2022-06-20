@@ -1,3 +1,4 @@
+import { playlistsSongCountConversion } from './conversion.js'
 import prisma from './prismaService.js'
 
 /**
@@ -25,7 +26,7 @@ export const createPlaylist = async (name: string, guildId: string) => {
  * @throws An error if the playlists could not be fetched.
  */
 export const getGuildPlaylists = async (guildId: string) => {
-    return await prisma.playlist.findMany({
+    const playlists = await prisma.playlist.findMany({
         where: {
             guildId
         },
@@ -40,6 +41,8 @@ export const getGuildPlaylists = async (guildId: string) => {
             }
         }
     })
+
+    return playlistsSongCountConversion(playlists)
 }
 
 /**

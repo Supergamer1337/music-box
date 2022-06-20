@@ -13,7 +13,7 @@ import {
 } from './../services/songService.js'
 import { handleEndpointError } from './../services/requestService.js'
 import hasGuildPermissions from '../middleware/hasGuildPermissions.js'
-import { playlistsToResponsePlaylists } from './../services/conversion.js'
+import { playlistsSongCountConversion } from './../services/conversion.js'
 import hasPlaylistPermissions from './../middleware/hasPlaylistPermissions.js'
 
 const playlistRouter = Router()
@@ -24,9 +24,7 @@ playlistRouter.get('/guild/:guildId', hasGuildPermissions, async (req, res) => {
     try {
         const playlists = await getGuildPlaylists(guildId)
 
-        const mappedPlaylists = playlistsToResponsePlaylists(playlists)
-
-        res.status(200).json({ playlists: mappedPlaylists })
+        res.status(200).json({ playlists })
     } catch (error) {
         handleEndpointError(
             error,
