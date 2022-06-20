@@ -6,6 +6,7 @@ import {
 
 /**
  * Checks if the current request is authenticated.
+ *
  * @param req The request.
  * @param res The response.
  * @param next The next middleware.

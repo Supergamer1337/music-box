@@ -1,9 +1,9 @@
 import { Router } from 'express'
+import { userServersAddBotInfo as userGuildsAddBotInfo } from '../services/conversion.js'
 import {
     getDiscordGuild,
     getDiscordUserGuilds
 } from './../services/guildService.js'
-import MusicBot from './../services/MusicBot.js'
 import { handleEndpointError } from './../services/requestService.js'
 
 const guildRouter = Router()
@@ -15,10 +15,9 @@ guildRouter.get('/', async (req, res) => {
             req.session.discordTokenData.access_token
         )
 
-        const mappedGuilds =
-            MusicBot.getSharedInstance().isInServers(userGuilds)
+        const mappedGuilds = userGuildsAddBotInfo(userGuilds)
 
-        res.status(200).json({ userGuilds: mappedGuilds })
+        res.status(200).json({ guilds: mappedGuilds })
     } catch (error) {
         handleEndpointError(
             error,

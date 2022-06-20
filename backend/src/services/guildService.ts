@@ -1,4 +1,4 @@
-import { RESTGetAPICurrentUserGuildsResult } from '.pnpm/discord-api-types@0.30.0/node_modules/discord-api-types/v10'
+import { RESTGetAPICurrentUserGuildsResult } from 'discord-api-types/v10'
 import { getRequest, handleRequestError } from './requestService.js'
 
 /**

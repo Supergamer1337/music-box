@@ -13,6 +13,7 @@ import { PlaylistInfo } from './../types/Playlist.d'
  * @throws An error if the request failed.
  */
 export const addNewPlaylist = async (name: string, guildId: string) => {
+    console.log(name, guildId)
     const response = await clientBackendPostRequest(
         '/api/v1/playlists/create',
         {

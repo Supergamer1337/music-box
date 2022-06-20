@@ -72,5 +72,5 @@ const handleGuildsRequest = async (guilds: Response) => {
         throw new Error('Failed to get servers')
     }
 
-    return (await guilds.json()) as GuildListObject[]
+    return (await guilds.json()).guilds as GuildListObject[]
 }
