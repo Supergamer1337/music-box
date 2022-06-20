@@ -1,7 +1,9 @@
+import { Response } from 'express'
 import fetch from 'node-fetch'
 
 /**
  * General request function.
+ *
  * @param url The URL to request.
  * @param method The HTTP method to use.
  * @param data The data to send.
@@ -36,6 +38,7 @@ const request = async (
 
 /**
  * Form data POST request.
+ *
  * @param url The URL to request.
  * @param data The data to send.
  * @param headers The headers to send. If specified, the Content-Type header will be overwritten.
@@ -56,6 +59,7 @@ export const formDataPostRequest = async (
 
 /**
  * A GET request.
+ *
  * @param url The URL to request.
  * @param headers The headers to send.
  * @returns The response data.
@@ -69,6 +73,7 @@ export const getRequest = async (
 
 /**
  * Makes a request to the specified Discord API endpoint.
+ *
  * @param endpoint The Discord API endpoint to request.
  * @param headers The headers to send.
  * @param accessToken The Discord access token to use.
@@ -92,6 +97,7 @@ export const discordGetRequest = async (
 
 /**
  * Handles a request error.
+ *
  * @param errorResponse The error response.
  * @param functionName The name of the function that caused the error.
  * @throws Formatted error message.
@@ -116,4 +122,23 @@ export const handleRequestError = async (
             }. ${await errorResponse.text()}`
         }
     }
+}
+
+/**
+ * Handles a non-specific endpoint error.
+ *
+ * @param error The error.
+ * @param res The response object.
+ * @param returnMessage The message to return to the client.
+ */
+export const handleEndpointError = async (
+    error: unknown | any,
+    res: Response,
+    returnMessage: string
+) => {
+    console.error(error)
+
+    res.status(500).json({
+        error: returnMessage
+    })
 }

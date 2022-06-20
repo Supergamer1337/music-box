@@ -5,6 +5,8 @@ import {
 } from '@discordjs/voice'
 import { playLocalFile } from './playerService.js'
 import path from 'path'
+import { RESTGetAPICurrentUserGuildsResult } from '.pnpm/discord-api-types@0.30.0/node_modules/discord-api-types/v10'
+import GuildWithBotInfo from './../types/GuildWithBotInfo.d'
 
 export default class MusicBot {
     private static botInstance: MusicBot | undefined
@@ -66,5 +68,23 @@ export default class MusicBot {
      */
     public isInServer(id: string) {
         return this.musicBot.guilds.cache.has(id)
+    }
+
+    /**
+     * Converts a list of user guilds to a list of user guilds with bot info.
+     *
+     * @param guilds List of user guilds
+     * @returns List of user guilds with bot info
+     */
+    public isInServers(
+        guilds: RESTGetAPICurrentUserGuildsResult
+    ): GuildWithBotInfo[] {
+        const mappedGuilds = guilds.map((guild) => {
+            return {
+                ...guild,
+                botInServer: this.isInServer(guild.id)
+            } as unknown as GuildWithBotInfo
+        })
+        return mappedGuilds
     }
 }

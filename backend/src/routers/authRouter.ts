@@ -5,7 +5,7 @@ import {
     requestAccessToken
 } from '../services/authService.js'
 import { isString } from '../services/validationService.js'
-import { handleEndpointError } from './../services/requestService'
+import { handleEndpointError } from './../services/requestService.js'
 
 const authRouter = Router()
 
@@ -44,7 +44,7 @@ authRouter.get('/me', isAuthenticated, async (req, res) => {
 
         res.status(200).json(discordUser)
     } catch (error) {
-        handleEndpointError(eror, res, 'Failed to get Discord user data.')
+        handleEndpointError(error, res, 'Failed to get Discord user data.')
     }
 })
 

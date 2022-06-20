@@ -4,6 +4,7 @@ import {
     getDiscordUserGuilds
 } from './../services/guildService.js'
 import MusicBot from './../services/MusicBot.js'
+import { handleEndpointError } from './../services/requestService.js'
 
 const guildRouter = Router()
 
@@ -14,22 +15,16 @@ guildRouter.get('/', async (req, res) => {
             req.session.discordTokenData.access_token
         )
 
-        const musicBot = MusicBot.getSharedInstance()
+        const mappedGuilds =
+            MusicBot.getSharedInstance().isInServers(userGuilds)
 
-        userGuilds = userGuilds.map((guild) => {
-            return {
-                ...guild,
-                botInServer: musicBot.isInServer(guild.id)
-            }
-        })
-
-        res.status(200).json(userGuilds)
+        res.status(200).json({ userGuilds: mappedGuilds })
     } catch (error) {
-        console.error(error)
-
-        res.status(500).json({
-            error: 'An error occurred while retrieving servers.'
-        })
+        handleEndpointError(
+            error,
+            res,
+            'An error occurred while retrieving servers.'
+        )
     }
 })
 
@@ -41,11 +36,11 @@ guildRouter.get('/:guildId', async (req, res) => {
 
         res.status(200).json(guild)
     } catch (error) {
-        console.error(error)
-
-        res.status(500).json({
-            error: 'An error occurred while retrieving server.'
-        })
+        handleEndpointError(
+            error,
+            res,
+            'An error occurred while retrieving server.'
+        )
     }
 })
 
