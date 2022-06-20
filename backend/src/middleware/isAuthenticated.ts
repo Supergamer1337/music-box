@@ -3,6 +3,7 @@ import {
     discordTokenValid,
     getDiscordUserData
 } from './../services/authService.js'
+import { handleEndpointError } from './../services/requestService.js'
 
 /**
  * Checks if the current request is authenticated.
@@ -27,21 +28,21 @@ const isAuthenticated: RequestHandler = async (req, res, next) => {
                 // req.user = user
                 next()
             } catch (error) {
-                console.error(error)
-
-                return res
-                    .status(500)
-                    .json({ error: 'Failed to get user data from Discord' })
+                return handleEndpointError(
+                    error,
+                    res,
+                    'Failed to get user data from Discord.'
+                )
             }
         } else {
             return res.status(401).json({ error: 'You are not authenticated' })
         }
     } catch (error) {
-        console.error(error)
-
-        return res.status(500).json({
-            error: 'Internal server error occurred while checking token validity'
-        })
+        return handleEndpointError(
+            error,
+            res,
+            'Internal server error occurred while checking validity of Discord token.'
+        )
     }
 }
 
