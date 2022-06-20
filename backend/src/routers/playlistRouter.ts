@@ -1,17 +1,17 @@
 import { Router } from 'express'
-import { isString, validYtVideo } from './../services/validationService.js'
+import { isString, validYtVideo } from '../services/validation.js'
 import {
     createPlaylist,
     getExtendedPlaylist,
     getGuildPlaylists
-} from './../services/playlistService.js'
+} from '../services/playlist.js'
 import type YtVideo from '../types/YtVideo.d'
 import {
     addNewSong,
     getSongByPlaylistAndYoutubeId,
     removeSongFromPlaylist
-} from './../services/songService.js'
-import { handleEndpointError } from './../services/requestService.js'
+} from '../services/song.js'
+import { handleEndpointError } from '../services/request.js'
 import hasGuildPermissions from '../middleware/hasGuildPermissions.js'
 import { playlistsSongCountConversion } from './../services/conversion.js'
 import hasPlaylistPermissions from './../middleware/hasPlaylistPermissions.js'

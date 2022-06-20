@@ -1,11 +1,8 @@
 import { Router } from 'express'
 import isAuthenticated from './../middleware/isAuthenticated.js'
-import {
-    getDiscordUserData,
-    requestAccessToken
-} from '../services/authService.js'
-import { isString } from '../services/validationService.js'
-import { handleEndpointError } from './../services/requestService.js'
+import { getDiscordUserData, requestAccessToken } from '../services/auth.js'
+import { isString } from '../services/validation.js'
+import { handleEndpointError } from '../services/request.js'
 
 const authRouter = Router()
 

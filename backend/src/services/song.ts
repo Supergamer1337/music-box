@@ -1,5 +1,5 @@
-import type YtVideo from '../types/YtVideo.d'
-import prisma from './prismaService.js'
+import type YtVideo from '../types/YtVideo'
+import prisma from './prisma.js'
 
 /**
  * Adds a song to a playlist.

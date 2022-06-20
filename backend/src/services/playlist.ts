@@ -1,5 +1,5 @@
 import { playlistsSongCountConversion } from './conversion.js'
-import prisma from './prismaService.js'
+import prisma from './prisma.js'
 
 /**
  * Creates a new playlist.

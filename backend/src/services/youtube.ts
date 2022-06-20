@@ -1,6 +1,6 @@
 import * as yt from 'youtube-search-without-api-key'
 import type { search as ytSearch } from 'youtube-search-without-api-key'
-import YtVideo from './../types/YtVideo.d'
+import YtVideo from '../types/YtVideo'
 
 /**
  * Search for videos on youtube.

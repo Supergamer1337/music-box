@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
-import { getPlaylist } from '../services/playlistService.js'
-import { validGuildPermissions } from '../services/validationService.js'
+import { getPlaylist } from '../services/playlist.js'
+import { validGuildPermissions } from '../services/validation.js'
 
 /**
  * Checks if the current request playlist exists and the user has the correct permissions.

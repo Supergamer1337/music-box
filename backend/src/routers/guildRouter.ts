@@ -1,10 +1,7 @@
 import { Router } from 'express'
 import { userServersAddBotInfo as userGuildsAddBotInfo } from '../services/conversion.js'
-import {
-    getDiscordGuild,
-    getDiscordUserGuilds
-} from './../services/guildService.js'
-import { handleEndpointError } from './../services/requestService.js'
+import { getDiscordGuild, getDiscordUserGuilds } from '../services/guild.js'
+import { handleEndpointError } from '../services/request.js'
 
 const guildRouter = Router()
 

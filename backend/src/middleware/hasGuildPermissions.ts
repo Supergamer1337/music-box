@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express'
-import { validGuildPermissions } from '../services/validationService.js'
+import { validGuildPermissions } from '../services/validation.js'
 import MusicBot from '../services/MusicBot.js'
 
 /**

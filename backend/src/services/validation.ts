@@ -1,5 +1,5 @@
-import { getDiscordUserGuilds } from './guildService.js'
-import YtVideo from './../types/YtVideo.d'
+import { getDiscordUserGuilds } from './guild.js'
+import YtVideo from '../types/YtVideo'
 
 /**
  * Validates that the given user has the correct rights for the given guild.

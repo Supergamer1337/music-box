@@ -7,7 +7,7 @@ import {
     discordGetRequest,
     formDataPostRequest,
     handleRequestError
-} from './requestService.js'
+} from './request.js'
 
 /**
  * Gets the user Discord access token data.

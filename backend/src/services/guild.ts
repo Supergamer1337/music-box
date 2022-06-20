@@ -1,5 +1,5 @@
 import { RESTGetAPICurrentUserGuildsResult } from 'discord-api-types/v10'
-import { getRequest, handleRequestError } from './requestService.js'
+import { getRequest, handleRequestError } from './request.js'
 
 /**
  * Gets the user's Discord guilds.

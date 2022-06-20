@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { searchForYoutubeVideos } from './../services/youtubeService.js'
+import { searchForYoutubeVideos } from '../services/youtube.js'
 
 const searchRouter = Router()
 

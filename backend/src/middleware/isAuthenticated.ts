@@ -1,9 +1,6 @@
 import { RequestHandler } from 'express'
-import {
-    discordTokenValid,
-    getDiscordUserData
-} from './../services/authService.js'
-import { handleEndpointError } from './../services/requestService.js'
+import { discordTokenValid, getDiscordUserData } from '../services/auth.js'
+import { handleEndpointError } from '../services/request.js'
 
 /**
  * Checks if the current request is authenticated.
