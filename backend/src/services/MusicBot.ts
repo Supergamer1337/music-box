@@ -3,7 +3,6 @@ import {
     DiscordGatewayAdapterCreator,
     joinVoiceChannel
 } from '@discordjs/voice'
-import { playLocalFile } from './playerService.js'
 import path from 'path'
 import { RESTGetAPICurrentUserGuildsResult } from '.pnpm/discord-api-types@0.30.0/node_modules/discord-api-types/v10'
 import GuildWithBotInfo from './../types/GuildWithBotInfo.d'
@@ -35,30 +34,6 @@ export default class MusicBot {
         })
 
         await this.musicBot.login(process.env.BOT_TOKEN)
-    }
-
-    public playAudioInVC(channelId: string, guildId: string) {
-        const adapterCreator = this.musicBot.guilds.cache.get(guildId)
-            ?.voiceAdapterCreator as DiscordGatewayAdapterCreator
-
-        if (!adapterCreator)
-            throw new Error('No voice adapter creator defined!')
-
-        if (adapterCreator) {
-            const voiceConnection = joinVoiceChannel({
-                channelId,
-                guildId,
-                adapterCreator: adapterCreator
-            })
-
-            const player = playLocalFile(
-                path.join(path.dirname(''), '/resources/test.mp3')
-            )
-
-            const subscription = voiceConnection.subscribe(player)
-
-            player.unpause()
-        }
     }
 
     /**

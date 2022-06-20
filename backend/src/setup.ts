@@ -2,7 +2,6 @@ import { createClient } from 'redis'
 import connectRedis from 'connect-redis'
 import session from 'express-session'
 import { Express } from 'express'
-import playbackRouter from './routers/playbackRouter.js'
 import authRouter from './routers/authRouter.js'
 import isAuthenticated from './middleware/isAuthenticated.js'
 import guildRouter from './routers/guildRouter.js'
@@ -57,7 +56,6 @@ export const setupSessions = async (app: Express) => {
 }
 
 export const setupRoutes = (app: Express) => {
-    app.use('/api/v1/', playbackRouter)
     app.use('/api/v1/auth', authRouter)
     app.use('/api/v1/guilds', isAuthenticated, guildRouter)
     app.use('/api/v1/search', isAuthenticated, searchRouter)
