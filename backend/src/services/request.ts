@@ -1,5 +1,6 @@
 import { Response } from 'express'
 import fetch from 'node-fetch'
+import CachedRequest from '../models/CachedRequest.js'
 
 /**
  * General request function.
@@ -34,6 +35,44 @@ const request = async (
     } else {
         return await response.text()
     }
+}
+
+const requestCache: Record<string, CachedRequest<any>> = {}
+
+/**
+ * Makes a request to the given URL, caching the response. The identification of the request is based on the URL and the identifier.
+ *
+ * @param identifier The identifier to use for the request.
+ * @param url The URL to request.
+ * @param options The options to use for the cached request. Defaults to { staleTime: 10000 }.
+ * @param headers The headers to send.
+ * @returns The response data.
+ * @throws The response if the request failed.
+ */
+export const cachedGetRequest = async <T>(
+    identifier: string,
+    url: string,
+    options?: { staleTime: number },
+    headers?: Record<string, string>
+) => {
+    // Check if the request is cached and not stale.
+    if (
+        url + identifier in requestCache &&
+        !requestCache[url + identifier].isStale()
+    ) {
+        return requestCache[url + identifier].getData() as T
+    }
+
+    // Request the data.
+    const response = (await request(url, 'GET', undefined, headers)) as T
+
+    // Cache the data.
+    requestCache[url] = new CachedRequest<T>(
+        options?.staleTime ?? 10000,
+        response
+    )
+
+    return response
 }
 
 /**
@@ -93,6 +132,35 @@ export const discordGetRequest = async (
             ...headers
         }
     )
+}
+
+/**
+ * Makes a cached GET request to the specified Discord API endpoint.
+ *
+ * @param identifier The identifier to use for the request.
+ * @param endpoint The Discord API endpoint to request.
+ * @param accessToken The Discord access token to use.
+ * @param options The options to use for the cached request. Defaults to { staleTime: 10000 }.
+ * @param headers The headers to send.
+ * @returns The response data.
+ * @throws The response if the request failed.
+ */
+export const cachedDiscordGetRequest = async <T>(
+    identifier: string,
+    endpoint: string,
+    accessToken: string,
+    options: { staleTime: number },
+    headers?: Record<string, string>
+) => {
+    return (await cachedGetRequest(
+        identifier,
+        `https://discord.com/api/v10${endpoint}`,
+        { staleTime: options.staleTime ?? 10000 },
+        {
+            Authorization: `Bearer ${accessToken}`,
+            ...headers
+        }
+    )) as T
 }
 
 /**
