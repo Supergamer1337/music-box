@@ -81,7 +81,8 @@ export const cachedGetRequest = async <T>(
     )
     delete requestMadeRecently[url + identifier]
 
-    if (Math.random() < 0.1) {
+    // Clean the cache approximately every 100 requests.
+    if (Math.random() < 0.01) {
         for (const key in requestCache) {
             if (requestCache[key].isStale()) {
                 delete requestCache[key]
