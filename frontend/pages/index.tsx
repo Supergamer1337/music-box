@@ -8,6 +8,7 @@ import { useState } from 'react'
 import Header from '../components/Header'
 import useGuilds from './../hooks/useGuilds'
 import TextField from '../components/TextField'
+import ErrorDiv from '../components/ErrorDiv'
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     const queryClient = new QueryClient()
@@ -67,9 +68,9 @@ const Home: NextPage = () => {
 
             <div className="w-[36rem] md:w-[40rem] max-w-full mx-auto">
                 {!guilds ? (
-                    <div className="text-center text-2xl mt-10 bg-red-600 mx-2 p-2 rounded-md">
-                        Failed to retrieve servers. Please try again later.
-                    </div>
+                    <ErrorDiv size="large">
+                        Failed to retrieve guilds. Please try again later.
+                    </ErrorDiv>
                 ) : (
                     <ul className="flex flex-col mx-4 sm:mx-0 gap-2">
                         {guilds

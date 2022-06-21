@@ -9,6 +9,7 @@ import YtVideo from '../types/YtVideo'
 import usePlaylists from './../hooks/usePlaylists'
 import CreatePlaylistForm from './CreatePlaylistForm'
 import TextField from './TextField'
+import ErrorDiv from './ErrorDiv'
 
 interface Props {
     hideFunction: () => void
@@ -54,9 +55,7 @@ const AddToPlaylist = ({ hideFunction, video }: Props) => {
             )}
 
             {playlistsError && (
-                <p className="p-2 text-center bg-red-700 rounded-md mt-5 text-lg mx-4">
-                    {playlistsError}
-                </p>
+                <ErrorDiv size="large">{playlistsError}</ErrorDiv>
             )}
 
             <div className="flex flex-col gap-2 mt-4">
