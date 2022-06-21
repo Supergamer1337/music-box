@@ -66,7 +66,7 @@ const AddToPlaylist = ({ hideFunction, video }: Props) => {
                             <AddToPlaylistItem
                                 key={playlist.id}
                                 playlist={playlist}
-                                videoToAdd={video}
+                                video={video}
                             />
                         ))
                     ) : (

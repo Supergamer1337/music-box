@@ -1,55 +1,41 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { PlaylistInfo } from '../types/Playlist'
 import Image from 'next/image'
 import YtVideo from './../types/YtVideo.d'
 import AddIconSVG from '../svg/AddIconSVG'
-import { useMutation, useQuery } from 'react-query'
-import {
-    addNewSong,
-    checkYtVideoExistsInPlaylist,
-    removeSongByYoutubeId
-} from './../services/songService'
 import LoadingSpinnerSVG from '../svg/LoadingSpinnerSVG'
 import Tooltip from './Tooltip'
 import CheckMarkIconSVG from '../svg/CheckMarkIconSVG'
+import useYoutubeVideoExists from '../hooks/useYoutubeVideoExists'
+import useAddSong from './../hooks/useAddSong'
+import useRemoveSong from './../hooks/useRemoveSong'
+
 interface Props {
     playlist: PlaylistInfo
-    videoToAdd: YtVideo
+    video: YtVideo
 }
 
-const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
+const AddToPlaylistItem = ({ playlist, video }: Props) => {
     const {
-        data: youtubeVideoExists,
-        isLoading: youtubeVideoExistsLoading,
-        isError: youtubeVideoExistsError,
-        refetch: youtubeVideoExistsRefetch
-    } = useQuery(
-        ['youtubeVideoExistsIn', playlist.id, videoToAdd.id],
-        async () => checkYtVideoExistsInPlaylist(playlist.id, videoToAdd.id)
-    )
+        youtubeVideoExists,
+        loadingYoutubeVideoExists,
+        youtubeVideoExistsError,
+        refetchYoutubeVideoExists
+    } = useYoutubeVideoExists(playlist.id, video.id)
+    const { addSong, addedSong, addingSong, errorAddingSong, resetAddSong } =
+        useAddSong(video, playlist.id, () => {
+            resetRemoveSong()
+            refetchYoutubeVideoExists()
+        })
     const {
-        isSuccess: addIsSuccess,
-        isLoading: addIsLoading,
-        isError: addIsError,
-        mutate: addMutate,
-        reset: addReset
-    } = useMutation(() => addNewSong(videoToAdd, playlist.id), {
-        onSuccess: () => {
-            deleteReset()
-            youtubeVideoExistsRefetch()
-        }
-    })
-    const {
-        isSuccess: deleteIsSuccess,
-        isLoading: deleteIsLoading,
-        isError: deleteIsError,
-        mutate: deleteMutate,
-        reset: deleteReset
-    } = useMutation(() => removeSongByYoutubeId(videoToAdd.id, playlist.id), {
-        onSuccess: () => {
-            addReset()
-            youtubeVideoExistsRefetch()
-        }
+        removedSong,
+        removingSong,
+        errorRemovingSong,
+        removeSong,
+        resetRemoveSong
+    } = useRemoveSong(video.id, playlist.id, () => {
+        resetAddSong()
+        refetchYoutubeVideoExists()
     })
 
     return (
@@ -68,57 +54,72 @@ const AddToPlaylistItem = ({ playlist, videoToAdd }: Props) => {
             </p>
             <Tooltip
                 message={
-                    deleteIsError
+                    errorRemovingSong
                         ? 'Failed to delete song. Try again later.'
                         : 'Failed to add song. Try again later.'
                 }
                 onActive
-                active={addIsError || deleteIsError}
+                active={errorAddingSong || errorRemovingSong}
                 error
             >
-                {/* Using display hidden instead of ternary operator, 
-                or the UseOutsideDetection function in search box will 
-                think it is clicked outside and close the menu. */}
-                <LoadingSpinnerSVG
-                    className={`${
-                        !youtubeVideoExistsLoading &&
-                        !addIsLoading &&
-                        !deleteIsLoading
-                            ? 'hidden'
-                            : ''
-                    } w-8 h-8 animate-spin cursor-pointer hover:opacity-75`}
-                />
-                <AddIconSVG
+                <div
                     onClick={() => {
-                        if (deleteIsError) return deleteMutate()
-                        addMutate()
+                        if (
+                            addedSong ||
+                            youtubeVideoExists ||
+                            youtubeVideoExistsError ||
+                            errorAddingSong
+                        )
+                            return removeSong()
+                        if (
+                            removedSong ||
+                            !youtubeVideoExists ||
+                            errorRemovingSong
+                        )
+                            return addSong()
                     }}
-                    className={`${
-                        (addIsLoading ||
-                            addIsSuccess ||
-                            youtubeVideoExistsLoading ||
-                            (youtubeVideoExists && !deleteIsSuccess)) &&
-                        !deleteIsError
-                            ? 'hidden'
-                            : ''
-                    } w-8 h-8 hover:opacity-75 cursor-pointer transition-all ${
-                        addIsError || youtubeVideoExistsError || deleteIsError
-                            ? 'rotate-45'
-                            : ''
-                    }`}
-                />
-                <CheckMarkIconSVG
-                    onClick={() => deleteMutate()}
-                    className={`${
-                        addIsLoading ||
-                        deleteIsLoading ||
-                        deleteIsSuccess ||
-                        deleteIsError ||
-                        (!youtubeVideoExists && !addIsSuccess)
-                            ? 'hidden'
-                            : ''
-                    } w-8 h-8 cursor-pointer hover:opacity-75`}
-                />
+                >
+                    {/* Using display hidden instead of ternary operator, 
+                    or the UseOutsideDetection function in search box will 
+                    think it is clicked outside and close the menu. */}
+                    <LoadingSpinnerSVG
+                        className={`${
+                            !loadingYoutubeVideoExists &&
+                            !addingSong &&
+                            !removingSong
+                                ? 'hidden'
+                                : ''
+                        } w-8 h-8 animate-spin cursor-pointer hover:opacity-75`}
+                    />
+                    <CheckMarkIconSVG
+                        className={`${
+                            addingSong ||
+                            removingSong ||
+                            removedSong ||
+                            errorRemovingSong ||
+                            (!youtubeVideoExists && !addedSong)
+                                ? 'hidden'
+                                : ''
+                        } w-8 h-8 cursor-pointer hover:opacity-75`}
+                    />
+                    <AddIconSVG
+                        className={`${
+                            (addingSong ||
+                                addedSong ||
+                                loadingYoutubeVideoExists ||
+                                (youtubeVideoExists && !removedSong)) &&
+                            !errorAddingSong
+                                ? 'hidden'
+                                : ''
+                        } w-8 h-8 hover:opacity-75 cursor-pointer transition-all ${
+                            errorAddingSong ||
+                            youtubeVideoExistsError ||
+                            errorRemovingSong
+                                ? 'rotate-45'
+                                : ''
+                        }`}
+                    />
+                </div>
             </Tooltip>
         </div>
     )
