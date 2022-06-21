@@ -23,7 +23,7 @@ export const getDiscordUserGuilds = async (accessToken: string) => {
             { staleTime: 5000 }
         )
     } catch (errorResponse: any) {
-        throw handleRequestError(errorResponse, 'getDiscordUserGuilds')
+        throw await handleRequestError(errorResponse, 'getDiscordUserGuilds')
     }
 }
 
@@ -42,6 +42,6 @@ export const getDiscordGuild = async (guildId: string) => {
             }
         )) as RESTGetAPIGuildResult
     } catch (errorResponse: any) {
-        throw handleRequestError(errorResponse, 'getDiscordGuild')
+        throw await handleRequestError(errorResponse, 'getDiscordGuild')
     }
 }

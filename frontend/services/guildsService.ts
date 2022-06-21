@@ -51,6 +51,12 @@ export const serverGetGuildData = async (
     return (await guild.json()) as APIGuild
 }
 
+/**
+ * Gets guild data from Discord for the given guild ID, as the client.
+ *
+ * @param guildId The guild ID.
+ * @returns The guild data.
+ */
 export const clientGetGuildData = async (guildId: string) => {
     const guild = await clientBackendGetRequest(`/api/v1/guilds/${guildId}`)
 
