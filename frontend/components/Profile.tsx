@@ -4,13 +4,12 @@ import LogoutSVG from '../svg/LogoutSVG'
 import { AnimatePresence, motion } from 'framer-motion'
 import { logout } from '../services/authenticationService'
 import useOutsideDetection from '../hooks/useOutsideDetection'
-import { APIUser } from 'discord-api-types/v10'
+import useUser from './../hooks/useUser'
 
-type Props = {
-    user: APIUser
-}
+interface Props {}
 
-const Profile = ({ user }: Props) => {
+const Profile = ({}: Props) => {
+    const user = useUser()
     const [showMenu, setShowMenu] = useState(false)
     let menuRef = createRef<HTMLDivElement>()
     useOutsideDetection(menuRef, () => {
