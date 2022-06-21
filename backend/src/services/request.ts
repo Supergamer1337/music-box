@@ -72,7 +72,13 @@ export const cachedGetRequest = async <T>(
 
     // Request the data.
     requestMadeRecently[url + identifier] = true
-    const response = (await request(url, 'GET', undefined, headers)) as T
+    let response
+    try {
+        response = (await request(url, 'GET', undefined, headers)) as T
+    } catch (error) {
+        delete requestMadeRecently[url + identifier]
+        throw error
+    }
 
     // Cache the data.
     requestCache[url + identifier] = new CachedRequest<T>(
