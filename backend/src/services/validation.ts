@@ -1,5 +1,6 @@
 import { getDiscordUserGuilds } from './guild.js'
 import YtVideo from '../types/YtVideo'
+import { RESTGetAPICurrentUserGuildsResult } from 'discord-api-types/v10'
 
 /**
  * Validates that the given user has the correct rights for the given guild.
@@ -13,44 +14,8 @@ export const validGuildPermissions = async (
     access_token: string,
     guildId: string
 ): Promise<boolean> => {
-    try {
-        return await checkGuildPermissions(access_token, guildId)
-    } catch (error: any) {
-        // Hack: This should be fixed using caching or a better error handling mechanism in the future.
-        // If checking the guild permissions fails, check if it was because of a rate limit.
-        if (error?.rateLimited) {
-            // If it was rate limited, wait for the rate limit to expire and try again.
-            return new Promise(async (resolve, reject) => {
-                setTimeout(async () => {
-                    try {
-                        const hasPermission = await validGuildPermissions(
-                            access_token,
-                            guildId
-                        )
-                        resolve(hasPermission)
-                    } catch (error) {
-                        reject(error)
-                    }
-                }, error.retryAfter * 1000)
-            })
-        } else {
-            // If it wasn't rate limited, throw the error.
-            throw error
-        }
-    }
-}
-
-/**
- * Helper function for validGuildPermissions, which checks if the given user has the correct rights for the given guild.
- *
- * @param access_token The user's Discord access token.
- * @param guildId The guild ID.
- * @returns True if the user has the correct rights for the given guild, false otherwise.
- */
-const checkGuildPermissions = async (access_token: string, guildId: string) => {
-    const guild = (await getDiscordUserGuilds(access_token)).find(
-        (guild) => guild.id === guildId
-    )
+    const guilds = await getDiscordUserGuilds(access_token)
+    const guild = guilds.find((g) => g.id === guildId)
 
     if (guild?.owner) {
         return true

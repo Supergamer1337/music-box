@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { getPlaylist } from '../services/playlist.js'
 import { validGuildPermissions } from '../services/validation.js'
+import { handleEndpointError } from './../services/request.js'
 
 /**
  * Checks if the current request playlist exists and the user has the correct permissions.
@@ -10,26 +11,36 @@ import { validGuildPermissions } from '../services/validation.js'
  * @param next The next middleware.
  */
 const hasPlaylistPermissions: RequestHandler = async (req, res, next) => {
-    const { playlistId } = req.params
+    try {
+        const { playlistId } = req.params
 
-    const playlist = await getPlaylist(playlistId as string)
+        const playlist = await getPlaylist(playlistId as string)
 
-    if (!playlistId)
-        return res.status(404).json({ error: 'That playlist does not exist.' })
+        if (!playlistId)
+            return res
+                .status(404)
+                .json({ error: 'That playlist does not exist.' })
 
-    if (
-        !validGuildPermissions(
-            // @ts-expect-error Taken care of by middleware.
-            req.session.discordTokenData.access_token,
-            // @ts-expect-error Taken care of by above if statement.
-            playlist.guildId
+        if (
+            !validGuildPermissions(
+                // @ts-expect-error Taken care of by middleware.
+                req.session.discordTokenData.access_token,
+                // @ts-expect-error Taken care of by above if statement.
+                playlist.guildId
+            )
         )
-    )
-        return res.status(403).json({
-            error: 'You do not have permission to add songs to this playlist.'
-        })
+            return res.status(403).json({
+                error: 'You do not have permission to add songs to this playlist.'
+            })
 
-    next()
+        next()
+    } catch (error) {
+        handleEndpointError(
+            error,
+            res,
+            'Internal server error occurred while checking playlist permissions.'
+        )
+    }
 }
 
 export default hasPlaylistPermissions

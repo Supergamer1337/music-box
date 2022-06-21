@@ -1,5 +1,12 @@
-import { RESTGetAPICurrentUserGuildsResult } from 'discord-api-types/v10'
-import { getRequest, handleRequestError } from './request.js'
+import {
+    RESTGetAPICurrentUserGuildsResult,
+    RESTGetAPIGuildResult
+} from 'discord-api-types/v10'
+import {
+    cachedDiscordGetRequest,
+    getRequest,
+    handleRequestError
+} from './request.js'
 
 /**
  * Gets the user's Discord guilds.
@@ -9,14 +16,14 @@ import { getRequest, handleRequestError } from './request.js'
  */
 export const getDiscordUserGuilds = async (accessToken: string) => {
     try {
-        return (await getRequest(
-            'https://discord.com/api/v10/users/@me/guilds',
-            {
-                Authorization: `Bearer ${accessToken}`
-            }
-        )) as RESTGetAPICurrentUserGuildsResult
+        return await cachedDiscordGetRequest<RESTGetAPICurrentUserGuildsResult>(
+            accessToken,
+            '/users/@me/guilds',
+            accessToken,
+            { staleTime: 5000 }
+        )
     } catch (errorResponse: any) {
-        return handleRequestError(errorResponse, 'getDiscordUserGuilds')
+        throw handleRequestError(errorResponse, 'getDiscordUserGuilds')
     }
 }
 
@@ -28,13 +35,13 @@ export const getDiscordUserGuilds = async (accessToken: string) => {
  */
 export const getDiscordGuild = async (guildId: string) => {
     try {
-        return await getRequest(
+        return (await getRequest(
             'https://discord.com/api/v10/guilds/' + guildId,
             {
                 Authorization: `Bot ${process.env.BOT_TOKEN}`
             }
-        )
+        )) as RESTGetAPIGuildResult
     } catch (errorResponse: any) {
-        return handleRequestError(errorResponse, 'getDiscordGuild')
+        throw handleRequestError(errorResponse, 'getDiscordGuild')
     }
 }

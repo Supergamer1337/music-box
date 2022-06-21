@@ -1,5 +1,6 @@
 import { Response } from 'express'
 import fetch from 'node-fetch'
+import CachedRequest from '../models/CachedRequest.js'
 
 /**
  * General request function.
@@ -34,6 +35,62 @@ const request = async (
     } else {
         return await response.text()
     }
+}
+
+const requestCache: Record<string, CachedRequest<any>> = {}
+const requestMadeRecently: Record<string, boolean> = {}
+
+/**
+ * Makes a request to the given URL, caching the response. The identification of the request is based on the URL and the identifier.
+ *
+ * @param identifier The identifier to use for the request.
+ * @param url The URL to request.
+ * @param options The options to use for the cached request. Defaults to { staleTime: 10000 }.
+ * @param headers The headers to send.
+ * @returns The response data.
+ * @throws The response if the request failed.
+ */
+export const cachedGetRequest = async <T>(
+    identifier: string,
+    url: string,
+    options?: { staleTime: number },
+    headers?: Record<string, string>
+) => {
+    if (requestMadeRecently[url + identifier]) {
+        while (requestMadeRecently[url + identifier]) {
+            await new Promise((resolve) => setTimeout(resolve, 100))
+        }
+    }
+
+    // Check if the request is cached and not stale.
+    if (
+        requestCache[url + identifier] &&
+        !requestCache[url + identifier].isStale()
+    ) {
+        return requestCache[url + identifier].getData() as T
+    }
+
+    // Request the data.
+    requestMadeRecently[url + identifier] = true
+    const response = (await request(url, 'GET', undefined, headers)) as T
+
+    // Cache the data.
+    requestCache[url + identifier] = new CachedRequest<T>(
+        options?.staleTime ?? 10000,
+        response
+    )
+    delete requestMadeRecently[url + identifier]
+
+    // Clean the cache approximately every 100 requests.
+    if (Math.random() < 0.01) {
+        for (const key in requestCache) {
+            if (requestCache[key].isStale()) {
+                delete requestCache[key]
+            }
+        }
+    }
+
+    return response
 }
 
 /**
@@ -96,6 +153,35 @@ export const discordGetRequest = async (
 }
 
 /**
+ * Makes a cached GET request to the specified Discord API endpoint.
+ *
+ * @param identifier The identifier to use for the request.
+ * @param endpoint The Discord API endpoint to request.
+ * @param accessToken The Discord access token to use.
+ * @param options The options to use for the cached request. Defaults to { staleTime: 10000 }.
+ * @param headers The headers to send.
+ * @returns The response data.
+ * @throws The response if the request failed.
+ */
+export const cachedDiscordGetRequest = async <T>(
+    identifier: string,
+    endpoint: string,
+    accessToken: string,
+    options?: { staleTime: number },
+    headers?: Record<string, string>
+) => {
+    return (await cachedGetRequest(
+        identifier,
+        `https://discord.com/api/v10${endpoint}`,
+        { staleTime: options?.staleTime ?? 10000 },
+        {
+            Authorization: `Bearer ${accessToken}`,
+            ...headers
+        }
+    )) as T
+}
+
+/**
  * Handles a request error.
  *
  * @param errorResponse The error response.
@@ -106,22 +192,11 @@ export const handleRequestError = async (
     errorResponse: any,
     functionName: string
 ) => {
-    if (errorResponse.status === 429) {
-        throw {
-            rateLimited: true,
-            message: `Rate limit exceeded in ${functionName}`,
-            retry_after: Number.parseFloat(
-                errorResponse.headers.get('retry-after')
-            )
-        }
-    } else {
-        throw {
-            rateLimited: false,
-            message: `${errorResponse.status} ${
-                errorResponse.statusText
-            }. ${await errorResponse.text()}`
-        }
-    }
+    throw new Error(
+        `${errorResponse.status} ${
+            errorResponse.statusText
+        }. ${await errorResponse.text()} in function ${functionName}`
+    )
 }
 
 /**
