@@ -38,6 +38,7 @@ const request = async (
 }
 
 const requestCache: Record<string, CachedRequest<any>> = {}
+const requestMadeRecently: Record<string, boolean> = {}
 
 /**
  * Makes a request to the given URL, caching the response. The identification of the request is based on the URL and the identifier.
@@ -55,22 +56,30 @@ export const cachedGetRequest = async <T>(
     options?: { staleTime: number },
     headers?: Record<string, string>
 ) => {
+    if (requestMadeRecently[url + identifier]) {
+        while (requestMadeRecently[url + identifier]) {
+            await new Promise((resolve) => setTimeout(resolve, 100))
+        }
+    }
+
     // Check if the request is cached and not stale.
     if (
-        url + identifier in requestCache &&
+        requestCache[url + identifier] &&
         !requestCache[url + identifier].isStale()
     ) {
         return requestCache[url + identifier].getData() as T
     }
 
     // Request the data.
+    requestMadeRecently[url + identifier] = true
     const response = (await request(url, 'GET', undefined, headers)) as T
 
     // Cache the data.
-    requestCache[url] = new CachedRequest<T>(
+    requestCache[url + identifier] = new CachedRequest<T>(
         options?.staleTime ?? 10000,
         response
     )
+    requestMadeRecently[url + identifier] = false
 
     return response
 }
@@ -149,13 +158,13 @@ export const cachedDiscordGetRequest = async <T>(
     identifier: string,
     endpoint: string,
     accessToken: string,
-    options: { staleTime: number },
+    options?: { staleTime: number },
     headers?: Record<string, string>
 ) => {
     return (await cachedGetRequest(
         identifier,
         `https://discord.com/api/v10${endpoint}`,
-        { staleTime: options.staleTime ?? 10000 },
+        { staleTime: options?.staleTime ?? 10000 },
         {
             Authorization: `Bearer ${accessToken}`,
             ...headers
@@ -174,22 +183,11 @@ export const handleRequestError = async (
     errorResponse: any,
     functionName: string
 ) => {
-    if (errorResponse.status === 429) {
-        throw {
-            rateLimited: true,
-            message: `Rate limit exceeded in ${functionName}`,
-            retry_after: Number.parseFloat(
-                errorResponse.headers.get('retry-after')
-            )
-        }
-    } else {
-        throw {
-            rateLimited: false,
-            message: `${errorResponse.status} ${
-                errorResponse.statusText
-            }. ${await errorResponse.text()}`
-        }
-    }
+    throw new Error(
+        `${errorResponse.status} ${
+            errorResponse.statusText
+        }. ${await errorResponse.text()} in function ${functionName}`
+    )
 }
 
 /**
