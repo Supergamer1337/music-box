@@ -79,7 +79,15 @@ export const cachedGetRequest = async <T>(
         options?.staleTime ?? 10000,
         response
     )
-    requestMadeRecently[url + identifier] = false
+    delete requestMadeRecently[url + identifier]
+
+    if (Math.random() < 0.1) {
+        for (const key in requestCache) {
+            if (requestCache[key].isStale()) {
+                delete requestCache[key]
+            }
+        }
+    }
 
     return response
 }
