@@ -87,7 +87,10 @@ const AddToPlaylist = ({ hideFunction, video }: Props) => {
             >
                 <CreatePlaylistForm
                     cancel={() => setShowDialog(false)}
-                    onCreation={refetchPlaylists}
+                    onCreation={async () => {
+                        await refetchPlaylists()
+                        setShowDialog(false)
+                    }}
                 />
             </Dialog>
         </motion.div>

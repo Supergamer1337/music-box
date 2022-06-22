@@ -15,7 +15,7 @@ const CreatePlaylistForm = ({ cancel, onCreation }: Props) => {
 
     return (
         <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
                 e.preventDefault()
                 createPlaylist()
             }}
@@ -31,11 +31,16 @@ const CreatePlaylistForm = ({ cancel, onCreation }: Props) => {
             />
 
             <div className="flex gap-4 justify-center flex-wrap mt-4">
-                <Button type="secondary" label="Cancel" onClick={cancel} />
                 <Button
-                    type="primary"
+                    type="button"
+                    variant="secondary"
+                    label="Cancel"
+                    onClick={cancel}
+                />
+                <Button
+                    variant="primary"
                     label="Create"
-                    inputType="submit"
+                    type="submit"
                     disabled={!playlistName || creatingPlaylist ? true : false}
                 />
             </div>
