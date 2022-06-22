@@ -88,7 +88,9 @@ const SearchComponent = ({}: Props) => {
                 </AnimatePresence>
             </div>
 
-            <Overlay active={searchTerm && searchBoxClicked ? true : false} />
+            <AnimatePresence>
+                {searchBoxClicked && searchTerm !== '' && <Overlay />}
+            </AnimatePresence>
         </main>
     )
 }

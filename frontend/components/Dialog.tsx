@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import ReactPortal from './ReactPortal'
+import Overlay from './Overlay'
 
 interface Props {
     children: ReactNode
@@ -24,13 +25,7 @@ const Dialog = ({ children, active, hideFunction }: Props) => {
                         >
                             {children}
                         </motion.div>
-                        <motion.div
-                            onClick={hideFunction}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 0.4 }}
-                            exit={{ opacity: 0 }}
-                            className={`fixed top-0 left-0 z-[200] w-full h-[100vh] bg-black`}
-                        />
+                        <Overlay zIndex={200} hideFunction={hideFunction} />
                     </>
                 )}
             </AnimatePresence>
