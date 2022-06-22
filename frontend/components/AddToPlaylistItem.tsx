@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { PlaylistInfo } from '../types/Playlist'
 import Image from 'next/image'
 import YtVideo from './../types/YtVideo.d'
@@ -6,9 +6,7 @@ import AddIconSVG from '../svg/AddIconSVG'
 import LoadingSpinnerSVG from '../svg/LoadingSpinnerSVG'
 import Tooltip from './Tooltip'
 import CheckMarkIconSVG from '../svg/CheckMarkIconSVG'
-import useYoutubeVideoExists from '../hooks/useYoutubeVideoExists'
-import useAddSong from './../hooks/useAddSong'
-import useRemoveSong from './../hooks/useRemoveSong'
+import useSongAdderRemover from './../hooks/useSongAdderRemover'
 
 interface Props {
     playlist: PlaylistInfo
@@ -16,27 +14,8 @@ interface Props {
 }
 
 const AddToPlaylistItem = ({ playlist, video }: Props) => {
-    const {
-        youtubeVideoExists,
-        loadingYoutubeVideoExists,
-        youtubeVideoExistsError,
-        refetchYoutubeVideoExists
-    } = useYoutubeVideoExists(playlist.id, video.id)
-    const { addSong, addedSong, addingSong, errorAddingSong, resetAddSong } =
-        useAddSong(video, playlist.id, () => {
-            resetRemoveSong()
-            refetchYoutubeVideoExists()
-        })
-    const {
-        removedSong,
-        removingSong,
-        errorRemovingSong,
-        removeSong,
-        resetRemoveSong
-    } = useRemoveSong(video.id, playlist.id, () => {
-        resetAddSong()
-        refetchYoutubeVideoExists()
-    })
+    const { videoExists, isLoading, isError, error, mutate } =
+        useSongAdderRemover(video, playlist.id)
 
     return (
         <div className="grid grid-cols-[min-content,auto,min-content] items-center w-4/5 mx-auto bg-secondaryBg p-2 rounded-md gap-2">
@@ -53,30 +32,15 @@ const AddToPlaylistItem = ({ playlist, video }: Props) => {
                 {playlist.name}
             </p>
             <Tooltip
-                message={
-                    errorRemovingSong
-                        ? 'Failed to delete song. Try again later.'
-                        : 'Failed to add song. Try again later.'
-                }
+                message={error ? error : 'No error was provided'}
                 onActive
-                active={errorAddingSong || errorRemovingSong}
+                active={isError}
                 error
             >
                 <div
                     onClick={() => {
-                        if (
-                            addedSong ||
-                            youtubeVideoExists ||
-                            youtubeVideoExistsError ||
-                            errorAddingSong
-                        )
-                            return removeSong()
-                        if (
-                            removedSong ||
-                            !youtubeVideoExists ||
-                            errorRemovingSong
-                        )
-                            return addSong()
+                        if (isLoading) return
+                        mutate()
                     }}
                 >
                     {/* Using display hidden instead of ternary operator, 
@@ -84,39 +48,19 @@ const AddToPlaylistItem = ({ playlist, video }: Props) => {
                     think it is clicked outside and close the menu. */}
                     <LoadingSpinnerSVG
                         className={`${
-                            !loadingYoutubeVideoExists &&
-                            !addingSong &&
-                            !removingSong
-                                ? 'hidden'
-                                : ''
+                            !isLoading ? 'hidden' : ''
                         } w-8 h-8 animate-spin cursor-pointer hover:opacity-75`}
                     />
                     <CheckMarkIconSVG
                         className={`${
-                            addingSong ||
-                            removingSong ||
-                            removedSong ||
-                            errorRemovingSong ||
-                            (!youtubeVideoExists && !addedSong)
-                                ? 'hidden'
-                                : ''
+                            !videoExists || isLoading ? 'hidden' : ''
                         } w-8 h-8 cursor-pointer hover:opacity-75`}
                     />
                     <AddIconSVG
                         className={`${
-                            (addingSong ||
-                                addedSong ||
-                                loadingYoutubeVideoExists ||
-                                (youtubeVideoExists && !removedSong)) &&
-                            !errorAddingSong
-                                ? 'hidden'
-                                : ''
+                            videoExists || isLoading ? 'hidden' : ''
                         } w-8 h-8 hover:opacity-75 cursor-pointer transition-all ${
-                            errorAddingSong ||
-                            youtubeVideoExistsError ||
-                            errorRemovingSong
-                                ? 'rotate-45'
-                                : ''
+                            isError ? 'rotate-45' : ''
                         }`}
                     />
                 </div>

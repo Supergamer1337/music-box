@@ -5,15 +5,18 @@ const useYoutubeVideoExists = (playlistId: string, videoId: string) => {
     const {
         data: youtubeVideoExists,
         isLoading: loadingYoutubeVideoExists,
-        isError: youtubeVideoExistsError,
+        isError: youtubeVideoExistsIsError,
+        error: youtubeVideoExistsError,
         refetch: refetchYoutubeVideoExists
-    } = useQuery(['youtubeVideoExistsIn', playlistId, videoId], async () =>
-        checkYtVideoExistsInPlaylist(playlistId, videoId)
+    } = useQuery<boolean, string>(
+        ['youtubeVideoExistsIn', playlistId, videoId],
+        () => checkYtVideoExistsInPlaylist(playlistId, videoId)
     )
 
     return {
         youtubeVideoExists,
         loadingYoutubeVideoExists,
+        youtubeVideoExistsIsError,
         youtubeVideoExistsError,
         refetchYoutubeVideoExists
     }

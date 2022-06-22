@@ -22,7 +22,7 @@ export const addNewSong = async (
     )
 
     if (!response.ok) {
-        throw new Error('Failed to add song')
+        throw new Error('Could not add song... Try again later.')
     }
 }
 
@@ -42,7 +42,7 @@ export const removeSongByYoutubeId = async (
     )
 
     if (!response.ok) {
-        throw new Error('Failed to delete song')
+        throw new Error('Could not remove song... Try again later.')
     }
 }
 
