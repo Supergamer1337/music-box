@@ -8,7 +8,7 @@ interface Props {}
 
 const BottomNavBar = ({}: Props) => {
     return (
-        <div className="flex justify-around bg-secondaryBg py-2 fixed bottom-0 w-full items-center text-center">
+        <div className="flex justify-around bg-secondaryBg py-2 fixed bottom-0 w-full items-center text-center sm:hidden">
             <BottomNavBarItem
                 icon="playlist"
                 label="Playlists"
