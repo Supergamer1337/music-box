@@ -5,15 +5,15 @@ import Button from './Button'
 import Dialog from './Dialog'
 import LoadingSpinnerSVG from './../svg/LoadingSpinnerSVG'
 import AddToPlaylistItem from './AddToPlaylistItem'
-import YtVideo from '../types/YtVideo'
 import usePlaylists from './../hooks/usePlaylists'
 import CreatePlaylistForm from './CreatePlaylistForm'
 import TextField from './TextField'
 import ErrorDiv from './ErrorDiv'
+import YouTubeVideo from './../types/youtube/YoutubeVideo.d'
 
 interface Props {
     hideFunction: () => void
-    video: YtVideo
+    video: YouTubeVideo
 }
 
 const AddToPlaylist = ({ hideFunction, video }: Props) => {

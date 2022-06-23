@@ -1,6 +1,5 @@
 import { getDiscordUserGuilds } from './guild.js'
-import YtVideo from '../types/YtVideo'
-import { RESTGetAPICurrentUserGuildsResult } from 'discord-api-types/v10'
+import { YouTubeVideo } from 'youtube-search-no-limit'
 
 /**
  * Validates that the given user has the correct rights for the given guild.
@@ -43,7 +42,7 @@ export const isString = (value: any): boolean => {
  * @param video The video to check.
  * @returns An array of errors if the video is invalid, an empty array otherwise.
  */
-export const validYtVideo = (video: Partial<YtVideo>): string[] => {
+export const validYtVideo = (video: Partial<YouTubeVideo>): string[] => {
     const errors = []
     if (video) {
         if (!video.id || !isString(video.id))

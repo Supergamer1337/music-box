@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { ytSearch } from '../services/searchService'
-import YtVideo from '../types/YtVideo'
+import YouTubeVideo from './../types/youtube/YoutubeVideo.d'
 
 /**
  * Hook to search YouTube for videos.
@@ -20,7 +20,7 @@ const useYtSearch = (searchTerm: string) => {
         data: searchResults,
         error: searchError,
         refetch
-    } = useQuery<YtVideo[], string>(
+    } = useQuery<YouTubeVideo[], string>(
         ['ytSearch', searchTerm],
         () => ytSearch(searchTerm),
         {

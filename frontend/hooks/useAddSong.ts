@@ -1,6 +1,6 @@
 import { useMutation } from 'react-query'
 import { addNewSong } from '../services/songService'
-import YtVideo from './../types/YtVideo.d'
+import YouTubeVideo from './../types/youtube/YoutubeVideo.d'
 
 /**
  * Hook to add a new song to the playlist.
@@ -16,7 +16,7 @@ import YtVideo from './../types/YtVideo.d'
  * - addedSong: Whether the song was added.
  */
 const useAddSong = (
-    video: YtVideo,
+    video: YouTubeVideo,
     playlistId: string,
     onSuccess?: () => void
 ) => {

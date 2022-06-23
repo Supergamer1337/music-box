@@ -1,7 +1,7 @@
 import { useMutation } from 'react-query'
 import { addNewSong, removeSongByYoutubeId } from './../services/songService'
-import YtVideo from './../types/YtVideo.d'
 import useYoutubeVideoExists from './useYoutubeVideoExists'
+import YouTubeVideo from './../types/youtube/YoutubeVideo.d'
 
 /**
  * Hook to toggle between adding or removing a song from a playlist.
@@ -15,7 +15,7 @@ import useYoutubeVideoExists from './useYoutubeVideoExists'
  * - error: The error message if the song status is erroring.
  * - mutate: A function to add or remove the song.
  */
-const useSongAdderRemover = (video: YtVideo, playlistId: string) => {
+const useSongAdderRemover = (video: YouTubeVideo, playlistId: string) => {
     const {
         youtubeVideoExists,
         loadingYoutubeVideoExists,

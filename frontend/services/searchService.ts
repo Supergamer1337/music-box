@@ -1,5 +1,5 @@
-import YtVideo from '../types/YtVideo'
 import { clientBackendGetRequest, handleInvalidRequest } from './requestService'
+import YouTubeVideo from './../types/youtube/YoutubeVideo.d'
 
 /**
  * Searches Youtube for videos matching the query string.
@@ -19,5 +19,5 @@ export const ytSearch = async (query: string) => {
             'Failed to retrieve search results.'
         )
 
-    return (await response.json()).videos as YtVideo[]
+    return (await response.json()).videos as YouTubeVideo[]
 }

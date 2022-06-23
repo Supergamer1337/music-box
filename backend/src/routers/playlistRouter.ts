@@ -5,7 +5,6 @@ import {
     getExtendedPlaylist,
     getGuildPlaylists
 } from '../services/playlist.js'
-import type YtVideo from '../types/YtVideo.d'
 import {
     addNewSong,
     getSongByPlaylistAndYoutubeId,
@@ -13,8 +12,8 @@ import {
 } from '../services/song.js'
 import { handleEndpointError } from '../services/request.js'
 import hasGuildPermissions from '../middleware/hasGuildPermissions.js'
-import { playlistsSongCountConversion } from './../services/conversion.js'
 import hasPlaylistPermissions from './../middleware/hasPlaylistPermissions.js'
+import { YouTubeVideo } from 'youtube-search-no-limit'
 
 const playlistRouter = Router()
 
@@ -65,7 +64,7 @@ playlistRouter.post('/:playlistId/add-song', async (req, res) => {
     try {
         const { playlistId } = req.params
 
-        const video = req.body.video as YtVideo
+        const video = req.body.video as YouTubeVideo
 
         const errors = validYtVideo(video)
         if (errors.length > 0) return res.status(400).json({ errors })

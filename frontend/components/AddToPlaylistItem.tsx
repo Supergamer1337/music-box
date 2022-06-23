@@ -1,16 +1,16 @@
 import React from 'react'
 import { PlaylistInfo } from '../types/Playlist'
 import Image from 'next/image'
-import YtVideo from './../types/YtVideo.d'
 import AddIconSVG from '../svg/AddIconSVG'
 import LoadingSpinnerSVG from '../svg/LoadingSpinnerSVG'
 import Tooltip from './Tooltip'
 import CheckMarkIconSVG from '../svg/CheckMarkIconSVG'
 import useSongAdderRemover from './../hooks/useSongAdderRemover'
+import YouTubeVideo from './../types/youtube/YoutubeVideo.d'
 
 interface Props {
     playlist: PlaylistInfo
-    video: YtVideo
+    video: YouTubeVideo
 }
 
 const AddToPlaylistItem = ({ playlist, video }: Props) => {
