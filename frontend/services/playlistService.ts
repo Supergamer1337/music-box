@@ -13,7 +13,6 @@ import { PlaylistInfo } from './../types/Playlist.d'
  * @throws An error if the request failed.
  */
 export const addNewPlaylist = async (name: string, guildId: string) => {
-    console.log(name, guildId)
     const response = await clientBackendPostRequest(
         '/api/v1/playlists/create',
         {
@@ -22,12 +21,11 @@ export const addNewPlaylist = async (name: string, guildId: string) => {
         }
     )
 
-    if (!response.ok) {
+    if (!response.ok)
         return handleInvalidRequest(
             response,
             'Failed to create playlist. Please try again later.'
         )
-    }
 
     return (await response.json()) as PlaylistInfo
 }
@@ -44,12 +42,11 @@ export const getPlaylists = async (guildId: string) => {
         `/api/v1/playlists/guild/${guildId}`
     )
 
-    if (!response.ok) {
+    if (!response.ok)
         return handleInvalidRequest(
             response,
             'Failed to get playlists. Please try again later.'
         )
-    }
 
     return (await response.json()).playlists as PlaylistInfo[]
 }

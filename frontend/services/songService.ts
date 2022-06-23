@@ -1,9 +1,9 @@
-import { rejects } from 'assert'
 import YtVideo from '../types/YtVideo'
 import {
     clientBackendDeleteRequest,
     clientBackendGetRequest,
-    clientBackendPostRequest
+    clientBackendPostRequest,
+    handleInvalidRequest
 } from './requestService'
 
 /**
@@ -21,9 +21,11 @@ export const addNewSong = async (
         { video }
     )
 
-    if (!response.ok) {
-        throw new Error('Could not add song... Try again later.')
-    }
+    if (!response.ok)
+        return handleInvalidRequest(
+            response,
+            'Could not add song... Try again later.'
+        )
 }
 
 /**
@@ -41,9 +43,11 @@ export const removeSongByYoutubeId = async (
         `/api/v1/playlists/${playlistId}/ytId/${youtubeId}`
     )
 
-    if (!response.ok) {
-        throw new Error('Could not remove song... Try again later.')
-    }
+    if (!response.ok)
+        return handleInvalidRequest(
+            response,
+            'Could not remove song... Try again later.'
+        )
 }
 
 /**
@@ -62,9 +66,11 @@ export const checkYtVideoExistsInPlaylist = async (
         `/api/v1/playlists/${playlistId}/ytId/${videoId}`
     )
 
-    if (!response.ok) {
-        throw new Error('Failed to check if video exists in playlist')
-    }
+    if (!response.ok)
+        return handleInvalidRequest(
+            response,
+            'Failed to check if video exists in playlist.'
+        )
 
     return (await response.json()).exists
 }
