@@ -13,7 +13,7 @@ const useSongAdderRemover = (video: YtVideo, playlistId: string) => {
     } = useYoutubeVideoExists(playlistId, video.id)
 
     const { isLoading, isError, error, mutate } = useMutation<void, string>(
-        () => {
+        async () => {
             if (!youtubeVideoExists) return addNewSong(video, playlistId)
             return removeSongByYoutubeId(video.id, playlistId)
         },

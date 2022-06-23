@@ -61,7 +61,7 @@ const Home: NextPage = () => {
             <TextField
                 type="text"
                 placeholder="Search for server..."
-                size="section"
+                fieldSize="section"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
             />

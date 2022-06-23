@@ -45,7 +45,7 @@ const AddToPlaylist = ({ hideFunction, video }: Props) => {
                 />
             </div>
 
-            <TextField size="section" placeholder="Filter Playlists..." />
+            <TextField fieldSize="section" placeholder="Filter Playlists..." />
 
             {loadingPlaylists && (
                 <div>

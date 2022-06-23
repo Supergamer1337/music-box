@@ -23,7 +23,7 @@ const SearchComponent = ({}: Props) => {
             <div className="relative z-[101] w-10/12 mx-auto" ref={searchRef}>
                 <TextField
                     type="text"
-                    size="section"
+                    fieldSize="section"
                     className={`!w-full !outline-none !mt-4 !mb-0 border-0 border-discordBorder transition-all duration-300 ${
                         searchTerm &&
                         searchBoxClicked &&
