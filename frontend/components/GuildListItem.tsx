@@ -44,7 +44,11 @@ const GuildListItem = ({ guild }: Props) => {
                 >
                     <div className="w-10 h-10">
                         <RoundCheckMarkIconSVG
-                            fill={guild.botInServer ? '#10B981' : undefined}
+                            className={
+                                guild.botInServer
+                                    ? 'fill-teal-500'
+                                    : 'fill-emptyBg'
+                            }
                         />
                     </div>
                 </Tooltip>

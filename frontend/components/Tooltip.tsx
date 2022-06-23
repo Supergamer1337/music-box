@@ -1,4 +1,5 @@
-import React, { createRef, useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import React, { createRef, useState } from 'react'
 
 type Props = {
     children: React.ReactNode
@@ -16,61 +17,45 @@ const Tooltip = ({
     error = false
 }: Props) => {
     const [display, setDisplay] = useState(false)
-    const [isVisible, setIsVisible] = useState(false)
-    const tooltipRef = createRef<HTMLDivElement>()
-    let hidingTimer: ReturnType<typeof setTimeout> | undefined = undefined
 
     const showTooltip = async () => {
         if (onActive) return
-        if (hidingTimer) {
-            clearTimeout(hidingTimer)
-            hidingTimer = undefined
-            // This prevents the tooltip from being hidden if the opacity was set to 0
-            setIsVisible(true)
-        } else {
-            setDisplay(true)
-            setTimeout(() => setIsVisible(true), 1) // FIX: This is a hack to make sure the tooltip fades in.
-        }
+        setDisplay(true)
     }
 
     const hideTooltip = async () => {
         if (onActive) return
-        if (!tooltipRef.current) return
-        setIsVisible(false)
-
-        hidingTimer = setTimeout(() => {
-            hidingTimer = undefined
-            setDisplay(false)
-        }, 200)
+        setDisplay(false)
     }
 
     return (
         <div className="relative flex items-center">
-            {(onActive && active) || display ? (
-                <div
-                    ref={tooltipRef}
-                    className={`flex items-center transition-opacity duration-200 shadow-lg ${
-                        isVisible || (onActive && active)
-                            ? 'opacity-100'
-                            : 'opacity-0'
-                    }`}
-                >
-                    <div
-                        className={`absolute ${
-                            error ? 'bg-red-700' : 'bg-accent'
-                        } right-[calc(100%+0.2rem)] p-2 w-max rounded-md z-10 shadow-lg`}
+            <AnimatePresence>
+                {(onActive && active) || display ? (
+                    <motion.div
+                        className={`flex items-center shadow-lg`}
+                        initial={{ opacity: 0, x: -5 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -5 }}
+                        transition={{ duration: 0.2 }}
                     >
-                        <p className="text-white">{message}</p>
-                    </div>
-                    <div
-                        className={`absolute right-[calc(100%-0.05rem)] rotate-45 ${
-                            error ? 'bg-red-700' : 'bg-accent'
-                        } w-2 h-2 shadow-lg`}
-                    />
-                </div>
-            ) : (
-                ''
-            )}
+                        <div
+                            className={`absolute ${
+                                error ? 'bg-red-700' : 'bg-accent'
+                            } right-[calc(100%+0.2rem)] p-2 w-max rounded-md z-10 shadow-lg`}
+                        >
+                            <p className="text-white">{message}</p>
+                        </div>
+                        <div
+                            className={`absolute right-[calc(100%-0.05rem)] rotate-45 ${
+                                error ? 'bg-red-700' : 'bg-accent'
+                            } w-2 h-2 shadow-lg`}
+                        />
+                    </motion.div>
+                ) : (
+                    ''
+                )}
+            </AnimatePresence>
 
             <div onMouseEnter={showTooltip} onMouseLeave={hideTooltip}>
                 {children}

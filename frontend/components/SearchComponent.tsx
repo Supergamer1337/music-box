@@ -1,56 +1,33 @@
-import React, { createRef, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Overlay from './Overlay'
-import YtVideo from '../../backend/src/types/YtVideo'
-import { ytSearch } from '../services/searchService'
 import YtSearchResultItem from './YtSearchResultItem'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useQuery } from 'react-query'
 import LoadingSpinnerSVG from '../svg/LoadingSpinnerSVG'
 import useOutsideDetection from '../hooks/useOutsideDetection'
+import useYtSearch from './../hooks/useYtSearch'
+import TextField from './TextField'
 
 interface Props {}
 
 const SearchComponent = ({}: Props) => {
     const [searchTerm, setSearchTerm] = useState('')
     const [searchBoxClicked, setSearchBoxClicked] = useState(false)
-    const [searchTimer, setSearchTimer] = useState<
-        ReturnType<typeof setTimeout> | undefined
-    >(undefined)
-
-    const searchRef = createRef<HTMLDivElement>()
-    useOutsideDetection(searchRef, () => {
+    const searchRef = useOutsideDetection<HTMLDivElement>(() => {
         setSearchBoxClicked(false)
     })
 
-    const {
-        data: searchResults,
-        error,
-        refetch
-    } = useQuery<YtVideo[]>(
-        ['ytSearch', searchTerm],
-        () => ytSearch(searchTerm),
-        {
-            enabled: false
-        }
-    )
-
-    useEffect(() => {
-        if (searchTerm === '') return // Prevents initial fetch
-        if (searchTimer) {
-            clearTimeout(searchTimer)
-        }
-        setSearchTimer(setTimeout(() => refetch(), 250))
-    }, [searchTerm])
+    const { searchResults, searchError } = useYtSearch(searchTerm)
 
     return (
-        <main>
+        <div>
             <div className="relative z-[101] w-10/12 mx-auto" ref={searchRef}>
-                <input
+                <TextField
                     type="text"
-                    className={`block w-full mt-4 p-2 rounded-md text-lg  outline-none border-0 border-discordBorder transition-all duration-300 ${
-                        searchTerm && searchBoxClicked
-                            ? 'bg-primaryBg border-b-2 rounded-b-none'
-                            : 'bg-emptyBg'
+                    fieldSize="section"
+                    className={`!w-full !outline-none !mt-4 !mb-0 border-0 border-discordBorder transition-all duration-300 ${
+                        searchTerm &&
+                        searchBoxClicked &&
+                        '!bg-primaryBg border-b-2 rounded-b-none'
                     }`}
                     placeholder="Search Youtube... (or paste url)"
                     onFocus={() => setSearchBoxClicked(true)}
@@ -65,13 +42,12 @@ const SearchComponent = ({}: Props) => {
                             exit={{ opacity: 0 }}
                             className="bg-primaryBg p-2 rounded-b-md flex flex-col gap-2"
                         >
-                            {!searchResults && !error ? (
+                            {!searchResults && !searchError ? (
                                 <LoadingSpinnerSVG className="animate-spin w-12 h-12 mx-auto my-2" />
-                            ) : error ? (
+                            ) : searchError ? (
                                 !searchResults && (
                                     <div className="text-center bg-red-600 mx-4 rounded-md">
-                                        A problem occurred while getting youtube
-                                        videos. Try again later.
+                                        {searchError}
                                     </div>
                                 )
                             ) : (
@@ -88,8 +64,10 @@ const SearchComponent = ({}: Props) => {
                 </AnimatePresence>
             </div>
 
-            <Overlay active={searchTerm && searchBoxClicked ? true : false} />
-        </main>
+            <AnimatePresence>
+                {searchBoxClicked && searchTerm !== '' && <Overlay />}
+            </AnimatePresence>
+        </div>
     )
 }
 
