@@ -6,7 +6,7 @@ interface Props
         HTMLInputElement
     > {
     className?: string
-    size: 'normal' | 'section'
+    size: 'normal' | 'large' | 'section'
 }
 
 const TextField = ({ className, size, ...restProps }: Props) => {

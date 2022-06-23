@@ -11,8 +11,7 @@ interface Props {}
 const Profile = ({}: Props) => {
     const user = useUser()
     const [showMenu, setShowMenu] = useState(false)
-    let menuRef = createRef<HTMLDivElement>()
-    useOutsideDetection(menuRef, () => {
+    const menuRef = useOutsideDetection<HTMLDivElement>(() => {
         setShowMenu(false)
     })
 

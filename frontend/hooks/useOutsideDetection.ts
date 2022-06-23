@@ -1,13 +1,14 @@
-import { useEffect, RefObject } from 'react'
+import { useEffect, createRef } from 'react'
 import { dialogWrapperId } from './../components/Dialog'
 
 /**
  * Hook that alerts clicks outside of the passed ref
  */
-export default function useOutsideDetection(
-    ref: RefObject<HTMLElement>,
+export default function useOutsideDetection<T extends HTMLElement>(
     callback: () => void
 ) {
+    const ref = createRef<T>()
+
     function handleClickOutside(event: any) {
         if (
             ref.current &&
@@ -26,4 +27,6 @@ export default function useOutsideDetection(
             document.removeEventListener('click', handleClickOutside)
         }
     }, [ref])
+
+    return ref
 }
