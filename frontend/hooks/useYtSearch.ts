@@ -3,6 +3,14 @@ import { useQuery } from 'react-query'
 import { ytSearch } from '../services/searchService'
 import YtVideo from '../types/YtVideo'
 
+/**
+ * Hook to search YouTube for videos.
+ *
+ * @param searchTerm The search term to search for.
+ * @returns An object with the following properties:
+ * - searchResults: The search results.
+ * - searchError: The error message if the search is erroring.
+ */
 const useYtSearch = (searchTerm: string) => {
     const [searchTimer, setSearchTimer] = useState<
         ReturnType<typeof setTimeout> | undefined

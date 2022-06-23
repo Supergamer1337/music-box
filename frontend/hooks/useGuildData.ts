@@ -3,6 +3,11 @@ import { useQuery } from 'react-query'
 import { MINUTE } from '../constants/time'
 import { clientGetGuildData } from '../services/guildsService'
 
+/**
+ * Hook to get the guild data.
+ *
+ * @returns The current guild data.
+ */
 const useGuildData = () => {
     const router = useRouter()
     const { guildId } = router.query

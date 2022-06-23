@@ -3,6 +3,9 @@ import { dialogWrapperId } from './../components/Dialog'
 
 /**
  * Hook that alerts clicks outside of the passed ref
+ *
+ * @param callback The callback to execute when the user clicks outside of the ref
+ * @returns The ref to pass to the component
  */
 export default function useOutsideDetection<T extends HTMLElement>(
     callback: () => void
