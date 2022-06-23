@@ -41,6 +41,9 @@ const GuildListItem = ({ guild }: Props) => {
                             ? 'Bot in server!'
                             : 'Bot not in server...'
                     }
+                    onClick={(e) => {
+                        e.stopPropagation()
+                    }}
                 >
                     <div className="w-10 h-10">
                         <RoundCheckMarkIconSVG

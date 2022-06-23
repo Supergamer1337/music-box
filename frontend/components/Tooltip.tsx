@@ -1,9 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import React, { createRef, useState } from 'react'
+import React, { MouseEventHandler, TouchEventHandler, useState } from 'react'
 
 type Props = {
     children: React.ReactNode
     message: string
+    onTouch?: TouchEventHandler<HTMLDivElement>
     onActive?: boolean
     active?: boolean
     error?: boolean
@@ -12,11 +13,23 @@ type Props = {
 const Tooltip = ({
     children,
     message,
+    onTouch = () => {},
     onActive = false,
     active = false,
     error = false
 }: Props) => {
     const [display, setDisplay] = useState(false)
+
+    const clickedTooltip: TouchEventHandler<HTMLDivElement> = (e) => {
+        if (onActive) return
+        setDisplay(!display)
+        onTouch(e)
+    }
+
+    const skipMouseEmulation: TouchEventHandler<HTMLDivElement> = (e) => {
+        if (onActive) return
+        e.preventDefault()
+    }
 
     const showTooltip = async () => {
         if (onActive) return
@@ -57,7 +70,12 @@ const Tooltip = ({
                 )}
             </AnimatePresence>
 
-            <div onMouseEnter={showTooltip} onMouseLeave={hideTooltip}>
+            <div
+                onTouchStart={clickedTooltip}
+                onTouchEnd={skipMouseEmulation}
+                onMouseEnter={showTooltip}
+                onMouseLeave={hideTooltip}
+            >
                 {children}
             </div>
         </div>
