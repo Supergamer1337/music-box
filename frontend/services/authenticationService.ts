@@ -2,6 +2,7 @@ import { NextIncomingMessage } from 'next/dist/server/request-meta'
 import {
     clientBackendGetRequest,
     clientBackendPostRequest,
+    handleInvalidRequest,
     serverBackendGetRequest
 } from './requestService'
 import router from 'next/router'
@@ -32,7 +33,8 @@ export const serverGetUserData = async (req: NextIncomingMessage) => {
 export const clientGetUserData = async () => {
     const user = await clientBackendGetRequest('/api/v1/auth/me')
 
-    if (!user.ok) throw new Error('User not authenticated')
+    if (!user.ok)
+        return handleInvalidRequest(user, 'User data could not be retrieved.')
 
     return (await user.json()) as APIUser
 }

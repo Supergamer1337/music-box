@@ -1,8 +1,5 @@
 import React from 'react'
-import PlaylistIconSVG from '../svg/PlaylistIconSVG'
 import BottomNavBarItem from './BottomNavBarItem'
-import SearchIconSvg from '../svg/SearchIconSVG'
-import SoundIconSVG from './../svg/SoundIconSVG'
 
 interface Props {}
 
