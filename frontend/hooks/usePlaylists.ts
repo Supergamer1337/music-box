@@ -4,10 +4,10 @@ import { getPlaylists } from '../services/playlistService'
 import { PlaylistInfo } from '../types/Playlist'
 
 /**
- * Hook to get the user's playlists.
+ * Hook to get the guild's playlists.
  *
  * @returns An object with the following properties:
- * - playlists: The user's playlists.
+ * - playlists: The guild's playlists.
  * - loadingPlaylists: Whether the playlists are being loaded.
  * - playlistsError: The error message if the playlists are not loaded.
  * - refetchPlaylists: A function to refetch the playlists.

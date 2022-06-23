@@ -7,6 +7,7 @@ interface Props {
     icon: 'playlist' | 'search' | 'sound'
     label: string
     active: boolean
+    onClick?: () => void
 }
 
 const iconStyle = 'w-8 h-8'
@@ -22,7 +23,7 @@ const pickIcon = (iconName: string, active: boolean): ReactNode => {
     }
 }
 
-const BottomNavBarItem = ({ icon, label, active }: Props) => {
+const BottomNavBarItem = ({ icon, label, active, onClick }: Props) => {
     let iconSvg = pickIcon(icon, active)
 
     return (
@@ -30,6 +31,7 @@ const BottomNavBarItem = ({ icon, label, active }: Props) => {
             className={`flex flex-col items-center ${
                 !active && 'opacity-60'
             } hover:opacity-100 select-none cursor-pointer`}
+            onClick={onClick}
         >
             {iconSvg}
             <p>{label}</p>

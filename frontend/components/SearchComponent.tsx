@@ -9,9 +9,11 @@ import TextField from './TextField'
 import YouTubeVideo from './../types/youtube/YoutubeVideo.d'
 import AddToPlaylist from './AddToPlaylist'
 
-interface Props {}
+interface Props {
+    chosenSection: string
+}
 
-const SearchComponent = ({}: Props) => {
+const SearchComponent = ({ chosenSection }: Props) => {
     const [searchTerm, setSearchTerm] = useState('')
     const [searchBoxClicked, setSearchBoxClicked] = useState(false)
     const [showAddPlaylist, setShowAddPlaylist] = useState(false)
@@ -40,7 +42,7 @@ const SearchComponent = ({}: Props) => {
     const { searchResults, searchError } = useYtSearch(searchTerm)
 
     return (
-        <div>
+        <div className={chosenSection === 'search' ? '' : 'hidden'}>
             <div
                 className="relative z-[201] w-10/12 max-w-[40rem] mx-auto"
                 ref={searchRef}
