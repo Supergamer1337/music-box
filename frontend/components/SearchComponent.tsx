@@ -42,7 +42,7 @@ const SearchComponent = ({}: Props) => {
     return (
         <div>
             <div
-                className="relative z-[101] w-10/12 max-w-[40rem] mx-auto"
+                className="relative z-[201] w-10/12 max-w-[40rem] mx-auto"
                 ref={searchRef}
             >
                 <TextField
@@ -105,7 +105,9 @@ const SearchComponent = ({}: Props) => {
             </div>
 
             <AnimatePresence>
-                {searchBoxClicked && searchTerm !== '' && <Overlay />}
+                {searchBoxClicked && searchTerm !== '' && (
+                    <Overlay zIndex={200} />
+                )}
             </AnimatePresence>
         </div>
     )

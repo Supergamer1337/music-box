@@ -13,7 +13,8 @@ const Overlay = ({ zIndex = 100, hideFunction = () => {} }: Props) => {
             animate={{ opacity: 0.4 }}
             exit={{ opacity: 0 }}
             onClick={hideFunction}
-            className={`absolute top-0 z-[${zIndex}] w-[100vw] h-[100vh] bg-black`}
+            style={{ zIndex }}
+            className={`absolute top-0 w-[100vw] h-full bg-black`}
         />
     )
 }

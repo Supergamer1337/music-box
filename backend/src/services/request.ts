@@ -39,7 +39,6 @@ const request = async (
 
 const requestCache: Record<string, CachedRequest<any>> = {}
 const requestMadeRecently: Record<string, boolean> = {}
-
 /**
  * Makes a request to the given URL, caching the response. The identification of the request is based on the URL and the identifier.
  *
