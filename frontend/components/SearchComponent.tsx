@@ -6,15 +6,26 @@ import LoadingSpinnerSVG from '../svg/LoadingSpinnerSVG'
 import useOutsideDetection from '../hooks/useOutsideDetection'
 import useYtSearch from './../hooks/useYtSearch'
 import TextField from './TextField'
+import YouTubeVideo from './../types/youtube/YoutubeVideo.d'
+import AddToPlaylist from './AddToPlaylist'
 
 interface Props {}
 
 const SearchComponent = ({}: Props) => {
     const [searchTerm, setSearchTerm] = useState('')
     const [searchBoxClicked, setSearchBoxClicked] = useState(false)
+    const [showAddPlaylist, setShowAddPlaylist] = useState(false)
+    const [chosenVideo, setChosenVideo] = useState<YouTubeVideo>()
     const searchRef = useOutsideDetection<HTMLDivElement>(() => {
         setSearchBoxClicked(false)
+        setShowAddPlaylist(false)
+        setChosenVideo(false)
     })
+
+    const addToPlaylistAction = (video: YouTubeVideo) => {
+        setChosenVideo(video)
+        setShowAddPlaylist(true)
+    }
 
     const { searchResults, searchError } = useYtSearch(searchTerm)
 
@@ -59,10 +70,26 @@ const SearchComponent = ({}: Props) => {
                                     <YtSearchResultItem
                                         key={video.id}
                                         video={video}
+                                        highlightAdd={
+                                            chosenVideo &&
+                                            chosenVideo.id === video.id
+                                        }
+                                        addToPlaylist={addToPlaylistAction}
                                     />
                                 ))
                             )}
                         </motion.div>
+                    )}
+                </AnimatePresence>
+                <AnimatePresence>
+                    {showAddPlaylist && (
+                        <AddToPlaylist
+                            hideFunction={() => {
+                                setShowAddPlaylist(false)
+                                setChosenVideo(undefined)
+                            }}
+                            video={chosenVideo as YouTubeVideo}
+                        />
                     )}
                 </AnimatePresence>
             </div>

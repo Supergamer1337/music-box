@@ -27,7 +27,7 @@ const AddToPlaylist = ({ hideFunction, video }: Props) => {
             animate={{ x: 0 }}
             exit={{ x: '-100vw' }}
             transition={{ bounce: 0 }}
-            className="fixed top-0 left-0 w-full h-[100vh] bg-primaryBg z-[101] overflow-y-auto pb-4"
+            className="fixed top-0 left-0 w-full h-[100vh] sm:w-[30rem] bg-primaryBg z-[101] overflow-y-auto pb-4"
         >
             <div className="p-4 flex">
                 <BackArrowIconSVG
@@ -45,7 +45,11 @@ const AddToPlaylist = ({ hideFunction, video }: Props) => {
                 />
             </div>
 
-            <TextField fieldSize="section" placeholder="Filter Playlists..." />
+            <TextField
+                className="!bg-emptyBg"
+                fieldSize="section"
+                placeholder="Filter Playlists..."
+            />
 
             {loadingPlaylists && (
                 <div>

@@ -1,18 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import PlayIconSVG from '../svg/PlayIconSVG'
 import AddToPlaylistIconSVG from './../svg/AddToPlaylistIconSVG'
-import AddToPlaylist from './AddToPlaylist'
-import { AnimatePresence } from 'framer-motion'
 import YouTubeVideo from './../types/youtube/YoutubeVideo.d'
 
 interface Props {
     video: YouTubeVideo
+    addToPlaylist: (video: YouTubeVideo) => void
+    highlightAdd?: boolean
 }
 
-const YtSearchResultItem = ({ video }: Props) => {
-    const [showAddPlaylist, setShowAddPlaylist] = useState(false)
-
+const YtSearchResultItem = ({
+    video,
+    addToPlaylist,
+    highlightAdd = false
+}: Props) => {
     return (
         <>
             <div className="bg-secondaryBg grid grid-flow-col grid-cols-[min-content,auto] p-2 gap-2 rounded-md border-[1px] border-discordBorder">
@@ -35,21 +37,14 @@ const YtSearchResultItem = ({ video }: Props) => {
                     <div className="flex flex-row gap-4 items-center mt-3">
                         <PlayIconSVG className="w-5 h-5 cursor-pointer hover:opacity-75 transition-opacity" />
                         <AddToPlaylistIconSVG
-                            onClick={() => setShowAddPlaylist(true)}
-                            className="w-8 h-4 cursor-pointer hover:opacity-75 transition-opacity"
+                            onClick={() => addToPlaylist(video)}
+                            className={`w-8 h-4 cursor-pointer hover:opacity-75 transition ${
+                                highlightAdd ? 'fill-accent' : 'fill-white'
+                            }`}
                         />
                     </div>
                 </div>
             </div>
-
-            <AnimatePresence>
-                {showAddPlaylist && (
-                    <AddToPlaylist
-                        hideFunction={() => setShowAddPlaylist(false)}
-                        video={video}
-                    />
-                )}
-            </AnimatePresence>
         </>
     )
 }
