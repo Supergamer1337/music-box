@@ -18,6 +18,7 @@ interface Props {
 
 const AddToPlaylist = ({ hideFunction, video }: Props) => {
     const [showDialog, setShowDialog] = useState(false)
+    const [playlistSearchTerm, setPlaylistSearchTerm] = useState('')
     const { playlists, loadingPlaylists, playlistsError, refetchPlaylists } =
         usePlaylists()
 
@@ -49,6 +50,8 @@ const AddToPlaylist = ({ hideFunction, video }: Props) => {
                 className="!bg-emptyBg"
                 fieldSize="section"
                 placeholder="Filter Playlists..."
+                value={playlistSearchTerm}
+                onChange={(e) => setPlaylistSearchTerm(e.target.value)}
             />
 
             {loadingPlaylists && (
@@ -66,13 +69,19 @@ const AddToPlaylist = ({ hideFunction, video }: Props) => {
                 {!loadingPlaylists &&
                     !playlistsError &&
                     (playlists && playlists.length > 0 ? (
-                        playlists?.map((playlist) => (
-                            <AddToPlaylistItem
-                                key={playlist.id}
-                                playlist={playlist}
-                                video={video}
-                            />
-                        ))
+                        playlists
+                            ?.filter((playlist) =>
+                                playlist.name
+                                    .toLowerCase()
+                                    .includes(playlistSearchTerm.toLowerCase())
+                            )
+                            .map((playlist) => (
+                                <AddToPlaylistItem
+                                    key={playlist.id}
+                                    playlist={playlist}
+                                    video={video}
+                                />
+                            ))
                     ) : (
                         <>
                             <p className="text-lg px-2 mt-4 text-center">
