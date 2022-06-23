@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Overlay from './Overlay'
 import YtSearchResultItem from './YtSearchResultItem'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -19,13 +19,23 @@ const SearchComponent = ({}: Props) => {
     const searchRef = useOutsideDetection<HTMLDivElement>(() => {
         setSearchBoxClicked(false)
         setShowAddPlaylist(false)
-        setChosenVideo(false)
+        setChosenVideo(undefined)
     })
 
     const addToPlaylistAction = (video: YouTubeVideo) => {
+        if (chosenVideo && video.id == chosenVideo.id) {
+            setChosenVideo(undefined)
+            setShowAddPlaylist(false)
+            return
+        }
         setChosenVideo(video)
         setShowAddPlaylist(true)
     }
+
+    useEffect(() => {
+        setShowAddPlaylist(false)
+        setChosenVideo(undefined)
+    }, [searchTerm])
 
     const { searchResults, searchError } = useYtSearch(searchTerm)
 
@@ -82,7 +92,7 @@ const SearchComponent = ({}: Props) => {
                     )}
                 </AnimatePresence>
                 <AnimatePresence>
-                    {showAddPlaylist && (
+                    {showAddPlaylist && searchTerm && searchBoxClicked && (
                         <AddToPlaylist
                             hideFunction={() => {
                                 setShowAddPlaylist(false)

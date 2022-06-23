@@ -19,7 +19,7 @@ const CreatePlaylistForm = ({ cancel, onCreation }: Props) => {
                 e.preventDefault()
                 createPlaylist()
             }}
-            className="w-[80vw]"
+            className="w-[80vw] sm:w-96"
         >
             <p className="text-center">Give your playlist a name.</p>
             <input
@@ -28,6 +28,7 @@ const CreatePlaylistForm = ({ cancel, onCreation }: Props) => {
                 placeholder="Playlist Name..."
                 value={playlistName}
                 onChange={(e) => setPlaylistName(e.target.value)}
+                autoFocus
             />
 
             <div className="flex gap-4 justify-center flex-wrap mt-4">
