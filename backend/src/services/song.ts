@@ -1,5 +1,5 @@
-import type YtVideo from '../types/YtVideo'
 import prisma from './prisma.js'
+import { YouTubeVideo } from 'youtube-search-no-limit'
 
 /**
  * Adds a song to a playlist.
@@ -9,14 +9,15 @@ import prisma from './prisma.js'
  * @returns The added song.
  * @throws An error if the song could not be added to database.
  */
-export const addNewSong = async (playlistId: string, video: YtVideo) => {
+export const addNewSong = async (playlistId: string, video: YouTubeVideo) => {
     const song = prisma.song.create({
         data: {
             title: video.title,
             youtubeId: video.id,
             youtubeUrl: video.url,
-            thumbnail: video.thumbnail,
+            thumbnail: video.thumbnails[0].url,
             duration: video.duration,
+            durationText: video.durationText,
             playlist: {
                 connect: {
                     id: playlistId

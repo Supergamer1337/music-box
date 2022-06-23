@@ -49,10 +49,20 @@ export const validYtVideo = (video: Partial<YouTubeVideo>): string[] => {
             errors.push('Video id must exist and be of type string.')
         if (!video.title || !isString(video.title))
             errors.push('Video title must exist and be of type string.')
-        if (!video.thumbnail || !isString(video.thumbnail))
-            errors.push('Video thumbnail must exist and be of type string.')
+        if (
+            !video.thumbnails ||
+            !video.thumbnails[0].url ||
+            !isString(video.thumbnails[0].url)
+        )
+            errors.push(
+                'Video thumbnails array must contain at least one thumbnail with a valid url.'
+            )
         if (!video.duration || !Number.isInteger(video.duration))
             errors.push('Video duration must exist and be of type int.')
+        if (!video.durationText || !isString(video.durationText))
+            errors.push('Video duration text must exist and be of type string.')
+        if (!video.url || !isString(video.url))
+            errors.push('Video url must exist and be of type string.')
     } else {
         errors.push('No video provided')
     }
