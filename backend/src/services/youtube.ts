@@ -1,6 +1,4 @@
-import * as yt from 'youtube-search-without-api-key'
-import type { search as ytSearch } from 'youtube-search-without-api-key'
-import YtVideo from '../types/YtVideo'
+import { search as ytSearch, YouTubeVideo } from 'youtube-search-no-limit'
 
 /**
  * Search for videos on youtube.
@@ -13,33 +11,9 @@ import YtVideo from '../types/YtVideo'
 export const searchForYoutubeVideos = async (
     searchTerm: string,
     nrResults: number
-) => {
-    const ytSearchResult = await (
-        await yt.search(searchTerm)
-    ).slice(0, nrResults)
-    const videos = ytSearchToYtVideos(ytSearchResult)
-    return videos
-}
-
-/**
- * Convert a youtube search result to a list of YtVideos.
- *
- * @param ytSearchResult The youtube search result.
- * @returns The list of videos.
- */
-const ytSearchToYtVideos = (
-    ytSearchResult: Awaited<ReturnType<typeof ytSearch>>
-) => {
-    const videos = ytSearchResult.map((ytResult) => {
-        return {
-            id: ytResult.id.videoId,
-            title: ytResult.title,
-            url: ytResult.url,
-            thumbnail: ytResult.snippet.thumbnails.url,
-            duration: parseYtDuration(ytResult.duration_raw)
-        } as YtVideo
-    })
-    return videos
+): Promise<YouTubeVideo[]> => {
+    const results = await ytSearch(searchTerm, nrResults)
+    return results
 }
 
 /**
