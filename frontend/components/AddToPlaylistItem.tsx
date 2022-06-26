@@ -32,6 +32,7 @@ const AddToPlaylistItem = ({ playlist, video }: Props) => {
                 {playlist.name}
             </p>
             <Tooltip
+                direction="left"
                 message={error ? error : 'No error was provided'}
                 onActive
                 active={isError}
