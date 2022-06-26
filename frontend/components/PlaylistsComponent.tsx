@@ -3,6 +3,7 @@ import TextField from './TextField'
 import usePlaylists from './../hooks/usePlaylists'
 import LoadingSpinnerSVG from '../svg/LoadingSpinnerSVG'
 import ErrorDiv from './ErrorDiv'
+import PlaylistItem from './PlaylistItem'
 
 interface Props {
     chosenSection: string
@@ -25,11 +26,11 @@ const PlaylistsComponent = ({ chosenSection }: Props) => {
             ) : playlistsError ? (
                 <ErrorDiv size="large">{playlistsError}</ErrorDiv>
             ) : (
-                playlists?.map((playlist) => (
-                    <div key={playlist.id} className="mt-4">
-                        {playlist.name}
-                    </div>
-                ))
+                <div className="flex flex-col gap-4 w-10/12 mx-auto mb-24">
+                    {playlists?.map((playlist) => (
+                        <PlaylistItem key={playlist.id} playlist={playlist} />
+                    ))}
+                </div>
             )}
         </div>
     )
