@@ -8,6 +8,7 @@ import BottomNavBar from '../../components/BottomNavBar'
 import SearchComponent from '../../components/SearchComponent'
 import PlaylistsComponent from '../../components/PlaylistsComponent'
 import useWebsocket from '../../hooks/useWebsocket'
+import { useRouter } from 'next/router'
 
 export const getServerSideProps: GetServerSideProps = async ({
     req,

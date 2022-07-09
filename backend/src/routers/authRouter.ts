@@ -4,6 +4,7 @@ import { getDiscordUserData, requestAccessToken } from '../services/auth.js'
 import { handleEndpointError } from '../services/request.js'
 import { validateRequest } from 'zod-express-middleware'
 import { z } from 'zod'
+import { websocket } from './../services/websocket.js'
 
 const authRouter = Router()
 
@@ -38,7 +39,6 @@ authRouter.get(
 authRouter.get('/me', isAuthenticated, async (req, res) => {
     try {
         const discordUser = await getDiscordUserData(
-            // @ts-expect-error Taken care of by the authentication middleware
             req.session.discordTokenData.access_token
         )
 
@@ -50,11 +50,16 @@ authRouter.get('/me', isAuthenticated, async (req, res) => {
 
 // Handle /api/v1/auth/logout by clearing the session
 authRouter.post('/logout', isAuthenticated, async (req, res) => {
+    const sessionId = req.session.id
+
     req.session.destroy((err) => {
         if (err) {
             console.error('Failed to destroy session:', err)
+            // @ts-ignore Force it
             req.session.discordTokenData = undefined
         }
+
+        websocket.to(sessionId).disconnectSockets()
 
         res.status(200).json({
             message: 'Successfully logged out!'

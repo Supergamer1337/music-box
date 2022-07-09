@@ -2,8 +2,10 @@ import e, { Express, NextFunction } from 'express'
 import type { Response, Request } from 'express'
 import { Server } from 'socket.io'
 import { createServer } from 'http'
+import { validGuildPermissions } from './validation.js'
 
 export let websocket: Server
+const SESSION_RELOAD_INTERVAL = 30 * 1000
 
 /**
  * Setup the websocket.
@@ -18,7 +20,10 @@ export const setupWebsocket = (
     const httpServer = createServer(app)
     const io = new Server(httpServer, {
         cors: {
-            origin: process.env.NODE_ENV === 'development' && '*'
+            credentials: true,
+            origin:
+                process.env.NODE_ENV === 'development' &&
+                process.env.FRONTEND_ADDRESS
         }
     })
     io.use((socket, next) =>
@@ -30,16 +35,44 @@ export const setupWebsocket = (
     )
     websocket = io
 
-    setupEvents()
+    setupWsEvents()
 
     return httpServer
 }
 
-const setupEvents = () => {
+/**
+ * Setup the websocket events.
+ */
+const setupWsEvents = () => {
     websocket.on('connection', (socket) => {
-        console.log('Client connected')
+        socket.join(socket.request.session.id)
+
+        const timer = setInterval(() => {
+            socket.request.session.reload((err) => {
+                if (err) {
+                    socket.conn.close()
+                }
+            })
+        }, SESSION_RELOAD_INTERVAL)
+
         socket.on('disconnect', () => {
-            console.log('Client disconnected')
+            clearInterval(timer)
+        })
+
+        socket.emit('get-guild')
+
+        socket.on('post-guild', async (guildId) => {
+            if (
+                !(await validGuildPermissions(
+                    socket.request.session.discordTokenData.access_token,
+                    guildId
+                ))
+            ) {
+                socket.conn.close()
+            }
+            socket.join(guildId)
+
+            console.log('User was added to guild', guildId)
         })
     })
 }
