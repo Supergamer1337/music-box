@@ -3,6 +3,7 @@ import express from 'express'
 import MusicBot from './services/MusicBot.js'
 import cors from 'cors'
 import { setupRoutes, setupSessions } from './setup.js'
+import { setupWebsocket } from './services/websocket.js'
 
 // Load environment variables
 config()
@@ -13,7 +14,7 @@ await MusicBot.getSharedInstance().startBot()
 const app = express()
 
 // Setup sessions for app
-await setupSessions(app)
+const sessionMiddleware = await setupSessions(app)
 
 if (process.env.NODE_ENV === 'development') {
     app.use(
@@ -24,8 +25,9 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json())
 
 setupRoutes(app)
+const httpServer = setupWebsocket(app, sessionMiddleware)
 
 if (!process.env.BACKEND_PORT) throw new Error('No backend port defined!')
-app.listen(process.env.BACKEND_PORT, () => {
+httpServer.listen(process.env.BACKEND_PORT, () => {
     console.log(`Backend is listening on port ${process.env.BACKEND_PORT}`)
 })

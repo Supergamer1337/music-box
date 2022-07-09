@@ -7,6 +7,7 @@ import { serverGetGuildData } from '../../services/guildsService'
 import BottomNavBar from '../../components/BottomNavBar'
 import SearchComponent from '../../components/SearchComponent'
 import PlaylistsComponent from '../../components/PlaylistsComponent'
+import useWebsocket from '../../hooks/useWebsocket'
 
 export const getServerSideProps: GetServerSideProps = async ({
     req,
@@ -39,6 +40,8 @@ export const getServerSideProps: GetServerSideProps = async ({
 }
 
 const GuildPage: NextPage = () => {
+    useWebsocket()
+
     const [chosenSection, setChosenSection] = useState('playlists')
     return (
         <>

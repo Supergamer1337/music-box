@@ -26,10 +26,7 @@ const PlaylistItem = ({ playlist }: Props) => {
             <div className="flex flex-col flex-grow">
                 <div className="grid items-center grid-cols-[auto,max-content] grid-rows-1 gap-1">
                     <Tooltip direction="top" message={playlist.name}>
-                        <h4
-                            title={playlist.name}
-                            className="line-clamp-1 text-lg font-semibold min-w-full"
-                        >
+                        <h4 className="line-clamp-1 text-lg font-semibold min-w-full">
                             {playlist.name}
                         </h4>
                     </Tooltip>

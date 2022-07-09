@@ -9,7 +9,8 @@ import searchRouter from './routers/searchRouter.js'
 import playlistRouter from './routers/playlistRouter.js'
 
 /**
- * Setup redis for sessions
+ * Setup redis for sessions.
+ *
  * @returns A RedisStore instance.
  * @throws An error if the redis client could not connect.
  */
@@ -39,22 +40,30 @@ const setupRedis = async () => {
 }
 
 /**
- * Setup the session middleware
+ * Setup the session middleware.
+ *
  * @param app The express app.
  */
 export const setupSessions = async (app: Express) => {
     const redisStore = await setupRedis()
 
-    app.use(
-        session({
-            secret: process.env.SESSION_SECRET,
-            store: redisStore,
-            resave: false,
-            saveUninitialized: false
-        })
-    )
+    const sessionMiddleware = session({
+        secret: process.env.SESSION_SECRET,
+        store: redisStore,
+        resave: false,
+        saveUninitialized: false
+    })
+
+    app.use(sessionMiddleware)
+
+    return sessionMiddleware
 }
 
+/**
+ * Setup the routes for the API.
+ *
+ * @param app The express app.
+ */
 export const setupRoutes = (app: Express) => {
     app.use('/api/v1/auth', authRouter)
     app.use('/api/v1/guilds', isAuthenticated, guildRouter)
