@@ -24,7 +24,9 @@
         "libsodium-wrappers": "^0.7.10",
         "node-fetch": "^3.2.4",
         "redis": "^4.1.0",
-        "youtube-search-no-limit": "^1.0.1"
+        "youtube-search-no-limit": "^1.0.1",
+        "zod": "^3.17.3",
+        "zod-express-middleware": "^1.4.0"
     },
     "devDependencies": {
         "@types/connect-redis": "^0.0.18",
