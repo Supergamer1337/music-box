@@ -37,8 +37,8 @@ const request = async (
     }
 }
 
-const requestCache: Record<string, CachedRequest<any>> = {}
-const requestMadeRecently: Record<string, boolean> = {}
+const requestCache = new Map<string, CachedRequest<any>>()
+const requestMadeRecently = new Map<string, boolean>()
 /**
  * Makes a request to the given URL, caching the response. The identification of the request is based on the URL and the identifier.
  *
@@ -55,44 +55,41 @@ export const cachedGetRequest = async <T>(
     options?: { staleTime: number },
     headers?: Record<string, string>
 ) => {
-    if (requestMadeRecently[url + identifier]) {
-        while (requestMadeRecently[url + identifier]) {
-            await new Promise((resolve) => setTimeout(resolve, 100))
-        }
+    while (requestMadeRecently.get(url + identifier)) {
+        await new Promise((resolve) => setTimeout(resolve, 100))
     }
 
+    const cachedRequest = requestCache.get(url + identifier)
+
     // Check if the request is cached and not stale.
-    if (
-        requestCache[url + identifier] &&
-        !requestCache[url + identifier].isStale()
-    ) {
-        return requestCache[url + identifier].getData() as T
+    if (cachedRequest && !cachedRequest.isStale()) {
+        return cachedRequest.getData() as T
     }
 
     // Request the data.
-    requestMadeRecently[url + identifier] = true
+    requestMadeRecently.set(url + identifier, true)
     let response
     try {
         response = (await request(url, 'GET', undefined, headers)) as T
     } catch (error) {
-        delete requestMadeRecently[url + identifier]
+        requestMadeRecently.delete(url + identifier)
         throw error
     }
 
     // Cache the data.
-    requestCache[url + identifier] = new CachedRequest<T>(
-        options?.staleTime ?? 10000,
-        response
+    requestCache.set(
+        url + identifier,
+        new CachedRequest<T>(options?.staleTime ?? 10000, response)
     )
-    delete requestMadeRecently[url + identifier]
+    requestMadeRecently.delete(url + identifier)
 
     // Clean the cache approximately every 100 requests.
     if (Math.random() < 0.01) {
-        for (const key in requestCache) {
-            if (requestCache[key].isStale()) {
-                delete requestCache[key]
+        requestCache.forEach((cachedRequest, key) => {
+            if (cachedRequest.isStale()) {
+                requestCache.delete(key)
             }
-        }
+        })
     }
 
     return response

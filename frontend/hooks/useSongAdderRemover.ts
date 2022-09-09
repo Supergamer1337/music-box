@@ -1,7 +1,8 @@
-import { useMutation } from 'react-query'
+import { useRouter } from 'next/router'
+import { useMutation, useQueryClient } from 'react-query'
 import { addNewSong, removeSongByYoutubeId } from './../services/songService'
-import useYoutubeVideoExists from './useYoutubeVideoExists'
 import YouTubeVideo from './../types/youtube/YoutubeVideo.d'
+import useYoutubeVideoExists from './useYoutubeVideoExists'
 
 /**
  * Hook to toggle between adding or removing a song from a playlist.
@@ -16,6 +17,9 @@ import YouTubeVideo from './../types/youtube/YoutubeVideo.d'
  * - mutate: A function to add or remove the song.
  */
 const useSongAdderRemover = (video: YouTubeVideo, playlistId: string) => {
+    const queryClient = useQueryClient()
+    const router = useRouter()
+
     const {
         youtubeVideoExists,
         loadingYoutubeVideoExists,
@@ -30,7 +34,13 @@ const useSongAdderRemover = (video: YouTubeVideo, playlistId: string) => {
             return removeSongByYoutubeId(video.id, playlistId)
         },
         {
-            onSuccess: () => refetchYoutubeVideoExists()
+            onSuccess: async () => {
+                await refetchYoutubeVideoExists()
+                queryClient.invalidateQueries([
+                    'playlists',
+                    router.query.guildId
+                ])
+            }
         }
     )
 
