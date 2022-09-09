@@ -61,7 +61,7 @@ const setupWsEvents = () => {
 
         socket.emit('get-guild')
 
-        socket.on('post-guild', async (guildId) => {
+        socket.on('post-guild', async (guildId: string) => {
             if (
                 !(await validGuildPermissions(
                     socket.request.session.discordTokenData.access_token,
@@ -71,8 +71,10 @@ const setupWsEvents = () => {
                 socket.conn.close()
             }
             socket.join(guildId)
-
-            console.log('User was added to guild', guildId)
         })
+
+        socket.on('play-playlist', (playlistId: string) => {
+            
+        });
     })
 }

@@ -21,7 +21,6 @@ const hasGuildPermissions: RequestHandler = async (req, res, next) => {
 
         if (
             !(await validGuildPermissions(
-                // @ts-expect-error Fixed by middleware
                 req.session.discordTokenData?.access_token,
                 guildId
             ))

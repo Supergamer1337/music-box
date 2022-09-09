@@ -11,7 +11,6 @@ const guildRouter = Router()
 guildRouter.get('/', async (req, res) => {
     try {
         let userGuilds = await getDiscordUserGuilds(
-            // @ts-expect-error Taken care of by middleware
             req.session.discordTokenData.access_token
         )
 

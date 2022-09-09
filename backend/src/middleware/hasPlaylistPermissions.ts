@@ -23,7 +23,6 @@ const hasPlaylistPermissions: RequestHandler = async (req, res, next) => {
 
         if (
             !validGuildPermissions(
-                // @ts-expect-error Taken care of by middleware.
                 req.session.discordTokenData.access_token,
                 // @ts-expect-error Taken care of by above if statement.
                 playlist.guildId
