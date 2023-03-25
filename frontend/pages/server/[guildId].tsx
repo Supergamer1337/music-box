@@ -1,14 +1,13 @@
-import React, { useState } from 'react'
 import { GetServerSideProps, NextPage } from 'next'
-import Header from '../../components/Header'
-import { serverGetUserData } from '../../services/authenticationService'
+import { useState } from 'react'
 import { dehydrate, QueryClient } from 'react-query'
-import { serverGetGuildData } from '../../services/guildsService'
 import BottomNavBar from '../../components/BottomNavBar'
+import Header from '../../components/Header'
+import Playlists from '../../components/Playlists'
 import SearchComponent from '../../components/SearchComponent'
-import PlaylistsComponent from '../../components/PlaylistsComponent'
 import useWebsocket from '../../hooks/useWebsocket'
-import { useRouter } from 'next/router'
+import { serverGetUserData } from '../../services/authenticationService'
+import { serverGetGuildData } from '../../services/guildsService'
 
 export const getServerSideProps: GetServerSideProps = async ({
     req,
@@ -49,7 +48,7 @@ const GuildPage: NextPage = () => {
             <Header pageName="Saved Playlists" />
 
             <div>
-                <PlaylistsComponent chosenSection={chosenSection} />
+                <Playlists chosenSection={chosenSection} />
                 <SearchComponent chosenSection={chosenSection} />
             </div>
 

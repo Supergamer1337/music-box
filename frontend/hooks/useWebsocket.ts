@@ -1,6 +1,6 @@
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { io, Socket } from 'socket.io-client'
-import { useRouter } from 'next/router'
 
 export default function useWebsocket() {
     const router = useRouter()
@@ -21,6 +21,8 @@ export default function useWebsocket() {
             }
         }
     }, [])
+
+    return socket
 }
 
 const setupEvents = (socket: Socket, guildId: string) => {

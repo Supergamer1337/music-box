@@ -1,12 +1,11 @@
-import React from 'react'
-
 interface Props {
     className?: string
+    onClick?: () => void
 }
 
-const PlayIconSVG = ({ className }: Props) => {
+const PlayIconSVG = ({ className, onClick = () => {} }: Props) => {
     return (
-        <div className={className}>
+        <div onClick={onClick} className={className}>
             <svg
                 viewBox="0 0 22 24"
                 fill="currentColor"

@@ -1,15 +1,14 @@
-import React from 'react'
-import TextField from './TextField'
-import usePlaylists from './../hooks/usePlaylists'
+import usePlaylists from '../hooks/usePlaylists'
 import LoadingSpinnerSVG from '../svg/LoadingSpinnerSVG'
 import ErrorDiv from './ErrorDiv'
 import PlaylistItem from './PlaylistItem'
+import TextField from './TextField'
 
 interface Props {
     chosenSection: string
 }
 
-const PlaylistsComponent = ({ chosenSection }: Props) => {
+const Playlists = ({ chosenSection }: Props) => {
     const { playlists, loadingPlaylists, playlistsError } = usePlaylists()
 
     return (
@@ -18,7 +17,7 @@ const PlaylistsComponent = ({ chosenSection }: Props) => {
 
             {loadingPlaylists ? (
                 <div className="block mx-auto mt-8 text-center">
-                    <LoadingSpinnerSVG className="block mx-auto w-16 h-16 animate-spin" />
+                    <LoadingSpinnerSVG className="block w-16 h-16 mx-auto animate-spin" />
                     <h3 className="mt-2 text-lg font-medium">
                         Loading the playlists.
                     </h3>
@@ -26,7 +25,7 @@ const PlaylistsComponent = ({ chosenSection }: Props) => {
             ) : playlistsError ? (
                 <ErrorDiv size="large">{playlistsError}</ErrorDiv>
             ) : (
-                <div className="flex flex-col gap-4 w-10/12 mx-auto mb-24">
+                <div className="flex flex-col w-10/12 gap-4 mx-auto mb-24">
                     {playlists?.map((playlist) => (
                         <PlaylistItem key={playlist.id} playlist={playlist} />
                     ))}
@@ -36,4 +35,4 @@ const PlaylistsComponent = ({ chosenSection }: Props) => {
     )
 }
 
-export default PlaylistsComponent
+export default Playlists

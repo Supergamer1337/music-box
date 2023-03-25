@@ -1,5 +1,5 @@
-import prisma from './prisma.js'
 import { YouTubeVideo } from 'youtube-search-no-limit'
+import prisma from './prisma.js'
 
 /**
  * Adds a song to a playlist.
@@ -10,6 +10,8 @@ import { YouTubeVideo } from 'youtube-search-no-limit'
  * @throws An error if the song could not be added to database.
  */
 export const addNewSong = async (playlistId: string, video: YouTubeVideo) => {
+    const nrOfSongs = await countSongsInPlaylist(playlistId)
+
     const song = prisma.song.create({
         data: {
             title: video.title,
@@ -18,6 +20,7 @@ export const addNewSong = async (playlistId: string, video: YouTubeVideo) => {
             thumbnail: video.thumbnails[0].url,
             duration: video.duration,
             durationText: video.durationText,
+            playlistPos: nrOfSongs + 1,
             playlist: {
                 connect: {
                     id: playlistId
@@ -37,6 +40,19 @@ export const addNewSong = async (playlistId: string, video: YouTubeVideo) => {
  */
 export const getSongsInPlaylist = async (playlistId: string) => {
     return await prisma.song.findMany({
+        where: {
+            playlist: {
+                id: playlistId
+            }
+        },
+        orderBy: {
+            playlistPos: 'asc'
+        }
+    })
+}
+
+export const countSongsInPlaylist = async (playlistId: string) => {
+    return await prisma.song.count({
         where: {
             playlist: {
                 id: playlistId
@@ -70,9 +86,23 @@ export const getSongByPlaylistAndYoutubeId = async (
  * @param id The ID of the song.
  */
 export const removeSongFromPlaylist = async (id: string) => {
-    await prisma.song.delete({
+    const deletedSong = await prisma.song.delete({
         where: {
             id
         }
     })
+
+    // TODO: This should probably be done in a transaction.
+    const songs = await getSongsInPlaylist(deletedSong.playlistId)
+
+    for (let i = 0; i < songs.length; i++) {
+        await prisma.song.update({
+            where: {
+                id: songs[i].id
+            },
+            data: {
+                playlistPos: i + 1
+            }
+        })
+    }
 }

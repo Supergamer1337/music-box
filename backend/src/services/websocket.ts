@@ -1,7 +1,8 @@
+import type { Request, Response } from 'express'
 import e, { Express, NextFunction } from 'express'
-import type { Response, Request } from 'express'
-import { Server } from 'socket.io'
 import { createServer } from 'http'
+import { Server } from 'socket.io'
+import { getSongsInPlaylist } from './song.js'
 import { validGuildPermissions } from './validation.js'
 
 export let websocket: Server
@@ -67,14 +68,16 @@ const setupWsEvents = () => {
                     socket.request.session.discordTokenData.access_token,
                     guildId
                 ))
-            ) {
+            )
                 socket.conn.close()
-            }
+
+            if (socket.data.guildId) socket.leave(socket.data.guildId)
+            socket.data.guildId = guildId
             socket.join(guildId)
         })
 
-        socket.on('play-playlist', (playlistId: string) => {
-            
-        });
+        socket.on('play-playlist', async (playlistId: string) => {
+            console.log(await getSongsInPlaylist(playlistId))
+        })
     })
 }
