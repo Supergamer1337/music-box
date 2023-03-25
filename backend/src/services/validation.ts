@@ -1,5 +1,5 @@
-import { getDiscordUserGuilds } from './guild.js'
 import { z } from 'zod'
+import { getDiscordUserGuilds } from './guild.js'
 
 /**
  * Validates that the given user has the correct rights for the given guild.
@@ -16,7 +16,12 @@ export const validGuildPermissions = async (
     const guilds = await getDiscordUserGuilds(access_token)
     const guild = guilds.find((g) => g.id === guildId)
 
-    if (guild?.owner) {
+    if (!guild) return false
+
+    if (
+        (Number.parseInt(guild?.permissions) & 0x0000000000000008) ===
+        0x0000000000000008
+    ) {
         return true
     } else {
         return false

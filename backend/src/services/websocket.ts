@@ -5,8 +5,19 @@ import { Server } from 'socket.io'
 import { playPlaylist } from './musicBot.js'
 import { validGuildPermissions } from './validation.js'
 
-export let websocket: Server
+let websocket: Server
 const SESSION_RELOAD_INTERVAL = 30 * 1000
+
+export class WebsocketError extends Error {
+    constructor(message: string) {
+        super(message)
+        this.name = 'WebsocketError'
+    }
+}
+
+export const disconnectSessionWebsockets = (sessionId: string) => {
+    websocket.to(sessionId).disconnectSockets(true)
+}
 
 /**
  * Setup the websocket.
@@ -46,38 +57,46 @@ export const setupWebsocket = (
  */
 const setupWsEvents = () => {
     websocket.on('connection', (socket) => {
-        socket.join(socket.request.session.id)
+        try {
+            socket.join(socket.request.session.id)
 
-        const timer = setInterval(() => {
-            socket.request.session.reload((err) => {
-                if (err) {
-                    socket.conn.close()
-                }
+            const timer = setInterval(() => {
+                socket.request.session.reload((err) => {
+                    if (err) {
+                        socket.conn.close()
+                    }
+                })
+            }, SESSION_RELOAD_INTERVAL)
+
+            socket.on('disconnect', () => {
+                clearInterval(timer)
             })
-        }, SESSION_RELOAD_INTERVAL)
 
-        socket.on('disconnect', () => {
-            clearInterval(timer)
-        })
+            socket.on('post-guild', async (guildId: string) => {
+                if (
+                    !(await validGuildPermissions(
+                        socket.request.session.discordTokenData.access_token,
+                        guildId
+                    ))
+                )
+                    socket.conn.close()
 
-        socket.emit('get-guild')
+                if (socket.data.guildId) socket.leave(socket.data.guildId)
+                socket.data.guildId = guildId
+                socket.join(guildId)
+            })
 
-        socket.on('post-guild', async (guildId: string) => {
-            if (
-                !(await validGuildPermissions(
-                    socket.request.session.discordTokenData.access_token,
-                    guildId
-                ))
-            )
-                socket.conn.close()
+            socket.on('play-playlist', async (playlistId: string) => {
+                playPlaylist(playlistId, socket.data.guildId)
+            })
 
-            if (socket.data.guildId) socket.leave(socket.data.guildId)
-            socket.data.guildId = guildId
-            socket.join(guildId)
-        })
-
-        socket.on('play-playlist', async (playlistId: string) => {
-            playPlaylist(playlistId, socket.data.guildId)
-        })
+            socket.emit('get-guild')
+        } catch (error) {
+            if (error instanceof WebsocketError) {
+                socket.emit('error', error.message)
+            } else {
+                socket.emit('error', 'Internal server error occurred.')
+            }
+        }
     })
 }

@@ -1,7 +1,9 @@
+import { AnimatePresence } from 'framer-motion'
 import { GetServerSideProps, NextPage } from 'next'
 import { useState } from 'react'
 import { dehydrate, QueryClient } from 'react-query'
 import BottomNavBar from '../../components/BottomNavBar'
+import ErrorMessage from '../../components/ErrorMessage'
 import Header from '../../components/Header'
 import Playlists from '../../components/Playlists'
 import SearchComponent from '../../components/SearchComponent'
@@ -40,9 +42,18 @@ export const getServerSideProps: GetServerSideProps = async ({
 }
 
 const GuildPage: NextPage = () => {
-    useWebsocket()
-
+    const [socketError, setSocketError] = useState('')
     const [chosenSection, setChosenSection] = useState('playlists')
+    const socket = useWebsocket()
+
+    socket?.on('error', (error: string) => {
+        if (socketError !== '') return
+        setSocketError(error)
+        setTimeout(() => {
+            setSocketError('')
+        }, 5000)
+    })
+
     return (
         <>
             <Header pageName="Saved Playlists" />
@@ -51,6 +62,12 @@ const GuildPage: NextPage = () => {
                 <Playlists chosenSection={chosenSection} />
                 <SearchComponent chosenSection={chosenSection} />
             </div>
+
+            <AnimatePresence>
+                {socketError != '' ? (
+                    <ErrorMessage message={socketError} />
+                ) : null}
+            </AnimatePresence>
 
             <BottomNavBar
                 chosenSection={chosenSection}

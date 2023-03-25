@@ -1,10 +1,10 @@
 import { Router } from 'express'
-import isAuthenticated from './../middleware/isAuthenticated.js'
+import { z } from 'zod'
+import { validateRequest } from 'zod-express-middleware'
 import { getDiscordUserData, requestAccessToken } from '../services/auth.js'
 import { handleEndpointError } from '../services/request.js'
-import { validateRequest } from 'zod-express-middleware'
-import { z } from 'zod'
-import { websocket } from './../services/websocket.js'
+import { disconnectSessionWebsockets } from '../services/websocket.js'
+import isAuthenticated from './../middleware/isAuthenticated.js'
 
 const authRouter = Router()
 
@@ -59,7 +59,7 @@ authRouter.post('/logout', isAuthenticated, async (req, res) => {
             req.session.discordTokenData = undefined
         }
 
-        websocket.to(sessionId).disconnectSockets()
+        disconnectSessionWebsockets(sessionId)
 
         res.status(200).json({
             message: 'Successfully logged out!'

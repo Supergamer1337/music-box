@@ -48,11 +48,15 @@ export const playPlaylist = async (playlistId: string, guildId: string) => {
         .filter((s) => s !== undefined) as Track[]
 
     const channels = await guild.channels.fetch()
-    const channel = channels.find((c) => c?.isVoiceBased() && c?.joinable)
+    const keys = channels
+        .filter((c) => c?.isVoiceBased() && c?.joinable)
+        .entries()
+
+    keys.next()
+    keys.next()
+    const channel = keys.next().value[1]
 
     if (!channel) throw new Error('No voice channel found!')
-
-    console.log(songs)
 
     const something = await player?.play(channel.id, songs[0].url, {
         nodeOptions: {
