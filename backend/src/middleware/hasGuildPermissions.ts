@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
-import { validGuildPermissions } from '../services/validation.js'
-import MusicBot from '../services/MusicBot.js'
+import { botIsInServer } from '../services/musicBot.js'
 import { handleEndpointError } from '../services/request.js'
+import { validGuildPermissions } from '../services/validation.js'
 
 /**
  * Checks if the current requested guild exists and the user has the correct permissions.
@@ -14,7 +14,7 @@ const hasGuildPermissions: RequestHandler = async (req, res, next) => {
     try {
         const guildId = req.params.guildId || req.body.guildId
 
-        if (!MusicBot.getSharedInstance().isInServer(guildId))
+        if (!botIsInServer(guildId))
             return res.status(404).json({
                 error: 'Music bot is not in that server.'
             })

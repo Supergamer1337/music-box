@@ -1,7 +1,7 @@
 import { Playlist } from '@prisma/client'
 import { RESTGetAPICurrentUserGuildsResult } from 'discord-api-types/v10'
 import GuildWithBotInfo from '../types/GuildWithBotInfo.d'
-import MusicBot from './MusicBot.js'
+import { botIsInServer } from './musicBot.js'
 
 /**
  * Converts playlists (with songs as count) to an easier to use format.
@@ -33,7 +33,7 @@ export const userServersAddBotInfo = (
     const mappedGuilds = guilds.map((guild) => {
         return {
             ...guild,
-            botInServer: MusicBot.getSharedInstance().isInServer(guild.id)
+            botInServer: botIsInServer(guild.id)
         } as unknown as GuildWithBotInfo
     })
     return mappedGuilds

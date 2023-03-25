@@ -1,15 +1,15 @@
+import cors from 'cors'
 import { config } from 'dotenv'
 import express from 'express'
-import MusicBot from './services/MusicBot.js'
-import cors from 'cors'
-import { setupRoutes, setupSessions } from './setup.js'
+import { initializeBot } from './services/musicBot.js'
 import { setupWebsocket } from './services/websocket.js'
+import { setupRoutes, setupSessions } from './setup.js'
 
 // Load environment variables
 config()
 
 // Start the application
-await MusicBot.getSharedInstance().startBot()
+await initializeBot()
 
 const app = express()
 

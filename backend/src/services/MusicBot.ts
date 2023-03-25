@@ -1,63 +1,46 @@
 import { Client, Intents } from 'discord.js'
 import { getExtendedPlaylist } from './playlist.js'
 
-export default class MusicBot {
-    private static botInstance: MusicBot | undefined
+let botInstance: Client | undefined
 
-    private musicBot: Client
+/**
+ * Starts the bot and authenticates it with Discord.
+ */
+export const initializeBot = async () => {
+    botInstance = new Client({
+        intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES]
+    })
 
-    private constructor() {
-        this.musicBot = new Client({
-            intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES]
-        })
-    }
+    botInstance.on('ready', () => {
+        if (!botInstance?.user) throw new Error('No user tag defined!')
+        console.log(`Bot authenticated as ${botInstance.user.tag}`)
+    })
 
-    /**
-     * Gets the bot instance, creating it if it doesn't exist.
-     *
-     * @returns The bot instance.
-     */
-    public static getSharedInstance() {
-        if (!this.botInstance) {
-            this.botInstance = new MusicBot()
-            return this.botInstance
-        } else {
-            return this.botInstance
-        }
-    }
+    await botInstance.login(process.env.BOT_TOKEN)
+}
 
-    /**
-     * Starts the music bot and connects it to the Discord API.
-     */
-    public async startBot() {
-        this.musicBot.on('ready', () => {
-            if (!this.musicBot.user) throw new Error('No user tag defined!')
-            console.log(`Bot authenticated as ${this.musicBot.user.tag}`)
-        })
+/**
+ * Plays the given playlist in the specified guild.
+ *
+ * @param guildId Guild ID
+ * @param playlistId Playlist to play
+ */
+export const playPlaylist = async (playlistId: string, guildId: string) => {
+    if (!botInstance) return
 
-        await this.musicBot.login(process.env.BOT_TOKEN)
-    }
+    const guild = botInstance.guilds.cache.get(guildId)
+    if (!guild) throw new Error('Bot is not part of guild!')
 
-    /**
-     * Plays the given playlist in the specified guild.
-     *
-     * @param guildId Guild ID
-     * @param playlistId Playlist to play
-     */
-    public async playPlaylist(playlistId: string, guildId: string) {
-        const guild = this.musicBot.guilds.cache.get(guildId)
-        if (!guild) throw new Error('Bot is not part of guild!')
+    const playlist = await getExtendedPlaylist(playlistId)
+    if (!playlist) throw new Error('That playlist does not exist.')
+}
 
-        const playlist = await getExtendedPlaylist(playlistId)
-        if (!playlist) throw new Error('That playlist does not exist.')
-    }
-
-    /**
-     * Checks if the bot is in the specified guild
-     * @param id Guild ID
-     * @returns true if the bot is in the guild, false otherwise
-     */
-    public isInServer(id: string) {
-        return this.musicBot.guilds.cache.has(id)
-    }
+/**
+ * Checks if the bot is in the specified guild
+ * @param id Guild ID
+ * @returns true if the bot is in the guild, false otherwise
+ */
+export const botIsInServer = (id: string) => {
+    if (!botInstance) return false
+    return botInstance.guilds.cache.has(id)
 }
