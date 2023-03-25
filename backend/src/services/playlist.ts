@@ -70,8 +70,27 @@ export const getExtendedPlaylist = async (id: string) => {
         where: {
             id
         },
-        include: {
-            songs: true
+        select: {
+            id: true,
+            name: true,
+            guildId: true,
+            createdAt: true,
+            updatedAt: true,
+            songs: {
+                select: {
+                    id: true,
+                    title: true,
+                    youtubeId: true,
+                    youtubeUrl: true,
+                    thumbnail: true,
+                    duration: true,
+                    durationText: true,
+                    playlistPos: true
+                },
+                orderBy: {
+                    playlistPos: 'asc'
+                }
+            }
         }
     })
 }

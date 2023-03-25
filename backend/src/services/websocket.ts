@@ -2,7 +2,7 @@ import type { Request, Response } from 'express'
 import e, { Express, NextFunction } from 'express'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
-import { getSongsInPlaylist } from './song.js'
+import { playPlaylist } from './musicBot.js'
 import { validGuildPermissions } from './validation.js'
 
 export let websocket: Server
@@ -77,7 +77,7 @@ const setupWsEvents = () => {
         })
 
         socket.on('play-playlist', async (playlistId: string) => {
-            console.log(await getSongsInPlaylist(playlistId))
+            playPlaylist(playlistId, socket.data.guildId)
         })
     })
 }

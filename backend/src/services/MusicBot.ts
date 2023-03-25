@@ -1,20 +1,23 @@
-import { Client, Intents } from 'discord.js'
+import { Player, QueueRepeatMode, Track } from 'discord-player'
+import { Client } from 'discord.js'
 import { getExtendedPlaylist } from './playlist.js'
 
 let botInstance: Client | undefined
-
+let player: Player | undefined
 /**
  * Starts the bot and authenticates it with Discord.
  */
 export const initializeBot = async () => {
     botInstance = new Client({
-        intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES]
+        intents: ['GuildVoiceStates', 'Guilds']
     })
 
     botInstance.on('ready', () => {
         if (!botInstance?.user) throw new Error('No user tag defined!')
         console.log(`Bot authenticated as ${botInstance.user.tag}`)
     })
+
+    player = new Player(botInstance)
 
     await botInstance.login(process.env.BOT_TOKEN)
 }
@@ -33,8 +36,34 @@ export const playPlaylist = async (playlistId: string, guildId: string) => {
 
     const playlist = await getExtendedPlaylist(playlistId)
     if (!playlist) throw new Error('That playlist does not exist.')
-}
 
+    const search = (
+        await Promise.all(
+            playlist.songs.map((s) => player?.search(s.youtubeUrl))
+        )
+    ).filter((s) => s !== undefined)
+
+    const songs = search
+        .map((s) => s?.tracks[0])
+        .filter((s) => s !== undefined) as Track[]
+
+    const channels = await guild.channels.fetch()
+    const channel = channels.find((c) => c?.isVoiceBased() && c?.joinable)
+
+    if (!channel) throw new Error('No voice channel found!')
+
+    console.log(songs)
+
+    const something = await player?.play(channel.id, songs[0].url, {
+        nodeOptions: {
+            repeatMode: QueueRepeatMode.QUEUE
+        }
+    })
+
+    for (let i = 1; i < songs.length; i++) {
+        something?.queue.tracks.add(songs[i])
+    }
+}
 /**
  * Checks if the bot is in the specified guild
  * @param id Guild ID
